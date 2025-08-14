@@ -1,0 +1,53 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12" style="max-width: 30rem">
+      <div class="card">
+        <div class="card-header text-center">
+          <div class="row">
+            <div class="col-6">
+              <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="abayti" />
+            </div>
+            <div class="col-6 float-end">
+              <app-language-switcher></app-language-switcher>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <h1 class="fs-2">{{ 'sign_in' | translate }}</h1>
+          <p class="lead text-body-secondary">{{ 'sign_in_message' | translate }}</p>
+          <form (ngSubmit)="user_login()"  method="post"  class="mb-5">
+            <div class="mb-4">
+              <label for="email">
+                {{ 'email' | translate }}
+              </label>
+              <input [(ngModel)]="login.email" name="email" class="form-control" id="email" type="email" placeholder="{{ 'email' | translate }}" />
+            </div>
+            <div class="mb-4">
+              <label for="password">
+                {{ 'password' | translate }}
+              </label>
+              <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="password" id="password" [(ngModel)]="login.password"  placeholder="{{ 'password' | translate }}" type="password" value=""/>
+              <button (click)="toggleFieldTextType()" class="btn btn-icon" data-toggle-password-trigger="true" type="button">
+                <i [ngClass]="{'ki-filled ki-eye-slash text-gray-500 hidden toggle-password-active:block': !fieldTextType,'ki-filled ki-eye text-gray-500 toggle-password-active:hidden': fieldTextType}">
+                </i>
+              </button>
+            </div>
+            <tui-loader *ngIf="loading" />
+            <button *ngIf="!loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">
+              {{ 'sign_in' | translate }}
+            </button>
+          </form>
+          <p class="text-center text-body-secondary mb-0">
+            {{ 'not_registered_message' | translate}}
+            <a class="text-black" routerLink="/register"> {{ 'register' | translate}} </a>
+          </p>
+        </div>
+        <div class="card-footer">
+          <p class="text-center text-body-secondary mb-0">{{ 'forgot_password_message' | translate}}
+            <a class="text-black" routerLink="/reset">{{ 'reset_password' | translate}} </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

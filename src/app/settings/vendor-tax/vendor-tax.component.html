@@ -1,0 +1,116 @@
+<app-side></app-side>
+<app-top></app-top>
+<main class="main ml-desktop-22rem px-lg-6">
+  <!-- Content -->
+  <div class="container-lg">
+    <!-- Page header -->
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Tax information</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <!--        <a class="btn btn-secondary d-block">
+                  <span class="material-symbols-outlined me-1"> add </span> New
+                </a>-->
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="row">
+      <div class="col-12 col-lg-9" data-bs-spy="scroll">
+        <section *ngIf="!ui_controls.is_loading" class="card card-line bg-body-tertiary border-transparent mb-5" id="password">
+          <div class="card-body">
+            <h2 class="fs-5 mb-1">Tax Information</h2>
+            <p class="text-body-secondary">To complete your store setup with us, please submit your UAE tax details in your dashboard so we can issue VAT-compliant invoices and process payouts.</p>
+            <div class="card border-transparent">
+              <div class="card-body">
+                <div class="mb-4">
+                  <fieldset class="form-fieldset stock-status-wrapper">
+                    <label class="form-label me-5"> Tax status </label>
+                    <label class="form-check form-check-inline mb-3">
+                      <input  [(ngModel)]="store_single.vat_status" type="radio" name="vat_status" class="form-check-input" value="registered">
+                      <span class="form-check-label">  Registered  </span>
+                    </label>
+                    <label class="form-check form-check-inline mb-3">
+                      <input [(ngModel)]="store_single.vat_status" type="radio" name="vat_status" class="form-check-input" value="not_registered">
+                      <span class="form-check-label"> Not registered </span>
+                    </label>
+                    <label class="form-check form-check-inline mb-3">
+                      <input [(ngModel)]="store_single.vat_status" type="radio" name="vat_status" class="form-check-input" value="exempt">
+                      <span class="form-check-label"> Exempt </span>
+                    </label>
+                  </fieldset>
+                  <div class="form-text text-muted">Select ‘Registered’ only if you have a valid Tax Registration number.</div>
+                </div>
+                <div *ngIf="store_single.vat_status === 'registered'" class="form-group">
+                  <div class="row">
+                    <div class="col-6">
+                      <div  class="mb-4">
+                        <label class="form-label">Registered Business Name (as on Trade License)</label>
+                        <input [(ngModel)]="store_single.store_legal_name" type="text" name="store_legal_name" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div  class="mb-4">
+                        <label class="form-label">Trade License Number</label>
+                        <input [(ngModel)]="store_single.trade_license_number" type="text" name="trade_license_number" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <fieldset class="form-fieldset stock-status-wrapper">
+                      <label class="form-label me-5"> Licensing Authority (Dubai DED / Free Zone) </label>
+                      <label class="form-check form-check-inline mb-3">
+                        <input  [(ngModel)]="store_single.licensing_authority" type="radio" name="licensing_authority" class="form-check-input" value="dubai_ded">
+                        <span class="form-check-label"> Dubai DED  </span>
+                      </label>
+                      <label class="form-check form-check-inline mb-3">
+                        <input [(ngModel)]="store_single.licensing_authority" type="radio" name="licensing_authority" class="form-check-input" value="free_zone">
+                        <span class="form-check-label"> Free Zone </span>
+                      </label>
+                    </fieldset>
+                  </div>
+                  <div  class="mb-4">
+                    <label class="form-label">Tax Registration Number (TRN) — 15 digits</label>
+                    <input [(ngModel)]="store_single.tax_registration_number" type="text" name="tax_registration_number" class="form-control">
+                  </div>
+                  <div class="row">
+                    <div class="col-4">
+                      <div class="mb-4">
+                        <label class="form-label">VAT Registration Effective Date</label>
+                        <input [(ngModel)]="store_single.vat_registration_effective_date" type="date" name="vat_registration_effective_date" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="mb-4">
+                        <label class="form-label">Registered Tax Address (UAE)</label>
+                        <input [(ngModel)]="store_single.registered_tax_address" type="text" name="registered_tax_address" class="form-control">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Tax Contact Email</label>
+                    <input [(ngModel)]="store_single.tax_contact_email" type="email" name="tax_contact_email" class="form-control">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button (click)="save_change()" class="btn btn-secondary text-white" type="button">Save Changes</button>
+          </div>
+        </section>
+        <tui-loader *ngIf="ui_controls.is_loading" />
+      </div>
+    </div>
+  </div>
+</main>

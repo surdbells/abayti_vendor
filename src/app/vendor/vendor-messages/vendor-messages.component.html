@@ -1,0 +1,36 @@
+<app-side></app-side>
+<app-top></app-top>
+<main class="main ml-desktop-22rem px-lg-6">
+  <div class="container-lg">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Messages</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <!--<a (click)="createCoupon()" class="btn btn-secondary d-block">
+          <span class="material-symbols-outlined me-1"> add </span> New
+        </a>-->
+      </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="row">
+      <div class="col-12">
+        <!-- Filters -->
+        <div class="card card-line bg-body-tertiary border-transparent mb-7">
+          <div class="card-body p-4">
+            <h3 class="text-center">No records found</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

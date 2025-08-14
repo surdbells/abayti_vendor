@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import '../node_modules/ckeditor5/dist/ckeditor5-editor.css';
+@import '../node_modules/ckeditor5/dist/ckeditor5-content.css';
+@media (min-width: 1180px) {
+  .ml-desktop-22rem {
+    margin-left: 18rem;
+  }
+}
+@media (max-width: 991px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+/* Visible by default on mobile (≤ 991px), hidden on ≥ 992px */
+@media (min-width: 992px) {
+  .show-on-mobile {
+    display: none !important;
+  }
+}
+.form-label.required:after {
+  color: #d63939;
+  content: "*";
+  margin-left: .25rem;
+}

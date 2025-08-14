@@ -1,0 +1,136 @@
+<aside class="aside aside-base sidenav-base">
+  <nav class="navbar navbar-expand-xl navbar-vertical">
+    <div class="container-lg">
+      <div class="card mb-5 hide-on-mobile">
+        <div class="card-header text-center">
+          <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="abayti" />
+        </div>
+        <div class="card-body">
+          <h4 class="fs-base fw-normal text-body-secondary mb-1">Balance</h4>
+          <div class="fs-2 fw-semibold">
+            <span class="fs-6 align-text-top me-1">AED</span>0<span class="fs-5">.0</span>
+            <span class="badge bg-success-subtle text-success fs-sm align-text-top ms-2">+0%</span>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="row g-2">
+            <div class="col-12">
+              <a routerLink="/create-product"  class="btn btn-sm text-white btn-success w-100 d-flex align-items-center justify-content-center gap-1">
+                <svg class="icon svg-icon-ti-ti-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                 <path d="M12 5l0 14"></path>
+                  <path d="M5 12l14 0"></path>
+                </svg>
+                <span class="d-none d-sm-inline">Add&nbsp;Product</span>
+                <span class="d-inline d-sm-none">Product</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="navbar-toggler ms-3"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#sidenavBaseCollapse"
+        aria-controls="sidenavBaseCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenavBaseCollapse">
+        <!-- Search -->
+        <div class="input-group d-xl-none my-4 my-xl-0">
+          <input class="form-control" type="search" placeholder="Search" aria-label="Search" aria-describedby="sidenavBaseSearchMobile" />
+          <span class="input-group-text" id="sidenavBaseSearchMobile">
+                <span class="material-symbols-outlined">search</span>
+              </span>
+        </div>
+        <!-- Heading -->
+        <h3 class="fs-base px-3 mb-4">Main Menu</h3>
+        <!-- Nav -->
+        <nav class="navbar-nav nav-pills mb-7">
+          <div class="nav-item">
+            <a routerLink="/account" class="nav-link">
+              <span class="me-3">
+              <svg class="icon svg-icon-ti-ti-home" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+              </svg>
+              </span>Dashboard
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#marketplace" role="button" aria-expanded="false" aria-controls="dashboards">
+                <span class="me-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket-icon lucide-shopping-basket"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg>
+                </span>
+              Ecommerce
+            </a>
+            <div class="collapse" id="marketplace">
+              <nav class="nav nav-pills">
+                <a class="nav-link" routerLink="/products">Products</a>
+                <a class="nav-link" routerLink="/orders">Orders</a>
+                <a class="nav-link" routerLink="/returns">Returns</a>
+                <a class="nav-link" routerLink="/reviews">Reviews</a>
+                <a class="nav-link" routerLink="/coupons">Coupons</a>
+              </nav>
+            </div>
+          </div>
+        <div class="nav-item">
+          <a routerLink="/transactions" class="nav-link">
+            <span class="me-3">
+              <svg class="icon  svg-icon-ti-ti-cash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 15h-3a1 1 0 0 1 -1 -1v-8a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v3"></path>
+                <path d="M7 9m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"></path>
+                <path d="M12 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+              </svg>
+            </span> Transactions
+          </a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#settings" role="button" aria-expanded="false" aria-controls="dashboards">
+              <span class="me-3">
+              <svg class="icon  svg-icon-ti-ti-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+              </svg>
+              </span> Settings
+            </a>
+            <div class="collapse" id="settings">
+              <nav class="nav nav-pills">
+                <a class="nav-link" routerLink="/profile">User profile</a>
+                <a class="nav-link" routerLink="/store">Manage Store</a>
+                <a class="nav-link" routerLink="/security">Security settings</a>
+                <a class="nav-link" routerLink="/payment_info">Payment information</a>
+                <a class="nav-link" routerLink="/tax_information">Tax information</a>
+                <a class="nav-link" routerLink="/notifications">Notifications</a>
+              </nav>
+            </div>
+          </div>
+          <hr/>
+<!--          <div class="nav-item">
+            <a routerLink="/user_preference" class="nav-link">
+            <span class="me-3">
+              <svg class="icon  svg-icon-ti-ti-messages" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 14l-3 -3h-7a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1h9a1 1 0 0 1 1 1v10"></path>
+                <path d="M14 15v2a1 1 0 0 1 -1 1h-7l-3 3v-10a1 1 0 0 1 1 -1h2"></path>
+              </svg>
+            </span> Preference
+            </a>
+          </div>-->
+          <div class="nav-item text-danger">
+            <a (click)="sign_out()" role="link" class="nav-link">
+            <span class="me-3 text-danger">
+              <span class="material-symbols-outlined fs-3"> logout </span>
+            </span><span class="text-danger"> Sign out</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </nav>
+</aside>

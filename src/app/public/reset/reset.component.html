@@ -1,0 +1,60 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12" style="max-width: 30rem">
+      <div class="card">
+        <div class="card-header text-center">
+          <img class="img img-fluid w-25" src="assets/img/abayti.png" alt="abayti" />
+        </div>
+        <div *ngIf="!ui_controls.confirmed && !ui_controls.validated" class="card-body">
+          <h1 class="fs-2">Reset password</h1>
+          <p class="lead text-body-secondary">Please enter your email address to search for your account.</p>
+          <form (ngSubmit)="user_confirm()"  method="post"  class="mb-5">
+            <div class="mb-4">
+              <label for="email" class="form-label">Email Address</label>
+              <input [(ngModel)]="reset.email" name="email" class="form-control" id="email" type="email" placeholder="" />
+            </div>
+            <tui-loader *ngIf="ui_controls.loading" />
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Reset password</button>
+          </form>
+          <p class="text-center text-body-secondary mb-0">Already have an account?
+            <a class="text-black" routerLink="/">Sign in </a>
+          </p>
+        </div>
+        <div *ngIf="ui_controls.confirmed && !ui_controls.validated" class="card-body">
+          <h1 class="fs-1">Email confirmation</h1>
+          <p class="lead text-body-secondary">Enter the otp sent to your email below.</p>
+          <form (ngSubmit)="user_validate()"  method="post"  class="mb-5">
+            <div class="mb-4">
+              <label for="otp" class="form-label">One Time Password [ OTP ]</label>
+              <input [max]="6" [(ngModel)]="confirm.input_otp" name="otp" class="form-control" id="otp" type="text" />
+            </div>
+            <tui-loader *ngIf="ui_controls.loading" />
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Validate</button>
+          </form>
+        </div>
+        <div *ngIf="ui_controls.confirmed && ui_controls.validated" class="card-body">
+          <h1 class="fs-1">Set a New Password</h1>
+          <p class="lead text-body-secondary">Your OTP has been verified. Please enter your new password below to complete the reset process.</p>
+          <form (ngSubmit)="reset_password()"  method="post"  class="mb-5">
+            <div class="row">
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="password" class="form-label">Password</label>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="password" id="password" [(ngModel)]="r_password.password"  placeholder="" type="password" value=""/>
+                </div>
+              </div>
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="password" class="form-label">Confirm password</label>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="confirm_password" id="confirm_password" [(ngModel)]="r_password.confirm_password"  placeholder="" type="password" value=""/>
+                </div>
+              </div>
+            </div>
+            <tui-loader *ngIf="ui_controls.loading" />
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Reset password</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

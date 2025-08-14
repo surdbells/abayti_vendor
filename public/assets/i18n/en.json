@@ -1,0 +1,14 @@
+{
+  "hello": "Hello, {{name}}!",
+  "tagline": "Build once, speak to everyone.",
+  "save": "Save",
+  "cancel": "Cancel",
+  "sign_in": "Sign In",
+  "sign_in_message": "sign in to manage your account",
+  "email": "Email Address",
+  "password": "Password",
+  "not_registered_message": "Don't have an account yet ?",
+  "register": "Register",
+  "forgot_password_message": "Forgot your password ?",
+  "reset_password": "Reset password"
+}

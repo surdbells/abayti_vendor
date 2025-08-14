@@ -1,0 +1,75 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12" style="max-width: 30rem">
+      <div class="card">
+        <div class="card-header text-center">
+          <img class="img img-fluid w-25" src="assets/img/abayti.png" alt="abayti" />
+        </div>
+        <div *ngIf="!ui_controls.registered" class="card-body">
+          <h1 class="fs-2">Register</h1>
+          <p class="lead text-body-secondary">Create a new account.</p>
+          <form (ngSubmit)="user_register()"  method="post"  class="mb-5">
+            <div class="row">
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="first_name" class="form-label">Firs name</label>
+                  <input [(ngModel)]="register.first_name" name="first_name" class="form-control" id="first_name" type="text" placeholder="" />
+                </div>
+              </div>
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="last_name" class="form-label">Last name</label>
+                  <input [(ngModel)]="register.last_name" name="last_name" class="form-control" id="last_name" type="text" placeholder="" />
+                </div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="email" class="form-label">Email Address</label>
+              <input [(ngModel)]="register.email" name="email" class="form-control" id="email" type="email" placeholder="" />
+            </div>
+            <div class="mb-4">
+              <label for="phone" class="form-label">Phone number</label>
+              <input [(ngModel)]="register.phone" name="phone" class="form-control" id="phone" type="text" placeholder="" />
+            </div>
+            <div class="row">
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="password" class="form-label">Password</label>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="password" id="password" [(ngModel)]="register.password"  placeholder="" type="password" value=""/>
+                </div>
+              </div>
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="password" class="form-label">Confirm password</label>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="confirm_password" id="confirm_password" [(ngModel)]="register.confirm_password"  placeholder="" type="password" value=""/>
+                </div>
+              </div>
+            </div>
+            <tui-loader *ngIf="ui_controls.loading" />
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Register</button>
+          </form>
+          <p class="text-center text-body-secondary mb-0">Already have an account?
+            <a class="text-black" routerLink="/">Sign in </a>
+          </p>
+        </div>
+        <div *ngIf="ui_controls.registered" class="card-body">
+          <h1 class="fs-1">Email confirmation</h1>
+          <p class="lead text-body-secondary">Enter the otp sent to your email below.</p>
+          <form (ngSubmit)="user_validate()"  method="post"  class="mb-5">
+            <div class="mb-4">
+              <label for="otp" class="form-label">One Time Password [ OTP ]</label>
+              <input [max]="6" [(ngModel)]="confirm.input_otp" name="otp" class="form-control" id="otp" type="text" />
+            </div>
+            <tui-loader *ngIf="ui_controls.loading" />
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Validate</button>
+          </form>
+        </div>
+        <div class="card-footer">
+        <p class="text-center text-body-secondary mb-0">Forgot your password ?
+          <a class="text-black" routerLink="/reset"> Reset password </a>
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

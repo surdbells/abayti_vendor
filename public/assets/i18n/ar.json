@@ -1,0 +1,14 @@
+{
+  "hello": "مرحبًا، {{name}}!",
+  "tagline": "ابنِ مرةً وتحدث مع الجميع.",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "sign_in": "تسجيل الدخول",
+  "sign_in_message": "تسجيل الدخول لإدارة حسابك",
+  "email": "عنوان البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "not_registered_message": "ليس لديك حساب حتى الآن؟",
+  "register": "يسجل",
+  "forgot_password_message": "نسيت كلمة السر ؟",
+  "reset_password": "إعادة تعيين كلمة المرور"
+}
