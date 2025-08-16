@@ -38,73 +38,34 @@
                           <angular-editor name="description" [config]="editorConfig" [maxlength]="200" [(ngModel)]="update.description"></angular-editor>
                         </div>
                         <div class="mb-3 position-relative">
-                          <label class="form-label">Product Images</label>
+                                <label class="form-label">Product Images</label>
+                                <div class="row mt-4">
+                                  <div *ngFor="let src of update.images; index as i;" class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-6 col-12 mb-5">
+                                    <div class="card shadow-sm">
+                                      <img *ngIf="src.length > 100" src="{{src}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
+                                      <img  *ngIf="src.length < 100" src="{{image_url+src}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
+                                    </div>
+                                  </div>
+                                </div>
+                        </div>
+                        <div class="mb-3 position-relative">
                           <div class="row">
-                            <div class="col-xxl-4 col-xl-4 col-md-6 col-12">
-                              <div class="row mb-2">
-                                <div class="col-12">
-                                  <div class="card shadow-sm border-success">
-                                    <img src="{{image_url+update.image_1}}" class="card-img-top" style="height: 300px; object-fit: cover; object-position: top center" alt="">
-                                    <div class="card-body">
-                                      <div class="mb-3">
-                                        <label for="image_1" class="form-label required">Featured Image</label>
-                                        <input [(ngModel)]="update.image_1" (change)="select_image_1($event)" name="image_1" class="form-control form-control-sm" type="file" id="image_1" accept="image/png, image/jpeg, image/webp">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xxl-8 col-xl-8 col-md-6 col-12">
-                              <div class="row mt-4">
-                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-5">
-                                  <div class="card shadow-sm">
-                                    <img src="{{image_url+update.image_2}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                    <div class="card-body">
-                                      <div class="mb-3">
-                                        <input [(ngModel)]="update.image_2" (change)="select_image_2($event)" name="image_2" class="form-control form-control-sm" type="file" id="image_2" accept="image/png, image/jpeg, image/webp">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-5">
-                                  <div class="card shadow-sm">
-                                    <img src="{{image_url+update.image_3}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                    <div class="card-body">
-                                      <div class="mb-3">
-                                        <input [(ngModel)]="update.image_3" (change)="select_image_3($event)" name="image_3" class="form-control form-control-sm" type="file" id="image_3" accept="image/png, image/jpeg, image/webp">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-3">
-                                  <div class="card shadow-sm">
-                                    <img src="{{image_url+update.image_4}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                    <div class="card-body">
-                                      <div class="mb-3">
-                                        <input [(ngModel)]="update.image_4" (change)="select_image_4($event)" name="image_4" class="form-control form-control-sm" type="file" id="image_4" accept="image/png, image/jpeg, image/webp">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-3">
-                                  <div class="card shadow-sm">
-                                    <img src="{{image_url+update.image_5}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                    <div class="card-body">
-                                      <div class="mb-3">
-                                        <input [(ngModel)]="update.image_5" (change)="select_image_5($event)" name="image_5" class="form-control form-control-sm" type="file" id="image_5" accept="image/png, image/jpeg, image/webp">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                            <div class="col-12">
+                              <ngx-dropzone class="mt-5" (change)="onSelect($event)" [multiple]="true" accept=".png,.jpeg,.jpeg,.webp">
+                                <ngx-dropzone-label>Drag & drop files here, or click to browse.</ngx-dropzone-label>
+                                <ngx-dropzone-image-preview
+                                  *ngFor="let f of files; trackBy: trackByName"
+                                  [file]="f"
+                                  [removable]="true"
+                                  (removed)="onRemove(f)">
+                                </ngx-dropzone-image-preview>
+                              </ngx-dropzone>
                             </div>
                           </div>
-                        </div>
                       </div>
                     </div>
                   </div>
-                  <div id="main-manage-product-type">
+                    <div id="main-manage-product-type">
                     <div class="card mb-3">
                       <div class="card-body">
                         <div class="row price-group">
@@ -251,6 +212,7 @@
                       </div>
                     </div>
                   </div>
+                  </div>
                 </form>
               </div>
               <div *ngIf="!ui_controls.page_loading" class="col-xxl-4 col-xl-4 col-md-6 col-12 gap-3 d-flex flex-column-reverse flex-md-column mb-md-0 mb-5">
@@ -287,36 +249,40 @@
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#featured" aria-expanded="false" aria-controls="featured">
+                        <label class="form-label required"> Featured Image </label>
+                      </button>
+                    </h2>
+                    <div id="featured" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
+                      <div class="accordion-body">
+                        <img *ngIf="update.image_1.length > 100" src="{{update.image_1}}" class="card-img-top" style="height: 250px; object-fit: cover; object-position: top center" alt="">
+                        <img  *ngIf="update.image_1.length < 100" src="{{image_url+update.image_1}}" class="card-img-top" style="height: 250px; object-fit: cover; object-position: top center" alt="">
+                        <div class="card-body">
+                          <div class="mb-3">
+                            <input [(ngModel)]="update.image_1" (change)="select_image_1($event)" name="image_1" class="form-control form-control-sm" type="file" id="image_1" accept="image/png, image/jpeg, image/webp">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
                       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collections" aria-expanded="false" aria-controls="collections">
                         <label class="form-label required"> Collections </label>
                       </button>
                     </h2>
                     <div id="collections" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
                       <div class="accordion-body">
-                        <fieldset class="form-fieldset fieldset-for-multi-check-list">
-                          <div class="multi-check-list-wrapper">
-                            <label class="form-check">
-                              <input [checked]="update.is_new_arrival" (change)="update.is_new_arrival = !update.is_new_arrival" type="checkbox" name="is_new_arrival" class="form-check-input">
-                              <span class="form-check-label"> New Arrival </span>
-                            </label>
-                            <label class="form-check">
-                              <input [checked]="update.is_winter_collection" (change)="update.is_winter_collection = !update.is_winter_collection" type="checkbox" name="is_winter_collection" class="form-check-input">
-                              <span class="form-check-label"> Winter Collection </span>
-                            </label>
-                            <label class="form-check">
-                              <input [checked]="update.is_eid_collection" (change)="update.is_eid_collection = !update.is_eid_collection" type="checkbox" name="is_eid_collection" class="form-check-input">
-                              <span class="form-check-label"> Eid Collection </span>
-                            </label>
-                            <label class="form-check">
-                              <input [checked]="update.is_best_sellers" (change)="update.is_best_sellers = !update.is_best_sellers" type="checkbox" name="is_best_sellers" class="form-check-input">
-                              <span class="form-check-label"> Best Sellers </span>
-                            </label>
-                            <label class="form-check">
-                              <input [checked]="update.is_special_offer" (change)="update.is_special_offer = !update.is_special_offer" type="checkbox" name="is_special_offer" class="form-check-input">
-                              <span class="form-check-label"> Special Offer </span>
-                            </label>
-                          </div>
-                        </fieldset>
+                        <div class="accordion-body">
+                          <ng-multiselect-dropdown
+                            [placeholder]="'Select collections'"
+                            [settings]="dropdownSettings"
+                            [data]="dropdownList"
+                            [(ngModel)]="selectedItems"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)">
+                          </ng-multiselect-dropdown>
+                        </div>
                       </div>
                     </div>
                   </div>

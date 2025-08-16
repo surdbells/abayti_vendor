@@ -1,16 +1,11 @@
-export class Products {
+export class Reviews {
   constructor(
     public id: number,
-    public store: number,
-    public image: string,
-    public category: string,
-    public name: string,
-    public price: string,
-    public sales: string,
-    public quantity: number,
-    public order_count: number,
-    public created: string,
-    public stock_status: string,
-    public status: string
+    public customer_id: number,
+    public customer_name: string,
+    public product_name: string,
+    public rating: number,
+    public comment: string,
+    public created: string
   ){  }
 }

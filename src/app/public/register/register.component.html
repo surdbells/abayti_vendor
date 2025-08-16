@@ -1,6 +1,17 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-12" style="max-width: 30rem">
+<style>
+  /* keep the image filling its card without distortion */
+  .object-fit-cover { object-fit: cover; }
+</style>
+
+<div style="max-width: 55rem; padding-top: 5%" class="container animate__animated animate__fadeIn">
+  <div  class="row justify-content-center align-items-stretch g-4">
+    <div class="col-12 col-lg-6 d-none d-md-flex">
+      <div class="card shadow-lg w-100 h-100 overflow-hidden">
+        <img src="assets/img/e572a033-31e5-4b38-991f-44578a2125a8.jpeg" alt="home" class="w-100 h-100 object-fit-cover animate__animated animate__fadeIn"
+        />
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 d-flex">
       <div class="card">
         <div class="card-header text-center">
           <img class="img img-fluid w-25" src="assets/img/abayti.png" alt="abayti" />
@@ -12,41 +23,50 @@
             <div class="row">
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
                 <div class="mb-4">
-                  <label for="first_name" class="form-label">Firs name</label>
-                  <input [(ngModel)]="register.first_name" name="first_name" class="form-control" id="first_name" type="text" placeholder="" />
+                  <label for="first_name" class="form-label">First name</label>
+                  <input [(ngModel)]="register.first_name" name="first_name" class="form-control form-control-sm" id="first_name" type="text" placeholder="" />
                 </div>
               </div>
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
                 <div class="mb-4">
                   <label for="last_name" class="form-label">Last name</label>
-                  <input [(ngModel)]="register.last_name" name="last_name" class="form-control" id="last_name" type="text" placeholder="" />
+                  <input [(ngModel)]="register.last_name" name="last_name" class="form-control form-control-sm" id="last_name" type="text" placeholder="" />
                 </div>
               </div>
             </div>
-            <div class="mb-4">
-              <label for="email" class="form-label">Email Address</label>
-              <input [(ngModel)]="register.email" name="email" class="form-control" id="email" type="email" placeholder="" />
-            </div>
-            <div class="mb-4">
-              <label for="phone" class="form-label">Phone number</label>
-              <input [(ngModel)]="register.phone" name="phone" class="form-control" id="phone" type="text" placeholder="" />
+            <div class="row">
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input [(ngModel)]="register.email" name="email" class="form-control form-control-sm" id="email" type="email" placeholder="" />
+                </div>
+              </div>
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-4">
+                  <label for="phone" class="form-label">Phone number</label>
+                  <div class="input-group">
+                    <span class="input-group-text">+971</span>
+                    <input [(ngModel)]="register.phone" name="phone" class="form-control form-control-sm" id="phone" type="tel" inputmode="numeric" />
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="row">
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
                 <div class="mb-4">
                   <label for="password" class="form-label">Password</label>
-                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="password" id="password" [(ngModel)]="register.password"  placeholder="" type="password" value=""/>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control form-control-sm" name="password" id="password" [(ngModel)]="register.password"  placeholder="" type="password" value=""/>
                 </div>
               </div>
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
                 <div class="mb-4">
                   <label for="password" class="form-label">Confirm password</label>
-                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="confirm_password" id="confirm_password" [(ngModel)]="register.confirm_password"  placeholder="" type="password" value=""/>
+                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control form-control-sm" name="confirm_password" id="confirm_password" [(ngModel)]="register.confirm_password"  placeholder="" type="password" value=""/>
                 </div>
               </div>
             </div>
             <tui-loader *ngIf="ui_controls.loading" />
-            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Register</button>
+            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">Register</button>
           </form>
           <p class="text-center text-body-secondary mb-0">Already have an account?
             <a class="text-black" routerLink="/">Sign in </a>
@@ -58,18 +78,19 @@
           <form (ngSubmit)="user_validate()"  method="post"  class="mb-5">
             <div class="mb-4">
               <label for="otp" class="form-label">One Time Password [ OTP ]</label>
-              <input [max]="6" [(ngModel)]="confirm.input_otp" name="otp" class="form-control" id="otp" type="text" />
+              <input [max]="6" [(ngModel)]="confirm.input_otp" name="otp" class="form-control form-control-sm" id="otp" type="text" />
             </div>
             <tui-loader *ngIf="ui_controls.loading" />
             <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">Validate</button>
           </form>
         </div>
         <div class="card-footer">
-        <p class="text-center text-body-secondary mb-0">Forgot your password ?
-          <a class="text-black" routerLink="/reset"> Reset password </a>
-        </p>
+          <p class="text-center text-body-secondary mb-0">Forgot your password ?
+            <a class="text-black" routerLink="/reset"> Reset password </a>
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
+

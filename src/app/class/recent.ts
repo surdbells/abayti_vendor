@@ -1,6 +1,9 @@
-export class Labels {
+export class ROrders {
   constructor(
-    public id: number,
-    public label: string
+    public code: string,
+    public created_at: string,
+    public customer: string,
+    public amount: string,
+    public status: string,
   ){  }
 }

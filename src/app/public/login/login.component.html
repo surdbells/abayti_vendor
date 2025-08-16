@@ -1,50 +1,72 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-12" style="max-width: 30rem">
-      <div class="card">
+<style>
+  /* keep the image filling its card without distortion */
+  .object-fit-cover { object-fit: cover; }
+</style>
+
+<div style="max-width: 50rem; padding-top: 5%" class="container animate__animated animate__fadeIn">
+  <div  class="row justify-content-center align-items-stretch g-4">
+    <div class="col-12 col-lg-6 d-none d-md-flex">
+      <div class="card shadow-lg w-100 h-100 overflow-hidden">
+        <img src="assets/img/regbg.png" alt="home" class="w-100 h-100 object-fit-cover animate__animated animate__fadeIn"
+        />
+      </div>
+    </div>
+    <div class="col-12 col-lg-6 d-flex">
+      <div class="card shadow-lg w-100 h-100">
         <div class="card-header text-center">
-          <div class="row">
-            <div class="col-6">
-              <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="abayti" />
+          <div class="row align-items-center">
+            <div class="col-6 text-start">
+              <img class="img-fluid" style="max-width: 140px" src="assets/img/abayti.png" alt="abayti" />
             </div>
-            <div class="col-6 float-end">
+            <div class="col-6 text-end">
               <app-language-switcher></app-language-switcher>
             </div>
           </div>
         </div>
-        <div class="card-body">
+        <div class="card-body d-flex flex-column justify-content-center">
           <h1 class="fs-2">{{ 'sign_in' | translate }}</h1>
           <p class="lead text-body-secondary">{{ 'sign_in_message' | translate }}</p>
-          <form (ngSubmit)="user_login()"  method="post"  class="mb-5">
+          <form (ngSubmit)="user_login()" method="post" class="mb-4">
             <div class="mb-4">
-              <label for="email">
-                {{ 'email' | translate }}
-              </label>
-              <input [(ngModel)]="login.email" name="email" class="form-control" id="email" type="email" placeholder="{{ 'email' | translate }}" />
+              <label for="email">{{ 'email' | translate }}</label>
+              <input
+                [(ngModel)]="login.email"
+                name="email"
+                id="email"
+                type="email"
+                class="form-control"
+                placeholder="{{ 'email' | translate }}" />
             </div>
             <div class="mb-4">
-              <label for="password">
-                {{ 'password' | translate }}
-              </label>
-              <input [type]="fieldTextType ? 'text' : 'password'" class="form-control" name="password" id="password" [(ngModel)]="login.password"  placeholder="{{ 'password' | translate }}" type="password" value=""/>
-              <button (click)="toggleFieldTextType()" class="btn btn-icon" data-toggle-password-trigger="true" type="button">
-                <i [ngClass]="{'ki-filled ki-eye-slash text-gray-500 hidden toggle-password-active:block': !fieldTextType,'ki-filled ki-eye text-gray-500 toggle-password-active:hidden': fieldTextType}">
-                </i>
-              </button>
+              <label for="password">{{ 'password' | translate }}</label>
+              <div class="input-group">
+                <input
+                  [type]="fieldTextType ? 'text' : 'password'"
+                  class="form-control"
+                  name="password"
+                  id="password"
+                  [(ngModel)]="login.password"
+                  placeholder="{{ 'password' | translate }}" />
+                <button (click)="toggleFieldTextType()" class="btn btn-outline-secondary" type="button">
+                  <span *ngIf="fieldTextType" class="material-symbols-outlined">visibility</span>
+                  <span *ngIf="!fieldTextType" class="material-symbols-outlined">visibility</span>
+                </button>
+              </div>
             </div>
-            <tui-loader *ngIf="loading" />
-            <button *ngIf="!loading" class="btn text-white fw-bold btn-secondary w-100" type="submit">
+            <tui-loader *ngIf="loading"></tui-loader>
+            <button *ngIf="!loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">
               {{ 'sign_in' | translate }}
             </button>
           </form>
-          <p class="text-center text-body-secondary mb-0">
-            {{ 'not_registered_message' | translate}}
-            <a class="text-black" routerLink="/register"> {{ 'register' | translate}} </a>
+          <p class="text-center text-body-secondary mb-0 mt-auto">
+            {{ 'not_registered_message' | translate }}
+            <a class="text-black" routerLink="/register">{{ 'register' | translate }}</a>
           </p>
         </div>
         <div class="card-footer">
-          <p class="text-center text-body-secondary mb-0">{{ 'forgot_password_message' | translate}}
-            <a class="text-black" routerLink="/reset">{{ 'reset_password' | translate}} </a>
+          <p class="text-center text-body-secondary mb-0">
+            {{ 'forgot_password_message' | translate }}
+            <a class="text-black" routerLink="/reset">{{ 'reset_password' | translate }}</a>
           </p>
         </div>
       </div>

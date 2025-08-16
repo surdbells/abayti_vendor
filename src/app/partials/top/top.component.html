@@ -1,4 +1,4 @@
-<nav class="navbar ml-desktop-22rem topnav-toolbar d-none d-xl-flex px-xl-6">
+<nav class="navbar abayti_secondary_background ml-desktop-22rem topnav-toolbar d-none d-xl-flex px-xl-6">
   <div class="container flex-column align-items-stretch">
     <div class="row">
       <div class="col">
@@ -14,11 +14,11 @@
       <div class="col-auto d-flex">
         <!-- User -->
         <div class="dropdown my-n2">
-          <a class="btn btn-link d-inline-flex align-items-center dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="avatar avatar-sm avatar-status avatar-status-success me-3">
-                  <img class="avatar-img" src="assets/img/photos/photo-6.jpg" alt="..." />
-                </span>
-            <span class="d-none d-xl-block">Hello, {{user_session.first_name}}</span>
+          <a class="btn btn-link btn-sm mt-2 d-inline-flex align-items-center dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <!--       <span class="avatar avatar-sm avatar-status avatar-status-success me-3">
+              <img class="avatar-img" src="assets/img/photos/photo-6.jpg" alt="..." />
+            </span>-->
+            <span class="d-none d-xl-block text-black">Hello, {{user_session.first_name}}</span>
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" routerLink="/profile">Account</a></li>
@@ -37,7 +37,7 @@
         <!-- Notifications -->
         <div  class="dropdown ">
           <button (click)="get_notifications()" class="btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-            <span class="material-symbols-outlined scale-125">notifications</span>
+            <span class="material-symbols-outlined text-white scale-125">notifications</span>
             <span class="position-absolute top-0 end-0 m-3 p-1 bg-warning rounded-circle">
                   <span class="visually-hidden">New notifications</span>
                 </span>

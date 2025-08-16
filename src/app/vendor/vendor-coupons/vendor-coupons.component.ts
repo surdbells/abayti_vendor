@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {TopComponent} from '../../partials/top/top.component';
 import {SideComponent} from '../../partials/side/side.component';
 import {TuiIcon} from '@taiga-ui/core';
@@ -11,7 +11,8 @@ import {HotToastService} from '@ngneat/hot-toast';
   imports: [
     TopComponent,
     SideComponent,
-    TuiIcon
+    TuiIcon,
+    RouterLink
   ],
   standalone: true,
   templateUrl: './vendor-coupons.component.html',

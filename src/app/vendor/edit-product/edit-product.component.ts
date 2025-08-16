@@ -13,60 +13,54 @@ import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
 import {GlobalComponent} from '../../global-component';
 import {TUI_CONFIRM} from '@taiga-ui/kit';
+import {NgxDropzoneChangeEvent, NgxDropzoneModule} from 'ngx-dropzone';
+import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 interface ColorOption {
   id: string;
   text: string;
   hex: string;
 }
+type EncodedFile = {
+  file: File;
+  name: string;
+  type: string;
+  size: number;
+  dataUrl: string;
+  base64: string;
+};
+
 @Component({
   selector: 'app-edit-product',
   standalone: true,
-    imports: [
-        AngularEditorModule,
-        FormsModule,
-        NgForOf,
-        NgIf,
-        ReactiveFormsModule,
-        SideComponent,
-        TopComponent,
-        TuiIcon,
-        TuiLoader
-    ],
+  imports: [
+    AngularEditorModule,
+    FormsModule,
+    NgForOf,
+    NgIf,
+    ReactiveFormsModule,
+    SideComponent,
+    TopComponent,
+    TuiIcon,
+    TuiLoader,
+    NgxDropzoneModule,
+    NgMultiSelectDropDownModule
+  ],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css'
 })
 export class EditProductComponent implements OnInit{
   category?: Category[];
   labels?: Labels[];
+  dropdownList: { id: number; collection: string }[] = [];
+  selectedItems: { id: number; collection: string }[] = [];
+  dropdownSettings = {};
   private readonly dialogs = inject(TuiResponsiveDialogService);
-  colorOptions: ColorOption[] = [
-    { id: 'black', text: 'Black', hex: '#000000' },
-    { id: 'white', text: 'White', hex: '#FFFFFF' },
-    { id: 'off-white', text: 'Off White', hex: '#FAF9F6' },
-    { id: 'charcoal', text: 'Charcoal', hex: '#333333' },
-    { id: 'gray', text: 'Gray', hex: '#808080' },
-    { id: 'beige', text: 'Beige', hex: '#F5F5DC' },
-    { id: 'tan', text: 'Tan', hex: '#D2B48C' },
-    { id: 'brown', text: 'Brown', hex: '#8B4513' },
-    { id: 'navy', text: 'Navy', hex: '#001F3F' },
-    { id: 'blue', text: 'Blue', hex: '#1F75FE' },
-    { id: 'light-blue', text: 'Light Blue', hex: '#87CEEB' },
-    { id: 'denim', text: 'Denim', hex: '#274472' },
-    { id: 'teal', text: 'Teal', hex: '#008080' },
-    { id: 'green', text: 'Green', hex: '#2E8B57' },
-    { id: 'olive', text: 'Olive', hex: '#808000' },
-    { id: 'red', text: 'Red', hex: '#C0392B' },
-    { id: 'burgundy', text: 'Burgundy', hex: '#800020' },
-    { id: 'pink', text: 'Pink', hex: '#FFC0CB' },
-    { id: 'purple', text: 'Purple', hex: '#800080' },
-    { id: 'orange', text: 'Orange', hex: '#FF8C00' },
-    { id: 'yellow', text: 'Yellow', hex: '#FFD200' },
-    { id: 'mustard', text: 'Mustard', hex: '#FFDB58' },
-    { id: 'gold', text: 'Gold (Metallic)', hex: '#D4AF37' },
-    { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' }
-  ];
+  colorOptions: ColorOption[] = [];
+
   base64String : any;
+  files: File[] = [];
+  encoded: EncodedFile[] = [];
   constructor(
     private router: Router,
     private crudService: CrudService,
@@ -101,10 +95,8 @@ export class EditProductComponent implements OnInit{
     name: "",
     description: "",
     image_1: "assets/img/placeholder-1.png",
-    image_2: "assets/img/placeholder-1.png",
-    image_3: "assets/img/placeholder-1.png",
-    image_4: "assets/img/placeholder-1.png",
-    image_5: "assets/img/placeholder-1.png",
+    images: [] as string[],
+    collection: {},
     quantity: 0,
     allow_checkout_when_out_of_stock: false,
     with_storehouse_management: false,
@@ -130,11 +122,6 @@ export class EditProductComponent implements OnInit{
     is_hot: false,
     is_new: false,
     is_sale: false,
-    is_new_arrival: false,
-    is_winter_collection: false,
-    is_eid_collection: false,
-    is_best_sellers: false,
-    is_special_offer: false,
     delivery_note: "",
     colors: "",
     label: 0
@@ -204,6 +191,7 @@ export class EditProductComponent implements OnInit{
     this.vendor_label_create.token = this.user_session.token;
 
     this.get_category();
+    this.get_collections();
     this.colorOptions = [
       { id: 'black', text: 'Black', hex: '#000000' },
       { id: 'white', text: 'White', hex: '#FFFFFF' },
@@ -230,6 +218,24 @@ export class EditProductComponent implements OnInit{
       { id: 'gold', text: 'Gold (Metallic)', hex: '#D4AF37' },
       { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' }
     ];
+    this.dropdownList = [];
+    this.selectedItems = [];
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'id',
+      textField: 'collection',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+
+  }
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
   goBack() {
     this.router.navigate(['/products']).then(r => console.log(r));
@@ -242,6 +248,7 @@ export class EditProductComponent implements OnInit{
   }
   updateProduct() {
     this.update.colors = this.getSelectedIdsCsv();
+    this.update.collection = this.selectedItems;
     this.ui_controls.is_loading = true;
     this.crudService.post_request(this.update, GlobalComponent.updateProduct)
       .subscribe(({
@@ -314,42 +321,6 @@ export class EditProductComponent implements OnInit{
     };
     if(file){ reader.readAsDataURL(file); }
   }
-  select_image_2(event: any) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.base64String = reader.result as string;
-      this.update.image_2 =  this.base64String;
-    };
-    if(file){ reader.readAsDataURL(file); }
-  }
-  select_image_3(event: any) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.base64String = reader.result as string;
-      this.update.image_3 =  this.base64String;
-    };
-    if(file){ reader.readAsDataURL(file); }
-  }
-  select_image_4(event: any) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.base64String = reader.result as string;
-      this.update.image_4 =  this.base64String;
-    };
-    if(file){ reader.readAsDataURL(file); }
-  }
-  select_image_5(event: any) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.base64String = reader.result as string;
-      this.update.image_5 =  this.base64String;
-    };
-    if(file){ reader.readAsDataURL(file); }
-  }
   get_category() {
     this.ui_controls.page_loading = true;
     this.crudService.get_request(GlobalComponent.UtilityCategory)
@@ -372,12 +343,25 @@ export class EditProductComponent implements OnInit{
         }
       }))
   }
+  get_collections() {
+    this.ui_controls.page_loading = true;
+    this.crudService.get_request(GlobalComponent.UtilityCollections)
+      .subscribe(({ next: (response) => {
+          if (response.response_code === 200 && response.status === "success") {
+            this.dropdownList =  response.data;
+            this.get_vendor_labels();
+            this.ui_controls.page_loading = false;
+          }
+        }
+      }))
+  }
   get_product_by_id() {
     this.crudService.post_request(this.single_product, GlobalComponent.getProductById)
       .subscribe(({
         next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
             this.update =  response.data;
+            this.selectedItems =  response.data.collection;
             for (const item of this.update.colors.split(',').map(s => s.trim()).filter(Boolean)) {
               this.selected.add(item);
             }
@@ -447,5 +431,43 @@ export class EditProductComponent implements OnInit{
           this.updateProduct();
         }
       });
+  }
+  trackByName = (_: number, f: File) => f.name;
+  async onSelect(event: NgxDropzoneChangeEvent) {
+    const added = event.addedFiles ?? [];
+    this.files.push(...added);
+    const results = await Promise.all(
+      added.map(async (f) => {
+        const dataUrl = await this.fileToDataURL(f);
+        const base64 = dataUrl.split(',')[1] ?? '';
+        return {
+          file: f,
+          name: f.name,
+          type: f.type,
+          size: f.size,
+          dataUrl,
+          base64
+        } as EncodedFile;
+      })
+    );
+
+    this.encoded.push(...results);
+    this.update.images = this.getDataUrlArray().slice(0, 10);
+  }
+  onRemove(file: File) {
+    this.files = this.files.filter(f => f !== file);
+    this.encoded = this.encoded.filter(e => e.file !== file);
+    this.update.images = this.getDataUrlArray().slice(0, 10);
+  }
+  private fileToDataURL(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+  getDataUrlArray(): string[] {
+    return this.encoded.map(e => e.dataUrl).filter(Boolean);
   }
 }

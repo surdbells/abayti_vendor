@@ -7,10 +7,12 @@ import {GlobalComponent} from '../../global-component';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {TuiLoader} from '@taiga-ui/core';
+import {LanguageSwitcherComponent} from '../../language-switcher.component';
+import {TranslatePipe} from '../../translate.pipe';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, TuiLoader, RouterLink],
+  imports: [CommonModule, FormsModule, TuiLoader, RouterLink, LanguageSwitcherComponent, TranslatePipe],
   standalone: true,
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'

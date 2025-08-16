@@ -12,25 +12,135 @@
         </div>
       </div>
       <div class="col">
-        <h1 class="fs-4 mb-0">Orders</h1>
+        <h1 class="fs-4 mb-0">Manage orders</h1>
       </div>
       <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <!--<a (click)="createCoupon()" class="btn btn-secondary d-block">
-          <span class="material-symbols-outlined me-1"> add </span> New
-        </a>-->
       </div>
     </div>
 
     <!-- Page content -->
     <div class="row">
       <div class="col-12">
-        <!-- Filters -->
-        <div class="card border-transparent mb-7">
-          <div class="card-body text-center">
-            <img src="../assets/img/5d35e39988e3a183bdc3a9d2570d20a9.gif" height="340" />
+        <div class="card border-0 mt-2">
+          <div *ngIf="!ui_controls.no_orders && !ui_controls.is_loading" class="card-body text-center">
+            <div style="min-height: 350px" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+                <thead>
+                <tr>
+                  <th>ORDER ID</th>
+                  <th>DATE</th>
+                  <th>CUSTOMER</th>
+                  <th>STATUS</th>
+                  <th>ITEMS</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a_orders of orders; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                  <td><h4>{{a_orders.code}}</h4></td>
+                  <td>{{a_orders.created}}</td>
+                  <td>{{a_orders.customer}}</td>
+                  <td>
+                    <span *ngIf="a_orders.status == 'pending'" class="badge bg-danger-subtle text-danger">Pending</span>
+                    <span *ngIf="a_orders.status == 'processing'" class="badge bg-warning-subtle text-warning">Processing</span>
+                    <span *ngIf="a_orders.status == 'ready_pickup'" class="badge bg-secondary-subtle text-secondary">Ready for Pickup</span>
+                    <span *ngIf="a_orders.status == 'delivered'" class="badge bg-success-subtle text-success">Delivered</span>
+                  </td>
+                  <td><button  class="btm btn-sm" (click)="get_order_items(a_orders.cart)"></button></td>
+                  <td style="width: 0px">
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-link text-body-tertiary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="material-symbols-outlined fs-4 scale-125">read_more</span>
+                      </button>
+                      <ul class="dropdown-menu" style="">
+                        <li>
+                          <a class="dropdown-item" (click)="startStatusChange(a_orders.id, 'processing', a_orders.email)">
+                            <span class="material-symbols-outlined abayti_secondary_color text-black">progress_activity</span>
+                            Processing
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" (click)="startStatusChange(a_orders.id, 'processing', a_orders.email)">
+                            <span class="material-symbols-outlined text-black">hand_package</span>
+                            Ready for Pickup
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" (click)="startStatusChange(a_orders.id, 'processing', a_orders.email)">
+                            <span class="material-symbols-outlined text-success">done_all</span>
+                            Delivered
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+        <div *ngIf="ui_controls.no_orders && !ui_controls.is_loading" class="card shadow-sm border rounded-3 text-center p-4">
+          <div class="card-body">
+            <div class="display-4 mb-2">🛍️</div>
+            <h5 class="card-title mb-1">Off to a fresh start</h5>
+            <p class="card-text text-secondary">
+              Every big shop starts at zero — your first sale is close.<br>
+              Add a launch discount and share your store to spark momentum.
+            </p>
+<!--            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+              <a routerLink="/coupons" class="btn abayti_secondary_background btn-secondary text-white">Create 10% Launch Promo</a>
+            </div>-->
           </div>
         </div>
       </div>
     </div>
+    <tui-drawer class="drawer" [overlay]="true" *tuiPopup="open()">
+      <header>
+        <h2 tuiHeader>
+          <div tuiTitle>ORDER ITEMS</div>
+          <div tuiAccessories>
+            <button tuiButton (click)="open.set(false)">Close</button>
+          </div>
+        </h2>
+        <div class="row g-4">
+          <div *ngIf="!ui_controls.loading_items" class="table-responsive table-responsive-sm">
+            <table class="table mb-0 table-hover align-middle">
+              <thead class="table-light">
+              <tr>
+                <th style="width:50px;">#</th>
+                <th>Product</th>
+                <th class="text-end" style="width:120px;">Quantity</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let p of cartItems; index as i">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    <img
+                      [src]="p.image || p.image || 'https://img.freepik.com/premium-vector/image-available-icon-set-default-missing-photo-stock-vector-symbol-black-filled-outlined-style-no-image-found-sign_268104-6708.jpg'"
+                      [alt]="p.name || p.name || 'Product image'"  width="50" height="50" class="rounded border" style="object-fit: cover; object-position: top center"/>
+                    <div class="fw-medium text-truncate">
+                      {{ p.name || p.name || 'Unnamed Product' }}
+                    </div>
+                  </div>
+                </td>
+                <td class="text-end">
+                    <span class="badge abayti_primary_background text-primary-emphasis">
+                      SIZE: {{ p.size || 0 }} | QTY{{ p.quantity || 0 }}
+                    </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.loading_items" />
+        </div>
+      </header>
+      <div *ngIf="!ui_controls.is_loading">
+      </div>
+    </tui-drawer>
   </div>
 </main>

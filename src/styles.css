@@ -3,6 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @import '../node_modules/ckeditor5/dist/ckeditor5-editor.css';
 @import '../node_modules/ckeditor5/dist/ckeditor5-content.css';
+@import '../node_modules/animate.css/animate.min.css';
 @media (min-width: 1180px) {
   .ml-desktop-22rem {
     margin-left: 18rem;
@@ -23,4 +24,19 @@
   color: #d63939;
   content: "*";
   margin-left: .25rem;
+}
+.abayti_primary_background {
+  background-color: #e8dccb;
+}
+
+.abayti_primary_color {
+  color: #e8dccb;
+}
+
+.abayti_secondary_background {
+  background-color: #906952;
+}
+
+.abayti_secondary_color {
+  color: #906952;
 }

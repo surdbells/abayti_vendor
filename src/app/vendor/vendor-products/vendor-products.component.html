@@ -15,80 +15,151 @@
         <h1 class="fs-4 mb-0">Products</h1>
       </div>
       <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <a routerLink="/create-product" class="btn btn-secondary text-white d-block">
-          <span class="material-symbols-outlined text-white me-1"> add </span> New Product
-        </a>
+        <div class="row">
+          <div class="col-2">
+            <button (click)="switch_grid()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
+              <span class="material-symbols-outlined text-white abayti_secondary_color fs-4"> flex_wrap </span>
+            </button>
+          </div>
+          <div class="col-2">
+            <button (click)="switch_list()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
+              <span class="material-symbols-outlined text-white fs-4"> list </span>
+            </button>
+          </div>
+          <div class="col-8">
+            <a routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
+              <span class="material-symbols-outlined text-white me-1"> add </span> New Product
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Page content -->
     <div class="row">
       <div class="col-12">
-        <div class="card">
-          <div *ngIf="!ui_controls.no_products && !ui_controls.is_loading" class="table-responsive mb-7">
-            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
-              <thead>
-              <tr>
-                <th style="width: 0px">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="tableCheckAll">
-                    <label class="form-check-label" for="tableCheckAll"></label>
-                  </div>
-                </th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th></th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let a_products of products; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
-                <td style="width: 0px">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="tableCheckTwo">
-                    <label class="form-check-label" for="tableCheckTwo"></label>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div class="avatar">
-                      <img class="avatar-img rounded" src="{{a_products.image}}" alt="...">
+        <tui-loader class="p-5" *ngIf="ui_controls.deleting" />
+        <div *ngIf="ui_controls.list_view" class="card card mt-2 mt-2">
+            <div style="min-height: 350px" *ngIf="!ui_controls.no_products && !ui_controls.is_loading" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a_products of products; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar">
+                        <img style="object-fit: cover; object-position: top center" class="avatar-img rounded" src="{{a_products.image}}" alt="...">
+                      </div>
+                      <div class="ms-4">
+                        <div>{{a_products.name}}</div>
+                      </div>
                     </div>
-                    <div class="ms-4">
-                      <div>{{a_products.name}}</div>
+                  </td>
+                  <td>{{a_products.category}}</td>
+                  <td>{{a_products.price}}</td>
+                  <td>
+                    <span *ngIf="a_products.stock_status == 'in_stock'" class="badge bg-success-subtle text-success">In Stock</span>
+                    <span *ngIf="a_products.stock_status == 'out_of_stock'" class="badge bg-danger-subtle text-danger">Out of stock</span>
+                    <span *ngIf="a_products.stock_status == 'on_backorder'" class="badge bg-warning-subtle text-warning">On backorder</span>
+                  </td>
+                  <td style="width: 0px">
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-link text-body-tertiary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="material-symbols-outlined fs-4 scale-125">read_more</span>
+                      </button>
+                      <ul class="dropdown-menu" style="">
+                        <li>
+                          <a class="dropdown-item" (click)="preview(a_products.id)">
+                            <span class="material-symbols-outlined abayti_secondary_color">preview</span>
+                            Preview
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" (click)="editProduct(a_products.id, a_products.name)">
+                            <span class="material-symbols-outlined text-black">edit</span>
+                            Edit
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" (click)="startDeleteProduct(a_products.id, a_products.name)">
+                            <span class="material-symbols-outlined text-danger">delete</span>
+                            Delete
+                          </a>
+                        </li>
+                      </ul>
                     </div>
-                  </div>
-                </td>
-                <td>{{a_products.category}}</td>
-                <td>{{a_products.price}}</td>
-                <td>
-                  <span *ngIf="a_products.stock_status == 'in_stock'" class="badge bg-success-subtle text-success">In Stock</span>
-                  <span *ngIf="a_products.stock_status == 'out_of_stock'" class="badge bg-danger-subtle text-danger">Out of stock</span>
-                  <span *ngIf="a_products.stock_status == 'on_backorder'" class="badge bg-warning-subtle text-warning">On backorder</span>
-                </td>
-                <td>
-                  <a  (click)="preview(a_products.id)" class="btn btn-link my-n2">
-                    <span class="material-symbols-outlined">
-                      preview
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+        <div *ngIf="ui_controls.grid_view" class="card border-0 mt-2">
+          <div *ngIf="!ui_controls.no_products && !ui_controls.is_loading" #gridScrollRegion style="max-height:160vh; overflow:auto;" class="row">
+            <div *ngFor="let a_products of visibleGridProducts; trackBy: trackByIdGrid" class="col-xxl-3 col-xl-4 col-lg-4 col-6 mb-4">
+              <div class="card shadow-sm">
+                <img src="{{a_products.image}}" alt="{{a_products.name}}" class="card-img-top" style="object-fit:cover; object-position: top center; height: 200px"/>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="card-title mb-0 text-truncate">
+                      {{ a_products.name }}
+                    </h6>
+                    <span class="badge abayti_secondary_background text-white">
+                      {{ a_products.category}}
                     </span>
-                  </a>
-                </td>
-                <td style="width: 0px">
-                  <a (click)="editProduct(a_products.id, a_products.name)" class="btn btn-link my-n2">
-                    <span class="material-symbols-outlined">arrow_right_alt</span>
-                  </a>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <div *ngIf="ui_controls.no_products && !ui_controls.is_loading" class="card-body text-center">
-            <img src="../assets/img/5d35e39988e3a183bdc3a9d2570d20a9.gif" height="400" />
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="fs-5 fw-semibold">
+                      {{ a_products.price }}
+                    </div>
+                    <span class="badge"
+                          [ngClass]="(a_products.quantity || 0) > 0 ? 'bg-success' : 'bg-danger'">
+                      {{ (a_products.quantity || 0) > 0 ? ('In stock: ' + a_products.quantity) : 'Out of stock' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <span (click)="editProduct(a_products.id, a_products.name)" class="material-symbols-outlined text-start abayti_secondary_color fs-6 me-1"> east </span>
+                </div>
+              </div>
+            </div>
+            <!-- Sentinel just for GRID -->
+            <div class="col-12 text-center py-3"
+                 appInfiniteScroll
+                 [root]="gridScrollRegion || null"
+                 [canLoadMore]="canLoadMoreGrid"
+                 (loadMore)="onLoadMoreGrid()">
+              <ng-container *ngIf="canLoadMoreGrid; else gridEndTpl">Loading more…</ng-container>
+              <ng-template #gridEndTpl><span class="alert alert-success abayti_primary_background abayti_secondary_color"> All Products Loaded</span></ng-template>
+            </div>
           </div>
           <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
         </div>
+        <div *ngIf="ui_controls.no_products && !ui_controls.is_loading" class="card border-0 shadow-sm border rounded-3 text-center p-4">
+            <div class="card-body">
+              <div class="display-6 mb-2">📦</div>
+              <h5 class="card-title mb-1">No products yet</h5>
+              <p class="card-text text-secondary">
+                Add your first product to open your storefront. You can create one manually.
+              </p>
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a routerLink="/create-product" class="btn abayti_secondary_background btn-secondary text-white">Add First Product</a>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 text-muted small">
+              Tip: clear photos + short, benefit-led titles help you convert faster.
+            </div>
+          </div>
       </div>
     </div>
     <tui-drawer class="drawer" [overlay]="true" *tuiPopup="open()">
@@ -99,218 +170,77 @@
             <button tuiButton (click)="open.set(false)">Close</button>
           </div>
         </h2>
-            <div class="row g-4">
-      <!-- Gallery -->
-      <div *ngIf="ui_controls.loaded_preview" class="col-12">
-        <div class="card p-3">
-          <div id="productCarousel" class="carousel slide" data-bs-ride="false">
-            <div class="carousel-inner rounded">
-              <div class="carousel-item active">
-                <img src="{{image_url+single_product.image_1}}" class="d-block w-100" alt="">
+      </header>
+      <div *ngIf="ui_controls.loaded_preview" class="row g-4">
+        <div  class="col-12">
+          <div class="card p-3">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="false">
+              <div class="carousel-inner rounded">
+                <div class="carousel-item active">
+                  <img src="{{image_url+single_product.image_1}}" class="d-block w-100" alt="">
+                </div>
+                <div *ngFor="let src of single_product.images; index as i;" class="carousel-item">
+                  <img *ngIf="src.length > 100" src="{{src}}" class="d-block w-100" alt="">
+                  <img *ngIf="src.length < 100" src="{{image_url+src}}" class="d-block w-100" alt="">
+                </div>
               </div>
-              <div class="carousel-item">
-                <img src="{{image_url+single_product.image_2}}" class="d-block w-100" alt="">
-              </div>
-              <div class="carousel-item">
-                <img src="{{image_url+single_product.image_3}}" class="d-block w-100" alt="">
-              </div>
-              <div class="carousel-item">
-                <img src="{{image_url+single_product.image_4}}" class="d-block w-100" alt="">
-              </div>
-              <div class="carousel-item">
-                <img src="{{image_url+single_product.image_5}}" class="d-block w-100" alt="">
-              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
 
-          <!-- Thumbnails -->
-          <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 g-2 mt-2" id="thumbs">
-            <div class="col">
-              <div class="thumb active" data-bs-target="#productCarousel" data-bs-slide-to="0">
-                <img src="{{image_url+single_product.image_1}}" class="w-100" alt="Thumb 1">
+            <!-- Thumbnails -->
+            <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 g-2 mt-2" id="thumbs">
+              <div class="col">
+                <div class="thumb active" data-bs-target="#productCarousel" data-bs-slide-to="0">
+                  <img src="{{image_url+single_product.image_1}}" class="w-100" alt="Thumb 1">
+                </div>
+              </div>
+              <div *ngFor="let src of single_product.images; index as i;" class="col">
+                <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="1">
+                  <img *ngIf="src.length > 100" src="{{src}}" class="w-100" alt="Thumb 2">
+                  <img *ngIf="src.length < 100" src="{{image_url+src}}" class="w-100" alt="Thumb 2">
+                </div>
               </div>
             </div>
-            <div class="col">
-              <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="1">
-                <img src="{{image_url+single_product.image_2}}" class="w-100" alt="Thumb 2">
-              </div>
-            </div>
-            <div class="col">
-              <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="2">
-                <img src="{{image_url+single_product.image_3}}" class="w-100" alt="Thumb 3">
-              </div>
-            </div>
-            <div class="col">
-              <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="3">
-                <img src="{{image_url+single_product.image_4}}" class="w-100" alt="Thumb 4">
-              </div>
-            </div>
-            <div class="col">
-              <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="4">
-                <img src="{{image_url+single_product.image_4}}" class="w-100" alt="Thumb 5">
+          </div>
+          <div class="mt-4">
+            <ul class="nav nav-tabs" id="detailTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+              </li>
+            </ul>
+            <div class="tab-content border border-top-0 p-3 rounded-bottom" id="detailTabsContent">
+              <div [innerHTML]="single_product.description" class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
               </div>
             </div>
           </div>
         </div>
-        <!-- Details Tabs / Accordions -->
-        <div class="mt-4">
-          <ul class="nav nav-tabs" id="detailTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab" aria-controls="shipping" aria-selected="false">Shipping & Returns</button>
-            </li>
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (128)</button>
-            </li>
-          </ul>
-          <div class="tab-content border border-top-0 p-3 rounded-bottom" id="detailTabsContent">
-            <div [innerHTML]="single_product.description" class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-            </div>
-            <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
-              <ul class="mb-0">
-                <li>Free standard shipping on orders over AED50.</li>
-                <li>Express shipping available at checkout.</li>
-                <li>30‑day hassle‑free returns. Items must be in original condition.</li>
-              </ul>
-            </div>
-            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-            <!--
-              <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="col-12">
+          <div class="vstack gap-3 sticky-lg-top-80">
+            <div class="card p-3">
+              <div class="d-flex align-items-start justify-content-between gap-3">
                 <div>
-                  <div class="h2 mb-0">4.6</div>
-                  <div class="rating text-warning" aria-label="Average rating 4.6 out of 5">
-                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                  </div>
-                  <div class="text-secondary small">128 reviews</div>
-                </div>
-                <div class="ms-auto">
-                  <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal"><i class="bi bi-pencil-square me-1"></i>Write a review</button>
+                  <h1 class="h3 mb-1">{{ single_product.name }}</h1>
                 </div>
               </div>
-
-              <div class="vstack gap-3">
-                <div class="border rounded p-3">
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <img class="avatar" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=200&auto=format&fit=crop" alt="Reviewer avatar">
-                    <div>
-                      <div class="fw-medium">Aisha B.</div>
-                      <div class="small text-secondary">3 days ago</div>
-                    </div>
-                  </div>
-                  <div class="rating text-warning mb-1"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star"></i></div>
-                  <p class="mb-0">Great ANC for the price. Super comfy on long flights. The carrying case is a plus.</p>
-                </div>
-
-                <div class="border rounded p-3">
-                  <div class="d-flex align-items-center gap-2 mb-1">
-                    <img class="avatar" src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=200&auto=format&fit=crop" alt="Reviewer avatar">
-                    <div>
-                      <div class="fw-medium">James K.</div>
-                      <div class="small text-secondary">1 week ago</div>
-                    </div>
-                  </div>
-                  <div class="rating text-warning mb-1"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i></div>
-                  <p class="mb-0">Sound profile is balanced with a slight bass boost. Multipoint works flawlessly.</p>
-                </div>
+              <hr>
+              <div class="d-flex align-items-baseline gap-3">
+                <div class="price-now">{{ formatCurrency(single_product.sale_price, 'en', 'AED') }}</div>
+                <div class="price-was">{{  formatCurrency(single_product.price, 'en', 'AED') }}</div>
+                <span class="badge text-bg-danger">Save 20%</span>
               </div>
-
-              &lt;!&ndash; Review Modal &ndash;&gt;
-              <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="reviewModalLabel">Write a review</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form class="vstack gap-3">
-                        <div>
-                          <label class="form-label">Rating</label>
-                          <select class="form-select">
-                            <option>5 - Excellent</option>
-                            <option>4 - Good</option>
-                            <option>3 - Average</option>
-                            <option>2 - Poor</option>
-                            <option>1 - Terrible</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label class="form-label">Title</label>
-                          <input type="text" class="form-control" placeholder="Summary of your experience">
-                        </div>
-                        <div>
-                          <label class="form-label">Review</label>
-                          <textarea class="form-control" rows="4" placeholder="Share details about fit, sound, comfort, etc."></textarea>
-                        </div>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit Review</button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
--->
             </div>
           </div>
         </div>
       </div>
       <tui-loader class="p-5" *ngIf="!ui_controls.loaded_preview" />
-
-              <!-- Purchase Panel -->
-      <div class="col-12">
-        <div class="vstack gap-3 sticky-lg-top-80">
-          <div class="card p-3">
-            <div class="d-flex align-items-start justify-content-between gap-3">
-              <div>
-                <h1 class="h3 mb-1">{{ single_product.name }}</h1>
-                <div class="d-flex align-items-center gap-2 mt-2">
-                  <div class="rating text-warning" aria-label="Rating 4.6 out of 5">
-                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-                  </div>
-                  <a class="small link-secondary">(128)</a>
-                  <span class="badge text-bg-success">In Stock</span>
-                </div>
-              </div>
-            </div>
-
-            <hr>
-
-            <div class="d-flex align-items-baseline gap-3">
-              <div class="price-now">{{ formatCurrency(single_product.sale_price, 'en', 'AED') }}</div>
-              <div class="price-was">{{  formatCurrency(single_product.price, 'en', 'AED') }}</div>
-              <span class="badge text-bg-danger">Save 20%</span>
-            </div>
-            <div class="small text-secondary">VAT included • Free shipping over AED1000</div>
-          </div>
-
-<!--          &lt;!&ndash; Seller / Store Info &ndash;&gt;
-          <div class="card p-3">
-            <div class="d-flex align-items-center">
-              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=120&auto=format&fit=crop" class="rounded me-3" alt="Seller logo" width="56" height="56">
-              <div>
-                <div class="fw-semibold">SonicWave Official Store</div>
-                <div class="small text-secondary">98% positive • 5k+ ratings</div>
-              </div>
-              <div class="ms-auto d-grid">
-                <a href="#" class="btn btn-outline-secondary btn-sm">Visit Store</a>
-              </div>
-            </div>
-          </div>-->
-        </div>
-      </div>
-    </div>
-      </header>
-      <div *ngIf="!ui_controls.is_loading">
-      </div>
+      <div *ngIf="!ui_controls.is_loading"></div>
     </tui-drawer>
   </div>
 </main>

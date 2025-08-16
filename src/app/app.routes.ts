@@ -19,6 +19,7 @@ import {VendorSecurityComponent} from './settings/vendor-security/vendor-securit
 import {VendorPaymentComponent} from './settings/vendor-payment/vendor-payment.component';
 import {VendorTaxComponent} from './settings/vendor-tax/vendor-tax.component';
 import {EditProductComponent} from './vendor/edit-product/edit-product.component';
+import {CreateCouponComponent} from './vendor/create-coupon/create-coupon.component';
 
 export const routes: Routes = [
   {
@@ -94,6 +95,11 @@ export const routes: Routes = [
     path: 'create-product',
     component: CreateProductComponent,
     title: 'Create product'
+  },
+  {
+    path: 'create-coupons',
+    component: CreateCouponComponent,
+    title: 'Create coupons'
   },
   {
     path: 'edit-product',

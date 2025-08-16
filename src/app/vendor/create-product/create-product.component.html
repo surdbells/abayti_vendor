@@ -38,66 +38,18 @@
                             <angular-editor name="description" [config]="editorConfig" [maxlength]="200" [(ngModel)]="create.description"></angular-editor>
                           </div>
                           <div class="mb-3 position-relative">
-                            <label class="form-label">Product Images</label>
+                            <label class="form-label">Product gallery</label>
                             <div class="row">
-                              <div class="col-xxl-4 col-xl-4 col-md-6 col-12">
-                                <div class="row mb-2">
-                                  <div class="col-12">
-                                    <div class="card shadow-sm border-success">
-                                      <img src="{{create.image_1}}" class="card-img-top" style="height: 300px; object-fit: cover; object-position: top center" alt="">
-                                      <div class="card-body">
-                                        <div class="mb-3">
-                                          <label for="image_1" class="form-label required">Featured Image</label>
-                                          <input [(ngModel)]="create.image_1" (change)="select_image_1($event)" name="image_1" class="form-control form-control-sm" type="file" id="image_1" accept="image/png, image/jpeg, image/webp">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-xxl-8 col-xl-8 col-md-6 col-12">
-                                <div class="row mt-4">
-                                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-5">
-                                    <div class="card shadow-sm">
-                                      <img src="{{create.image_2}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                      <div class="card-body">
-                                        <div class="mb-3">
-                                          <input [(ngModel)]="create.image_2" (change)="select_image_2($event)" name="image_2" class="form-control form-control-sm" type="file" id="image_2" accept="image/png, image/jpeg, image/webp">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-5">
-                                    <div class="card shadow-sm">
-                                      <img src="{{create.image_3}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                      <div class="card-body">
-                                        <div class="mb-3">
-                                          <input [(ngModel)]="create.image_3" (change)="select_image_3($event)" name="image_3" class="form-control form-control-sm" type="file" id="image_3" accept="image/png, image/jpeg, image/webp">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-3">
-                                    <div class="card shadow-sm">
-                                      <img src="{{create.image_4}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                      <div class="card-body">
-                                        <div class="mb-3">
-                                          <input [(ngModel)]="create.image_4" (change)="select_image_4($event)" name="image_4" class="form-control form-control-sm" type="file" id="image_4" accept="image/png, image/jpeg, image/webp">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12 mb-3">
-                                    <div class="card shadow-sm">
-                                      <img src="{{create.image_5}}" class="card-img-top" style="height: 160px; object-fit: cover; object-position: top center" alt="">
-                                      <div class="card-body">
-                                        <div class="mb-3">
-                                          <input [(ngModel)]="create.image_5" (change)="select_image_5($event)" name="image_5" class="form-control form-control-sm" type="file" id="image_5" accept="image/png, image/jpeg, image/webp">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                              <div class="col-12">
+                                <ngx-dropzone class="mt-5" (change)="onSelect($event)" [multiple]="true" accept=".png,.jpeg,.jpeg,.webp">
+                                  <ngx-dropzone-label>Drag & drop files here, or click to browse.</ngx-dropzone-label>
+                                  <ngx-dropzone-image-preview
+                                    *ngFor="let f of files; trackBy: trackByName"
+                                    [file]="f"
+                                    [removable]="true"
+                                    (removed)="onRemove(f)">
+                                  </ngx-dropzone-image-preview>
+                                </ngx-dropzone>
                               </div>
                             </div>
                           </div>
@@ -295,43 +247,45 @@
                     </div>
                     <div class="accordion-item">
                       <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#featured" aria-expanded="false" aria-controls="featured">
+                          <label class="form-label required"> Featured Image </label>
+                        </button>
+                      </h2>
+                      <div id="featured" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
+                        <div class="accordion-body">
+                          <img src="{{create.image_1}}" class="card-img-top" style="height: 250px; object-fit: cover; object-position: top center" alt="">
+                          <div class="card-body">
+                            <div class="mb-3">
+                              <label for="image_1" class="form-label required">Featured Image</label>
+                              <input [(ngModel)]="create.image_1" (change)="select_image_1($event)" name="image_1" class="form-control form-control-sm" type="file" id="image_1" accept="image/png, image/jpeg, image/webp">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="accordion-item">
+                      <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collections" aria-expanded="false" aria-controls="collections">
-                          <label class="form-label required"> Collections </label>
+                          <label class="form-label"> Collections </label>
                         </button>
                       </h2>
                       <div id="collections" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
                         <div class="accordion-body">
-                          <fieldset class="form-fieldset fieldset-for-multi-check-list">
-                            <div class="multi-check-list-wrapper">
-                              <label class="form-check">
-                                <input [checked]="create.is_new_arrival" (change)="create.is_new_arrival = !create.is_new_arrival" type="checkbox" name="is_new_arrival" class="form-check-input">
-                                <span class="form-check-label"> New Arrival </span>
-                              </label>
-                              <label class="form-check">
-                                <input [checked]="create.is_winter_collection" (change)="create.is_winter_collection = !create.is_winter_collection" type="checkbox" name="is_winter_collection" class="form-check-input">
-                                <span class="form-check-label"> Winter Collection </span>
-                              </label>
-                              <label class="form-check">
-                                <input [checked]="create.is_eid_collection" (change)="create.is_eid_collection = !create.is_eid_collection" type="checkbox" name="is_eid_collection" class="form-check-input">
-                                <span class="form-check-label"> Eid Collection </span>
-                              </label>
-                              <label class="form-check">
-                                <input [checked]="create.is_best_sellers" (change)="create.is_best_sellers = !create.is_best_sellers" type="checkbox" name="is_best_sellers" class="form-check-input">
-                                <span class="form-check-label"> Best Sellers </span>
-                              </label>
-                              <label class="form-check">
-                                <input [checked]="create.is_special_offer" (change)="create.is_special_offer = !create.is_special_offer" type="checkbox" name="is_special_offer" class="form-check-input">
-                                <span class="form-check-label"> Special Offer </span>
-                              </label>
-                            </div>
-                          </fieldset>
+                          <ng-multiselect-dropdown
+                            [placeholder]="'Select collections'"
+                            [settings]="dropdownSettings"
+                            [data]="dropdownList"
+                            [(ngModel)]="selectedItems"
+                            (onSelect)="onItemSelect($event)"
+                            (onSelectAll)="onSelectAll($event)">
+                          </ng-multiselect-dropdown>
                         </div>
                       </div>
                     </div>
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#labels" aria-expanded="false" aria-controls="labels">
-                          <label class="form-label required"> Product labels </label>
+                          <label class="form-label"> Product labels </label>
                         </button>
                       </h2>
                       <div id="labels" class="accordion-collapse collapse" data-bs-parent="#accordionSide">

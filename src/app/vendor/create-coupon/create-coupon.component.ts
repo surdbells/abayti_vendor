@@ -1,18 +1,24 @@
 import {Component, OnInit} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {TuiIcon} from '@taiga-ui/core';
+import {Router, RouterLink} from "@angular/router";
+import {SideComponent} from "../../partials/side/side.component";
+import {TopComponent} from "../../partials/top/top.component";
+import {TuiIcon} from "@taiga-ui/core";
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
-import {LanguageSwitcherComponent} from "../../language-switcher.component";
 
 @Component({
-  selector: 'app-side',
-    imports: [ RouterLink ],
+  selector: 'app-create-coupon',
   standalone: true,
-  templateUrl: './side.component.html',
-  styleUrl: './side.component.css'
+    imports: [
+        RouterLink,
+        SideComponent,
+        TopComponent,
+        TuiIcon
+    ],
+  templateUrl: './create-coupon.component.html',
+  styleUrl: './create-coupon.component.css'
 })
-export class SideComponent implements OnInit {
+export class CreateCouponComponent implements OnInit {
   constructor(
     private router: Router,
     private crudService: CrudService,
@@ -38,6 +44,12 @@ export class SideComponent implements OnInit {
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
     this.user_session = JSON.parse(atob(this.session_data));
+    if (!this.user_session.is_active){
+      this.router.navigate(['/', '']).then(r => console.log(r)); return;
+    }
+  }
+  goBack() {
+    this.router.navigate(['/account']).then(r => console.log(r));
   }
   error_notification(message: string) {
     this.toast.error(message);
@@ -45,12 +57,8 @@ export class SideComponent implements OnInit {
   success_notification(message: string) {
     this.toast.success(message);
   }
-  sign_out(): void {
-    localStorage.clear();
-    sessionStorage.clear();
-    this.success_notification("User logged out successfully.");
-    this.router.navigate(['/']).then(r => console.log(r));
+
+  createCoupon() {
+
   }
-
-
 }

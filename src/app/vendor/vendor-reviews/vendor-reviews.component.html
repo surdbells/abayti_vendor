@@ -24,10 +24,57 @@
     <!-- Page content -->
     <div class="row">
       <div class="col-12">
-        <!-- Filters -->
-        <div class="card border-transparent mb-7">
-          <div class="card-body text-center">
-            <img src="../assets/img/5d35e39988e3a183bdc3a9d2570d20a9.gif" height="340" />
+        <div class="col-12">
+          <div class="card card border-0 mt-2 mt-2">
+            <div style="min-height: 350px" *ngIf="!ui_controls.no_reviews && !ui_controls.is_loading" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+                <thead>
+                <tr>
+                  <th>PRODUCT</th>
+                  <th>CUSTOMER</th>
+                  <th>STAR</th>
+                  <th>COMMENT</th>
+                  <th>DATE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let a_review of reviews; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                  <td>{{a_review.product_name}}</td>
+                  <td>{{a_review.customer_name}}</td>
+                  <td>
+                    <div class="rating" aria-label="4 out of 5 stars" style="--stars: + {{a_review.rating}}"></div>
+                  </td>
+                  <td>{{a_review.comment}}</td>
+                  <td>{{a_review.created}}</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+          </div>
+          <div *ngIf="ui_controls.no_reviews && !ui_controls.is_loading" class="card border-0 shadow-sm border rounded-3 text-center p-4">
+            <div class="card-body">
+              <div class="display-6 mb-2">⭐</div>
+              <h5 class="card-title mb-1">No ratings yet</h5>
+              <p class="card-text text-secondary">
+                Ratings are collected automatically from verified purchases. <br>
+                Build trust by improving product info and customer experience.
+              </p>
+              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a routerLink="/products" class="btn abayti_secondary_background btn-secondary text-white">Improve product details</a>
+              </div>
+
+              <div class="text-start mx-auto text-center mt-3" style="max-width: 440px;">
+                <ul class="list-unstyled small text-secondary mb-0">
+                  <li class="mb-1">• Add clear photos (main + lifestyle)</li>
+                  <li class="mb-1">• Use accurate titles, specs, and sizing</li>
+                  <li class="mb-1">• State shipping times & return policy clearly</li>
+                </ul>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 text-muted small">
+              Tip: Fewer pre-purchase doubts = more orders, which generate ratings automatically.
+            </div>
           </div>
         </div>
       </div>

@@ -5,17 +5,17 @@
         <div class="card-header text-center">
           <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="abayti" />
         </div>
-        <div class="card-body">
+<!--        <div class="card-body">
           <h4 class="fs-base fw-normal text-body-secondary mb-1">Balance</h4>
           <div class="fs-2 fw-semibold">
             <span class="fs-6 align-text-top me-1">AED</span>0<span class="fs-5">.0</span>
             <span class="badge bg-success-subtle text-success fs-sm align-text-top ms-2">+0%</span>
           </div>
-        </div>
+        </div>-->
         <div class="card-footer">
           <div class="row g-2">
             <div class="col-12">
-              <a routerLink="/create-product"  class="btn btn-sm text-white btn-success w-100 d-flex align-items-center justify-content-center gap-1">
+              <a routerLink="/create-product"  class="btn btn-sm text-white abayti_secondary_background w-100 d-flex align-items-center justify-content-center gap-1">
                 <svg class="icon svg-icon-ti-ti-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                  <path d="M12 5l0 14"></path>
                   <path d="M5 12l14 0"></path>
@@ -55,50 +55,50 @@
           <div class="nav-item">
             <a routerLink="/account" class="nav-link">
               <span class="me-3">
-              <svg class="icon svg-icon-ti-ti-home" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-              </svg>
-              </span>Dashboard
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">analytics</span>
+              </span><span class="abayti_secondary_color">Dashboard</span>
             </a>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#marketplace" role="button" aria-expanded="false" aria-controls="dashboards">
-                <span class="me-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket-icon lucide-shopping-basket"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg>
-                </span>
-              Ecommerce
-            </a>
-            <div class="collapse" id="marketplace">
-              <nav class="nav nav-pills">
-                <a class="nav-link" routerLink="/products">Products</a>
-                <a class="nav-link" routerLink="/orders">Orders</a>
-                <a class="nav-link" routerLink="/returns">Returns</a>
-                <a class="nav-link" routerLink="/reviews">Reviews</a>
-                <a class="nav-link" routerLink="/coupons">Coupons</a>
-              </nav>
-            </div>
           </div>
         <div class="nav-item">
-          <a routerLink="/transactions" class="nav-link">
+          <a routerLink="/products" class="nav-link">
+          <span class="me-3">
+            <span class="material-symbols-outlined abayti_secondary_color fs-4">apparel</span>
+          </span> <span class="abayti_secondary_color">Manage products</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a routerLink="/orders" class="nav-link">
+        <span class="me-3">
+          <span class="material-symbols-outlined abayti_secondary_color fs-4">orders</span>
+        </span> <span class="abayti_secondary_color">Manage orders</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a routerLink="/reviews" class="nav-link">
             <span class="me-3">
-              <svg class="icon  svg-icon-ti-ti-cash" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 15h-3a1 1 0 0 1 -1 -1v-8a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v3"></path>
-                <path d="M7 9m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"></path>
-                <path d="M12 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
-              </svg>
-            </span> Transactions
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">share_reviews</span>
+            </span> <span class="abayti_secondary_color">Product reviews</span>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a routerLink="/returns" class="nav-link">
+          <span class="me-3">
+            <span class="material-symbols-outlined abayti_secondary_color fs-4">keyboard_return</span>
+          </span> <span class="abayti_secondary_color">Process returns</span>
+          </a>
+        </div>
+        <div class="nav-item d-none">
+          <a routerLink="/coupons" class="nav-link">
+        <span class="me-3">
+          <span class="material-symbols-outlined abayti_secondary_color fs-4">sell</span>
+        </span> <span class="abayti_secondary_color">Coupons & Discounts</span>
           </a>
         </div>
         <div class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#settings" role="button" aria-expanded="false" aria-controls="dashboards">
               <span class="me-3">
-              <svg class="icon  svg-icon-ti-ti-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-              </svg>
-              </span> Settings
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">store</span>
+              </span> <span class="abayti_secondary_color">Store Settings</span>
             </a>
             <div class="collapse" id="settings">
               <nav class="nav nav-pills">
