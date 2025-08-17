@@ -7,6 +7,8 @@ import {GlobalComponent} from '../../global-component';
 import {FormsModule} from '@angular/forms';
 import {TuiLoader} from '@taiga-ui/core';
 import {CommonModule} from '@angular/common';
+import {TranslatePipe} from '../../translate.pipe';
+import {LanguageSwitcherComponent} from '../../language-switcher.component';
 
 @Component({
   selector: 'app-reset',
@@ -14,7 +16,9 @@ import {CommonModule} from '@angular/common';
     FormsModule,
     TuiLoader,
     CommonModule,
-    RouterLink
+    RouterLink,
+    TranslatePipe,
+    LanguageSwitcherComponent
   ],
   standalone: true,
   templateUrl: './reset.component.html',

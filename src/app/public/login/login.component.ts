@@ -6,7 +6,7 @@ import {HotToastService} from '@ngneat/hot-toast';
 import {CookieService} from 'ngx-cookie-service';
 import {GlobalComponent} from '../../global-component';
 import {FormsModule} from '@angular/forms';
-import {NgClass, NgIf, NgOptimizedImage} from '@angular/common';
+import {CommonModule, NgClass, NgIf, NgOptimizedImage} from '@angular/common';
 import {LanguageSwitcherComponent} from '../../language-switcher.component';
 import {TranslatePipe} from '../../translate.pipe';
 
@@ -15,7 +15,7 @@ import {TranslatePipe} from '../../translate.pipe';
   imports: [
     TuiLoader,
     FormsModule,
-    NgClass,
+    CommonModule,
     NgIf,
     RouterLink,
     LanguageSwitcherComponent,

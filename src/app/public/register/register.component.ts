@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {TuiLoader} from '@taiga-ui/core';
 import {LanguageSwitcherComponent} from '../../language-switcher.component';
 import {TranslatePipe} from '../../translate.pipe';
+import {DIAL_CODES, DialCode} from '../../dial-codes';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,29 @@ export class RegisterComponent implements OnInit{
     private toast: HotToastService
   ) {}
   fieldTextType: boolean = false;
+  dialCodes: DialCode[] = DIAL_CODES;
+  codeSearch = '';
+  get selectedDial(): DialCode | undefined {
+    return this.dialCodes.find(d => d.code === this.register.countryCode);
+  }
+
+  filteredDialCodes(): DialCode[] {
+    const q = this.codeSearch.trim().toLowerCase();
+    if (!q) return this.dialCodes;
+    return this.dialCodes.filter(d =>
+      d.name.toLowerCase().includes(q) || d.code.includes(q)
+    );
+  }
+
+  selectCode(d: DialCode) {
+    this.register.countryCode = d.code;
+    this.codeSearch = '';
+  }
+
+  // Optional: full E.164 if you need it
+  get fullPhone(): string {
+    return `${this.register.countryCode}${(this.register.phone || '').replace(/\D/g, '')}`;
+  }
   ui_controls = {
     loading: false,
     registered: false
@@ -38,7 +62,10 @@ export class RegisterComponent implements OnInit{
     email: "",
     phone: "",
     password: "",
-    confirm_password: ""
+    confirm_password: "",
+    countryCode: "+971",
+    business_name: "",
+    license_number: ""
   };
   confirm = {
     otp: "",
@@ -46,11 +73,59 @@ export class RegisterComponent implements OnInit{
     expires_at: 0,
     email: ""
   };
+  send_otp_check = {
+    first_name: "",
+    email: ""
+  };
   r_response = {
     otp: "",
     expires_at: 0
   };
   user_register() {
+    this.ui_controls.loading = true;
+    this.crudService.post_request(this.register, GlobalComponent.UserRegister)
+      .subscribe(({
+        next: (response) => {
+          if (response.response_code === 200 && response.status === "success") {
+            this.ui_controls.loading = false;
+            this.success_notification(response.message);
+            this.router.navigate(['/']).then(r => console.log(r));
+          }
+        },
+        error: (e) => {
+          console.error(e);
+          this.error_notification(e);
+          this.ui_controls.loading = false;
+        },
+        complete: () => {
+          console.info('complete');
+        }
+      }))
+  }
+  user_validate() {
+    if (this.confirm.input_otp.length === 0) {
+      this.error_notification("OTP is required");
+      return;
+    }
+    this.ui_controls.loading = true;
+    this.crudService.post_request(this.confirm, GlobalComponent.UserValidate)
+      .subscribe(({
+        next: (response) => {
+          if (response.response_code === 200 && response.status === "success") {
+            this.user_register();
+          }
+        },
+        error: (e) => {
+          console.error(e);
+          this.error_notification(e);
+          this.ui_controls.loading = false;
+        },
+        complete: () => {
+          console.info('complete');
+        }
+      }))
+  }
+  send_otp() {
     if (this.register.first_name.length === 0) {
       this.error_notification("First name is required");
       return;
@@ -71,6 +146,10 @@ export class RegisterComponent implements OnInit{
       this.error_notification("Phone number is required");
       return;
     }
+    if (this.register.countryCode.length === 0) {
+      this.error_notification("Country code is required");
+      return;
+    }
     if (!GlobalComponent.validateNumber(this.register.phone)) {
       this.error_notification("Invalid phone number format provided");
       return;
@@ -87,9 +166,10 @@ export class RegisterComponent implements OnInit{
       this.error_notification("Password does not match");
       return;
     }
-
+    this.send_otp_check.email = this.register.email;
+    this.send_otp_check.first_name = this.register.first_name;
     this.ui_controls.loading = true;
-    this.crudService.post_request(this.register, GlobalComponent.UserRegister)
+    this.crudService.post_request(this.send_otp_check, GlobalComponent.EmailValidate)
       .subscribe(({
         next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
@@ -120,42 +200,7 @@ export class RegisterComponent implements OnInit{
         }
       }))
   }
-  user_validate() {
-    if (this.confirm.input_otp.length === 0) {
-      this.error_notification("OTP is required");
-      return;
-    }
-    this.ui_controls.loading = true;
-    this.crudService.post_request(this.confirm, GlobalComponent.UserValidate)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.ui_controls.loading = false;
-            this.success_notification(response.message);
-            this.router.navigate(['/']).then(r => console.log(r));
-          }
-          if (response.response_code == 200 && response.status === "failed") {
-            this.ui_controls.loading = false;
-            this.error_notification(response.message);
-          }
-          if (response.response_code == 400 && response.status === "failed") {
-            this.ui_controls.loading = false;
-            this.error_notification(response.message);
-          }
-        },
-        error: (e) => {
-          console.error(e);
-          this.error_notification(e);
-          this.ui_controls.loading = false;
-        },
-        complete: () => {
-          console.info('complete');
-        }
-      }))
-  }
-  toggleFieldTextType() {
-    this.fieldTextType = !this.fieldTextType;
-  }
+
   error_notification(message: string) {
     this.toast.error(message);
   }

@@ -26,8 +26,8 @@
         <div class="card-body d-flex flex-column justify-content-center">
           <h1 class="fs-2">{{ 'sign_in' | translate }}</h1>
           <p class="lead text-body-secondary">{{ 'sign_in_message' | translate }}</p>
-          <form (ngSubmit)="user_login()" method="post" class="mb-4">
-            <div class="mb-4">
+          <form (ngSubmit)="user_login()" method="post" class="mb-2">
+            <div class="mb-2">
               <label for="email">{{ 'email' | translate }}</label>
               <input
                 [(ngModel)]="login.email"
@@ -37,7 +37,7 @@
                 class="form-control"
                 placeholder="{{ 'email' | translate }}" />
             </div>
-            <div class="mb-4">
+            <div class="mb-2">
               <label for="password">{{ 'password' | translate }}</label>
               <div class="input-group">
                 <input

@@ -10,8 +10,8 @@
         </div>
       </div>
       <div class="col-12 col-md order-md-0 text-center text-md-start">
-        <h1>Hello, {{ user_session.first_name }} 🥰</h1>
-        <p class="fs-lg abayti_secondary_color mb-0">Here's a summary of your account activity for this week.</p>
+        <h1>{{ 'hello' | translate:{name:  user_session.first_name} }} 🥰</h1>
+        <p class="fs-lg abayti_secondary_color mb-0">{{ 'welcome_message'  | translate }}</p>
       </div>
     </div>
     <!-- Divider -->

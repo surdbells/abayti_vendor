@@ -7,6 +7,7 @@ export class GlobalComponent {
    public static UserLogin = GlobalComponent.baseURL + 'users/login';
    public static UserRegister = GlobalComponent.baseURL + 'users/register';
    public static UserValidate = GlobalComponent.baseURL + 'users/validate';
+   public static EmailValidate = GlobalComponent.baseURL + 'users/validate-email';
    public static UserReset = GlobalComponent.baseURL + 'users/reset';
    public static UserConfirm = GlobalComponent.baseURL + 'users/confirm';
    public static UserResetPassword = GlobalComponent.baseURL + 'users/reset';

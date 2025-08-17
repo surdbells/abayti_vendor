@@ -25,7 +25,6 @@ import {CartItems} from '../../class/cart_items';
     NgForOf,
     NgIf,
     TuiLoader,
-    RouterLink,
     TuiButton,
     TuiDrawer,
     TuiHeader,

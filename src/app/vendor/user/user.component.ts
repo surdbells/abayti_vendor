@@ -24,6 +24,7 @@ import {ROrders} from '../../class/recent';
 import {TuiLoader} from '@taiga-ui/core';
 import {DataTablesModule} from 'angular-datatables';
 import {Config} from 'datatables.net';
+import {TranslatePipe} from '../../translate.pipe';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -40,7 +41,7 @@ export type ChartOptions = {
   selector: 'app-user',
   standalone: true,
   templateUrl: './user.component.html',
-  imports: [SideComponent, CommonModule, TopComponent, NgApexchartsModule, ChartComponent, TuiLoader, DataTablesModule, RouterLink],
+  imports: [SideComponent, CommonModule, TopComponent, NgApexchartsModule, ChartComponent, TuiLoader, DataTablesModule, RouterLink, TranslatePipe],
   styleUrl: './user.component.css'
 })
 export class UserComponent implements OnInit {
