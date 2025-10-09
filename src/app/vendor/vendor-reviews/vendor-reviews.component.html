@@ -25,15 +25,15 @@
     <div class="row">
       <div class="col-12">
         <div class="col-12">
-          <div class="card card border-0 mt-2 mt-2">
-            <div style="min-height: 350px" *ngIf="!ui_controls.no_reviews && !ui_controls.is_loading" class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+          <div class="card card p-0 mt-2 mt-2">
+            <div *ngIf="!ui_controls.no_reviews && !ui_controls.is_loading" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" class="table table-bordered table-hover table-round mb-0">
                 <thead>
                 <tr>
                   <th>PRODUCT</th>
                   <th>CUSTOMER</th>
-                  <th>STAR</th>
-                  <th>COMMENT</th>
+                  <th>RATING</th>
+                  <th style="width: 200px">COMMENT</th>
                   <th>DATE</th>
                 </tr>
                 </thead>
@@ -42,9 +42,9 @@
                   <td>{{a_review.product_name}}</td>
                   <td>{{a_review.customer_name}}</td>
                   <td>
-                    <div class="rating" aria-label="4 out of 5 stars" style="--stars: + {{a_review.rating}}"></div>
+                    <div>{{a_review.rating}} / 5</div>
                   </td>
-                  <td>{{a_review.comment}}</td>
+                  <td style="width: 200px">{{a_review.comment}}</td>
                   <td>{{a_review.created}}</td>
                 </tr>
                 </tbody>

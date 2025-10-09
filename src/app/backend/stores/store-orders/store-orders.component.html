@@ -1,0 +1,83 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ store_name }} [ ORDERS ]</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <select  (change)="get_vendor_orders_status($event)" class="form-select form-select-sm" [(ngModel)]="singleStatus.status">
+          <option value="pending">Pending</option>
+          <option value="Accepted">Accepted</option>
+          <option value="Ready for Delivery">Ready for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Return Requested">Return Requested</option>
+          <option value="Returned">Returned</option>
+          <option value="Cancelled">Cancelled</option>
+          <option value="Refunded">Refunded</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mt-2">
+          <div *ngIf="!ui_controls.no_orders && !ui_controls.is_loading" class="card-body p-0">
+            <div style="min-height: 350px" class="table-responsive">
+              <table datatable [dtOptions]="dtOptions" class="table table-sm table-hover table-borderless table-round mb-0">
+                <thead>
+                <tr class="border-2 text-start rounded-2">
+                  <th>DATE</th>
+                  <th>PRODUCT</th>
+                  <th>QUANTITY</th>
+                  <th>CUSTOMER</th>
+                  <th>PRICE</th>
+                  <th>STATUS</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="border-2 rounded-2" *ngFor="let a_orders of orders; let i = index">
+                  <td>{{a_orders.created}}</td>
+                  <td>{{a_orders.product}}</td>
+                  <td>{{a_orders.quantity}}</td>
+                  <td>{{a_orders.name}}</td>
+                  <td>{{a_orders.total_price}}</td>
+                  <td>
+                    <span *ngIf="a_orders.status == 'pending'" class="badge bg-danger-subtle text-danger">Pending</span>
+                    <span *ngIf="a_orders.status == 'Accepted'" class="badge bg-success-subtle text-success">Accepted</span>
+                    <span *ngIf="a_orders.status == 'Ready for Delivery'" class="badge bg-success-subtle text-success">Ready for Delivery</span>
+                    <span *ngIf="a_orders.status == 'Delivered'" class="badge bg-success-subtle text-success">Delivered</span>
+                    <span *ngIf="a_orders.status == 'Return Requested'" class="badge bg-warning-subtle text-warning">Return Requested</span>
+                    <span *ngIf="a_orders.status == 'Returned'" class="badge bg-dark-subtle text-dark">Returned</span>
+                    <span *ngIf="a_orders.status == 'Cancelled'" class="badge bg-dark-subtle text-dark">Cancelled</span>
+                    <span *ngIf="a_orders.status == 'Refunded'" class="badge bg-dark-subtle text-dark">Refunded</span>
+                  </td>
+                  <td>
+                    <span role="button" (click)="open_order(a_orders.id, a_orders.product)" class="badge align-items-center py-2 px-3 text-secondary-emphasis bg-success-subtle border border-dark-subtle rounded-pill">
+                      Manage
+                    </span>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+        <div *ngIf="ui_controls.no_orders && !ui_controls.is_loading" class="card shadow-sm border rounded-3 text-center p-4">
+          <div class="card-body">
+            <h5 class="card-title mb-1">No orders in this store</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

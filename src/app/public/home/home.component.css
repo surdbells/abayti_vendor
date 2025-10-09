@@ -1,0 +1,112 @@
+.btn-brand { background: #906952; border-color: #906952; }
+.btn-brand:hover { background: #6f4e3b; border-color: #6f4e3b; }
+.link-brand { color: #906952; }
+
+.navbar .btn-outline-light:hover { color: #111; background: #fff; }
+
+.hero {
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(144,105,82,.15), transparent),
+    linear-gradient(180deg, rgba(232,220,203,.45), rgba(232,220,203,.1));
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.glass { backdrop-filter: blur(8px); background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+.shadow-soft {
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.soft-secondary {
+  background: rgba(144,105,82,.12);
+  color: #906952;
+  border: 1px solid rgba(144,105,82,.2);
+}
+/* CTA */
+.cta { background: linear-gradient(135deg, #906952 0%, #e8dccb 100%); color:#fff; border-top: 1px solid rgba(255,255,255,.2); }
+
+.feature-icon {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.8rem;
+  background: rgba(144,105,82,.12);
+  color: #906952;
+}
+
+.step {
+  border-left: 3px solid #906952;
+  padding-left: 1rem;
+}
+
+.stat-pill {
+  background: conic-gradient(
+    from 90deg,
+    rgba(144,105,82,.12),
+    rgba(232,220,203,.5)
+  );
+  border-radius: 1rem;
+}
+
+.    /* Tabs container */
+.nav-tabs {
+  border-bottom: 2px solid #eaeaea;
+  gap: 8px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+.nav-tabs::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+/* Tab buttons */
+.nav-tabs .nav-link {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-weight: 500;
+  color: #555;
+  background: #f1f3f5;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.nav-tabs .nav-link:hover {
+  background: #e9ecef;
+  color: #000;
+}
+
+/* Active tab */
+.nav-tabs .nav-link.active {
+  background: #906952;
+  color: #fff !important;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+/* Tab content */
+.tab-content {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  margin-top: 15px;
+}
+
+.tab-content h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #906952;
+}
+
+.tab-content p {
+  line-height: 1.6;
+  color: #444;
+}

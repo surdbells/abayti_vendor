@@ -1,0 +1,29 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ store_name }} [ SUPPORT TICKETS ]</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        <div *ngIf="!ui_controls.is_loading" class="card card mt-2 mt-2">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

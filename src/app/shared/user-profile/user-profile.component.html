@@ -1,0 +1,83 @@
+<app-side  *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
+<app-top></app-top>
+
+<main class="main ml-desktop-22rem px-lg-6">
+  <div class="container-lg">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ 'profile_title' | translate }}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0"></div>
+    </div>
+
+    <!-- Page content -->
+    <div class="row">
+      <div class="col-12 col-lg-9">
+        <section *ngIf="!ui_controls.is_loading" class="card bg-body-tertiary border-transparent mb-5">
+          <div class="card-body">
+            <h2 class="fs-5 mb-1">{{ 'profile_update_title' | translate }}</h2>
+            <p class="text-body-secondary">{{ 'profile_update_subtext' | translate }}</p>
+
+            <!-- Profile Picture Upload -->
+            <div class="container my-4">
+              <form class="row g-3 align-items-center">
+                <label for="profileUpload" class="col-sm-2 col-form-label fw-semibold">
+                  {{ 'profile_picture' | translate }}
+                </label>
+                <div class="col-sm-6">
+                  <input [(ngModel)]="user_single.avatar" (change)="select_avatar($event)" class="form-control" type="file" id="profileUpload" accept="image/*" />
+                </div>
+                <div class="col-sm-4 text-center">
+                  <img id="profilePreview" src="{{user_single.avatar}}" alt="{{ 'profile_preview' | translate }}" class="img-thumbnail rounded-circle" style="width:120px; height:120px; object-fit:cover;" />
+                </div>
+              </form>
+            </div>
+
+            <!-- Profile Info -->
+            <div class="card border-transparent">
+              <div class="card-body">
+                <div class="mb-4">
+                  <label class="form-label">{{ 'first_name' | translate }}</label>
+                  <input [disabled]="true" [readOnly]="true" type="text" [(ngModel)]="user_single.first_name" name="first_name" class="form-control">
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label">{{ 'last_name' | translate }}</label>
+                  <input [disabled]="true" [readOnly]="true" type="text" [(ngModel)]="user_single.last_name" name="last_name" class="form-control">
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label">{{ 'email_address' | translate }}</label>
+                  <input [disabled]="true" [readOnly]="true" [(ngModel)]="user_single.email" type="text" name="email" class="form-control">
+                  <div class="form-text">
+                    {{ 'email_edit_notice' | translate }}
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="form-label">{{ 'phone_number' | translate }}</label>
+                  <input [(ngModel)]="user_single.phone" type="text" name="phone" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button (click)="update_changes()" class="btn btn-secondary text-white" type="button">{{ 'save_changes' | translate }}</button>
+          </div>
+        </section>
+
+        <tui-loader *ngIf="ui_controls.is_loading" />
+      </div>
+    </div>
+  </div>
+</main>

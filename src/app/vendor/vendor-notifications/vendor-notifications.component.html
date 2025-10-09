@@ -1,0 +1,195 @@
+<app-side></app-side>
+<app-top></app-top>
+<main class="main ml-desktop-22rem px-lg-6">
+  <!-- Content -->
+  <div class="container-lg">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ 'notifications_title' | translate }}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0"></div>
+    </div>
+
+    <!-- Page content -->
+    <div class="row">
+      <div class="col-12 col-lg-9" data-bs-spy="scroll" data-bs-target="#accountNav" data-bs-smooth-scroll="true" tabindex="0">
+        <section *ngIf="!ui_controls.is_loading" class="card bg-body-tertiary border-transparent" id="security">
+          <div class="card-body">
+            <h2 class="fs-5 mb-1">{{ 'notifications_heading' | translate }}</h2>
+            <p class="text-body-secondary">{{ 'notifications_subtext' | translate }}</p>
+            <div class="card mb-4">
+              <div class="card-body py-0">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_new_order_title' | translate }}
+                        <div class="text-muted">{{ 'notif_new_order_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_order_received" (change)="store_single.store_notify_order_received = !store_single.store_notify_order_received" name="store_notify_order_received" id="store_notify_order_received" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_order_cancelled_title' | translate }}
+                        <div class="text-muted">{{ 'notif_order_cancelled_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_order_cancelled" (change)="store_single.store_notify_order_cancelled = !store_single.store_notify_order_cancelled" name="store_notify_order_cancelled" id="store_notify_order_cancelled" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_custom_order_title' | translate }}
+                        <div class="text-muted">{{ 'notif_custom_order_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_custom_order" (change)="store_single.store_notify_custom_order = !store_single.store_notify_custom_order" name="store_notify_custom_order" id="store_notify_custom_order" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_refund_initiated_title' | translate }}
+                        <div class="text-muted">{{ 'notif_refund_initiated_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_order_return_refund_initiated" (change)="store_single.store_notify_order_return_refund_initiated = !store_single.store_notify_order_return_refund_initiated" name="store_notify_order_return_refund_initiated" id="store_notify_order_return_refund_initiated" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_listing_status_title' | translate }}
+                        <div class="text-muted">{{ 'notif_listing_status_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_product_listing_approved_rejected" (change)="store_single.store_notify_product_listing_approved_rejected = !store_single.store_notify_product_listing_approved_rejected" name="store_notify_product_listing_approved_rejected" id="store_notify_product_listing_approved_rejected" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_payment_scheduled_title' | translate }}
+                        <div class="text-muted">{{ 'notif_payment_scheduled_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_payment_scheduled" (change)="store_single.store_notify_payment_scheduled = !store_single.store_notify_payment_scheduled" name="store_notify_payment_scheduled" id="store_notify_payment_scheduled" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_payment_completed_title' | translate }}
+                        <div class="text-muted">{{ 'notif_payment_completed_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_payment_completed" (change)="store_single.store_notify_payment_completed = !store_single.store_notify_payment_completed" name="store_notify_payment_completed" id="store_notify_payment_completed" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_new_review_title' | translate }}
+                        <div class="text-muted">{{ 'notif_new_review_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_negative_review" (change)="store_single.store_notify_negative_review = !store_single.store_notify_negative_review" name="store_notify_negative_review" id="store_notify_negative_review" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_weekly_summary_title' | translate }}
+                        <div class="text-muted">{{ 'notif_weekly_summary_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_weekly_performance" (change)="store_single.store_notify_weekly_performance = !store_single.store_notify_weekly_performance" name="store_notify_weekly_performance" id="store_notify_weekly_performance" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_monthly_summary_title' | translate }}
+                        <div class="text-muted">{{ 'notif_monthly_summary_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_monthly_performance" (change)="store_single.store_notify_monthly_performance = !store_single.store_notify_monthly_performance" name="store_notify_monthly_performance" id="store_notify_monthly_performance" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                  <li class="list-group-item px-0">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        {{ 'notif_low_engagement_title' | translate }} <sup>[A.I]</sup>
+                        <div class="text-muted">{{ 'notif_low_engagement_body' | translate }}</div>
+                      </div>
+                      <div class="col-auto">
+                        <div class="form-check form-switch mb-3 align-items-center d-flex">
+                          <input [checked]="store_single.store_notify_low_engagement" (change)="store_single.store_notify_low_engagement = !store_single.store_notify_low_engagement" name="store_notify_low_engagement" id="store_notify_low_engagement" class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+            <button (click)="save_change()" class="btn btn-secondary text-white" type="button">{{ 'save_changes' | translate }}</button>
+          </div>
+        </section>
+        <tui-loader *ngIf="ui_controls.is_loading" />
+      </div>
+    </div>
+  </div>
+</main>

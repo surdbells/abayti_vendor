@@ -47,6 +47,9 @@ export class LoginComponent implements OnInit{
     last_name: "",
     email: "",
     phone: "",
+    avatar: "",
+    id_front: "",
+    id_back: "",
     is_2fa: false,
     is_active: false,
     is_admin: false,
@@ -75,7 +78,7 @@ export class LoginComponent implements OnInit{
             this.loading = false;
             this.success_notification(response.message);
             if (this.user_session.is_active){
-                this.user_session_string = btoa(JSON.stringify(this.user_session));
+                this.user_session_string = GlobalComponent.encodeBase64(this.user_session);
                 sessionStorage.setItem('SESSION', this.user_session_string);
                 if (this.user_session.is_admin){
                   this.router.navigate(['/', 'backend']).then(r => console.log(r));
@@ -96,7 +99,7 @@ export class LoginComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.loading = false;
         },
         complete: () => {

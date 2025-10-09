@@ -16,7 +16,8 @@ import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
 import {Labels} from '../../class/labels';
 import {NgxDropzoneChangeEvent, NgxDropzoneModule} from 'ngx-dropzone';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import imageCompression from 'browser-image-compression';
+import {AsideComponent} from '../../partials/aside/aside.component';
 
 interface ColorOption {
   id: string;
@@ -45,7 +46,8 @@ type EncodedFile = {
     FormsModule,
     AngularEditorModule,
     NgxDropzoneModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    AsideComponent
   ],
   templateUrl: './create-product.component.html',
   styleUrl: './create-product.component.css'
@@ -123,14 +125,9 @@ export class CreateProductComponent implements OnInit{
     allow_checkout_when_out_of_stock: false,
     with_storehouse_management: false,
     stock_status: "in_stock",
-    sale_price: 0,
     price: 0,
     minimum_order_quantity: 1,
     maximum_order_quantity: 1,
-    height: 0,
-    weight: 0,
-    wide: 0,
-    length: 0,
     cost_per_item: 0,
     delivery_time: "",
     custom_delivery_time: "",
@@ -140,6 +137,16 @@ export class CreateProductComponent implements OnInit{
     size_l: false,
     size_xl: false,
     size_xxl: false,
+    size_50: false,
+    size_52: false,
+    size_54: false,
+    size_56: false,
+    size_58: false,
+    size_60: false,
+    size_62: false,
+    require_extra_msmt: false,
+    is_featured: false,
+    extra_msmt: "",
     size_custom: false,
     is_hot: false,
     is_new: false,
@@ -193,7 +200,7 @@ export class CreateProductComponent implements OnInit{
   }
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.create.id = this.user_session.id;
     this.create.token = this.user_session.token;
 
@@ -210,25 +217,44 @@ export class CreateProductComponent implements OnInit{
       { id: 'off-white', text: 'Off White', hex: '#FAF9F6' },
       { id: 'charcoal', text: 'Charcoal', hex: '#333333' },
       { id: 'gray', text: 'Gray', hex: '#808080' },
+      { id: 'light-gray', text: 'Light Gray', hex: '#D3D3D3' },
       { id: 'beige', text: 'Beige', hex: '#F5F5DC' },
       { id: 'tan', text: 'Tan', hex: '#D2B48C' },
+      { id: 'camel', text: 'Camel', hex: '#C19A6B' },
       { id: 'brown', text: 'Brown', hex: '#8B4513' },
+      { id: 'chocolate', text: 'Chocolate', hex: '#5D3A00' },
       { id: 'navy', text: 'Navy', hex: '#001F3F' },
       { id: 'blue', text: 'Blue', hex: '#1F75FE' },
       { id: 'light-blue', text: 'Light Blue', hex: '#87CEEB' },
+      { id: 'sky-blue', text: 'Sky Blue', hex: '#00BFFF' },
       { id: 'denim', text: 'Denim', hex: '#274472' },
       { id: 'teal', text: 'Teal', hex: '#008080' },
+      { id: 'aqua', text: 'Aqua', hex: '#00FFFF' },
+      { id: 'mint', text: 'Mint', hex: '#98FF98' },
       { id: 'green', text: 'Green', hex: '#2E8B57' },
+      { id: 'lime', text: 'Lime', hex: '#32CD32' },
       { id: 'olive', text: 'Olive', hex: '#808000' },
+      { id: 'forest', text: 'Forest Green', hex: '#228B22' },
       { id: 'red', text: 'Red', hex: '#C0392B' },
+      { id: 'crimson', text: 'Crimson', hex: '#DC143C' },
       { id: 'burgundy', text: 'Burgundy', hex: '#800020' },
       { id: 'pink', text: 'Pink', hex: '#FFC0CB' },
+      { id: 'hot-pink', text: 'Hot Pink', hex: '#FF69B4' },
+      { id: 'rose', text: 'Rose', hex: '#FF007F' },
       { id: 'purple', text: 'Purple', hex: '#800080' },
+      { id: 'lavender', text: 'Lavender', hex: '#E6E6FA' },
+      { id: 'violet', text: 'Violet', hex: '#8A2BE2' },
       { id: 'orange', text: 'Orange', hex: '#FF8C00' },
+      { id: 'peach', text: 'Peach', hex: '#FFDAB9' },
+      { id: 'coral', text: 'Coral', hex: '#FF7F50' },
       { id: 'yellow', text: 'Yellow', hex: '#FFD200' },
       { id: 'mustard', text: 'Mustard', hex: '#FFDB58' },
       { id: 'gold', text: 'Gold (Metallic)', hex: '#D4AF37' },
-      { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' }
+      { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' },
+      { id: 'bronze', text: 'Bronze', hex: '#CD7F32' },
+      { id: 'champagne', text: 'Champagne', hex: '#F7E7CE' },
+      { id: 'ivory', text: 'Ivory', hex: '#FFFFF0' },
+      { id: 'multicolor', text: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)'}
     ];
     this.dropdownList = [];
     this.selectedItems = [];
@@ -249,7 +275,12 @@ export class CreateProductComponent implements OnInit{
     console.log(items);
   }
   goBack() {
-    this.router.navigate(['/products']).then(r => console.log(r));
+    if (this.user_session.is_vendor){
+      this.router.navigate(['/account']).then(r => console.log(r));
+    }
+    if (this.user_session.is_admin){
+      this.router.navigate(['/backend']).then(r => console.log(r));
+    }
   }
   error_notification(message: string) {
     this.toast.error(message);
@@ -283,7 +314,7 @@ export class CreateProductComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -291,14 +322,29 @@ export class CreateProductComponent implements OnInit{
         }
       }))
   }
-  select_image_1(event: any) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      this.base64String = reader.result as string;
-      this.create.image_1 =  this.base64String;
-    };
-    if(file){ reader.readAsDataURL(file); }
+  async select_image_1(event: any) {
+    const file: File = event.target.files[0];
+    if (!file) return;
+
+    try {
+      // Compress the file
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 2,           // target size
+        maxWidthOrHeight: 950, // max width/height
+        useWebWorker: true,
+      });
+
+      // Convert compressed file to Data URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.base64String = reader.result as string;
+        this.create.image_1 = this.base64String;
+      };
+      reader.readAsDataURL(compressedFile);
+
+    } catch (error) {
+      this.error_notification('Image compression failed: ' + error);
+    }
   }
   get_category() {
     this.ui_controls.page_loading = true;
@@ -350,7 +396,7 @@ export class CreateProductComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -489,15 +535,24 @@ export class CreateProductComponent implements OnInit{
   async onSelect(event: NgxDropzoneChangeEvent) {
     const added = event.addedFiles ?? [];
     this.files.push(...added);
+
     const results = await Promise.all(
       added.map(async (f) => {
-        const dataUrl = await this.fileToDataURL(f);
+        // Compress the file
+        const compressedFile = await imageCompression(f, {
+          maxSizeMB: 2, // maximum size in MB
+          maxWidthOrHeight: 950, // max width or height
+          useWebWorker: true,
+        });
+
+        // Convert the compressed file to Data URL
+        const dataUrl = await this.fileToDataURL(compressedFile);
         const base64 = dataUrl.split(',')[1] ?? '';
         return {
-          file: f,
-          name: f.name,
-          type: f.type,
-          size: f.size,
+          file: compressedFile,
+          name: compressedFile.name,
+          type: compressedFile.type,
+          size: compressedFile.size,
           dataUrl,
           base64
         } as EncodedFile;

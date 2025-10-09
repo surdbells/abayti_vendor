@@ -64,7 +64,7 @@ export class VendorPaymentComponent implements OnInit {
   }
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     if (!this.user_session.is_active){
       this.router.navigate(['/', '']).then(r => console.log(r)); return;
     }
@@ -95,7 +95,7 @@ export class VendorPaymentComponent implements OnInit {
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -130,7 +130,7 @@ export class VendorPaymentComponent implements OnInit {
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {

@@ -37,7 +37,7 @@ export class I18nService {
 
       // Update document language + direction
       document.documentElement.setAttribute('lang', lang);
-      document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('dir', lang === 'ar' ? 'ltr' : 'ltr');
     } catch (err) {
       console.error('Failed to load language file:', err);
       // Optional: fallback to English if requested lang fails

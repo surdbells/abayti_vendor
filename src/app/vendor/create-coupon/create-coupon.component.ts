@@ -5,6 +5,7 @@ import {TopComponent} from "../../partials/top/top.component";
 import {TuiIcon} from "@taiga-ui/core";
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
+import {GlobalComponent} from '../../global-component';
 
 @Component({
   selector: 'app-create-coupon',
@@ -41,9 +42,22 @@ export class CreateCouponComponent implements OnInit {
     is_vendor: false,
     is_customer: false
   };
+  create_coupon = {
+    id: 0,
+    token: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    is_2fa: false,
+    is_active: false,
+    is_admin: false,
+    is_vendor: false,
+    is_customer: false
+  };
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     if (!this.user_session.is_active){
       this.router.navigate(['/', '']).then(r => console.log(r)); return;
     }

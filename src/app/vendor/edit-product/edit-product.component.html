@@ -1,5 +1,4 @@
 <app-side></app-side>
-<app-top></app-top>
 <main class="main ml-desktop-22rem px-lg-6">
   <div class="container-lg">
     <!-- Page header -->
@@ -35,7 +34,7 @@
                         </div>
                         <div class="mb-3 position-relative">
                           <label class="form-label required"> Description </label>
-                          <angular-editor name="description" [config]="editorConfig" [maxlength]="200" [(ngModel)]="update.description"></angular-editor>
+                          <angular-editor name="description" [config]="editorConfig" [maxlength]="800" [(ngModel)]="update.description"></angular-editor>
                         </div>
                         <div class="mb-3 position-relative">
                                 <label class="form-label">Product Images</label>
@@ -48,21 +47,6 @@
                                   </div>
                                 </div>
                         </div>
-                        <div class="mb-3 position-relative">
-                          <div class="row">
-                            <div class="col-12">
-                              <ngx-dropzone class="mt-5" (change)="onSelect($event)" [multiple]="true" accept=".png,.jpeg,.jpeg,.webp">
-                                <ngx-dropzone-label>Drag & drop files here, or click to browse.</ngx-dropzone-label>
-                                <ngx-dropzone-image-preview
-                                  *ngFor="let f of files; trackBy: trackByName"
-                                  [file]="f"
-                                  [removable]="true"
-                                  (removed)="onRemove(f)">
-                                </ngx-dropzone-image-preview>
-                              </ngx-dropzone>
-                            </div>
-                          </div>
-                      </div>
                     </div>
                   </div>
                     <div id="main-manage-product-type">
@@ -76,16 +60,6 @@
                                 <span class="input-group-text">AED</span>
                                 <input [(ngModel)]="update.price" class="form-control input-mask-number" [min]="1" [step]="1" type="number" name="price" id="price">
                               </div>
-                            </div>
-                          </div>
-                          <div class="col-md-4">
-                            <div class="mb-3 position-relative">
-                              <label class="form-label" for="sale_price"> Price sale </label>
-                              <div class="input-group input-group-flat">
-                                <span class="input-group-text">AED</span>
-                                <input [(ngModel)]="update.sale_price" class="form-control input-mask-number" [max]="update.price" [step]="1" type="number" name="sale_price" id="sale_price">
-                              </div>
-                              <small class="form-hint">Discount <strong></strong> from original price.</small>
                             </div>
                           </div>
                           <div class="col-md-4">
@@ -104,6 +78,23 @@
                             <input [checked]="update.with_storehouse_management" (change)="update.with_storehouse_management = !update.with_storehouse_management" type="checkbox" name="with_storehouse_management" class="form-check-input storehouse-management-status">
                             <span class="form-check-label"> With storehouse management </span>
                           </label>
+                        </div>
+                        <div class="mb-3 position-relative">
+                          <label class="form-check">
+                            <input [checked]="update.is_featured" (change)="update.is_featured = !update.is_featured" type="checkbox" name="is_featured" class="form-check-input storehouse-management-status">
+                            <span class="form-check-label"> Feature product </span>
+                          </label>
+                        </div>
+                        <div class="mb-3 position-relative">
+                          <label class="form-check">
+                            <input [checked]="update.require_extra_msmt" (change)="update.require_extra_msmt = !update.require_extra_msmt" type="checkbox" name="require_extra_msmt" class="form-check-input storehouse-management-status">
+                            <span class="form-check-label"> Requires extra measurement </span>
+                          </label>
+                        </div>
+                        <div  *ngIf="update.require_extra_msmt" class="mb-3 position-relative">
+                          <label class="form-label" for="require_extra_msmt"> Extra measurement details </label>
+                          <textarea class="form-control" placeholder="provide details for extra measurement required" [maxlength]="200" name="require_extra_msmt" id="require_extra_msmt" [(ngModel)]="update.extra_msmt">
+                            </textarea>
                         </div>
 
                         <fieldset class="form-fieldset storehouse-info">
@@ -140,50 +131,6 @@
                             </div>
                           </div>
                         </div>
-                        <fieldset class="form-fieldset">
-                          <legend>
-                            <h3>Shipping</h3>
-                          </legend>
-                          <div class="row">
-                            <div class="col-md-3 col-md-6">
-                              <div class="mb-3 position-relative">
-                                <label class="form-label" for="weight"> Weight (g) </label>
-                                <div class="input-group input-group-flat">
-                                  <span class="input-group-text">g</span>
-                                  <input [(ngModel)]="update.weight" class="form-control input-mask-number" type="number" name="weight" id="weight" [min]="1" [step]="0.1">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-3 col-md-6">
-                              <div class="mb-3 position-relative">
-                                <label class="form-label" for="length">  Length (cm) </label>
-                                <div class="input-group input-group-flat">
-                                  <span class="input-group-text">cm</span>
-                                  <input [(ngModel)]="update.length" class="form-control input-mask-number" type="number" name="length" id="length" [min]="1" [step]="0.1">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-3 col-md-6">
-                              <div class="mb-3 position-relative">
-                                <label class="form-label" for="wide"> Wide (cm) </label>
-                                <div class="input-group input-group-flat">
-                                  <span class="input-group-text">cm</span>
-                                  <input [(ngModel)]="update.wide" class="form-control input-mask-number" type="number" name="wide" id="wide" [min]="1" [step]="0.1">
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-md-3 col-md-6">
-                              <div class="mb-3 position-relative">
-                                <label class="form-label" for="height"> Height (cm) </label>
-                                <div class="input-group input-group-flat">
-                                  <span class="input-group-text">cm</span>
-                                  <input [(ngModel)]="update.height" class="form-control input-mask-number" type="number" name="height" id="height" [min]="1" [step]="0.1">
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </fieldset>
-
                         <div class="mb-3">
                           <label for="delivery_time" class="form-label required"> Delivery Time </label>
                           <select [(ngModel)]="update.delivery_time" id="delivery_time" name="delivery_time" class="form-select">
@@ -355,6 +302,48 @@
                             <label class="form-check">
                               <input [checked]="update.size_xxl" (change)="update.size_xxl = !update.size_xxl" type="checkbox" id="size_xxl" name="size_xxl" class="form-check-input">
                               <span class="form-check-label"> XXL </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_50" (change)="update.size_50 = !update.size_50" type="checkbox" id="size_50" name="size_50" class="form-check-input">
+                              <span class="form-check-label"> 50 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_52" (change)="update.size_52 = !update.size_52" type="checkbox" id="size_52" name="size_52" class="form-check-input">
+                              <span class="form-check-label"> 52 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_54" (change)="update.size_54 = !update.size_54" type="checkbox" id="size_54" name="size_54" class="form-check-input">
+                              <span class="form-check-label"> 54 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_56" (change)="update.size_56 = !update.size_56" type="checkbox" id="size_56" name="size_56" class="form-check-input">
+                              <span class="form-check-label"> 56 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_58" (change)="update.size_58 = !update.size_58" type="checkbox" id="size_58" name="size_58" class="form-check-input">
+                              <span class="form-check-label"> 58 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_60" (change)="update.size_60 = !update.size_60" type="checkbox" id="size_60" name="size_60" class="form-check-input">
+                              <span class="form-check-label"> 60 </span>
+                            </label>
+                          </div>
+                          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                            <label class="form-check">
+                              <input [checked]="update.size_62" (change)="update.size_62 = !update.size_62" type="checkbox" id="size_62" name="size_62" class="form-check-input">
+                              <span class="form-check-label"> 62 </span>
                             </label>
                           </div>
                           <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-12">

@@ -1,16 +1,9 @@
 <aside class="aside aside-base sidenav-base">
   <nav class="navbar navbar-expand-xl navbar-vertical">
     <div class="container-lg">
-      <div class="card mb-5">
+        <div class="card mb-5 hide-on-mobile">
         <div class="card-header text-center">
-          <a class="navbar-brand d-flex align-items-center fs-5 fw-bold px-xl-3 mb-xl-4" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fs-4 text-secondary me-2 duo-icon duo-icon-box-2" data-duoicon="box-2">
-              <path fill="currentColor" d="m20.765 7.982.022.19.007.194v7.268a2.5 2.5 0 0 1-1.099 2.07l-.15.095-6.295 3.634-.124.067-.126.06v-8.99l7.765-4.588Z" class="duoicon-secondary-layer" opacity=".3"></path>
-              <path fill="currentColor" d="m13.25 2.567 6.294 3.634c.05.03.1.06.148.092L12 10.838 4.308 6.293a2.81 2.81 0 0 1 .148-.092l6.294-3.634a2.498 2.498 0 0 1 2.5 0Z" class="duoicon-primary-layer"></path>
-              <path fill="currentColor" d="M3.235 7.982 11 12.571v8.988a2.339 2.339 0 0 1-.25-.126l-6.294-3.634a2.502 2.502 0 0 1-1.25-2.165V8.366c0-.13.01-.258.03-.384h-.001Z" class="duoicon-secondary-layer" opacity=".3">
-              </path>
-            </svg> 3BAYTI.COM
-          </a>
+          <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="abayti" />
         </div>
       </div>
       <button
@@ -20,11 +13,9 @@
         data-bs-target="#sidenavBaseCollapse"
         aria-controls="sidenavBaseCollapse"
         aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+        aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
       <!-- Collapse -->
       <div class="collapse navbar-collapse" id="sidenavBaseCollapse">
         <!-- Search -->
@@ -39,84 +30,76 @@
         <!-- Nav -->
         <nav class="navbar-nav nav-pills mb-7">
           <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#dashboards" role="button" aria-expanded="false" aria-controls="dashboards">
-                <span class="me-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard-icon lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-                </span>
-              Dashboard
-            </a>
-            <div class="collapse" id="dashboards">
-              <nav class="nav nav-pills">
-                <a class="nav-link " href="#">Overview</a>
-                <a class="nav-link " href="#">Insights</a>
-              </nav>
-            </div>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#marketplace" role="button" aria-expanded="false" aria-controls="dashboards">
-                <span class="me-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-basket-icon lucide-shopping-basket"><path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/></svg>
-                </span>
-              Marketplace
-            </a>
-            <div class="collapse" id="marketplace">
-              <nav class="nav nav-pills">
-                <a class="nav-link " href="#">Stores</a>
-                <a class="nav-link " href="#">Vendors</a>
-                <a class="nav-link " href="#">Unverified Vendors</a>
-                <a class="nav-link " href="#">Messages</a>
-                <a class="nav-link " href="#">Overview</a>
-              </nav>
-            </div>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#ecommerce" role="button" aria-expanded="false" aria-controls="dashboards">
-                <span class="me-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag-icon lucide-shopping-bag"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
-                </span>
-              Ecommerce
-            </a>
-            <div class="collapse" id="ecommerce">
-              <nav class="nav nav-pills">
-                <a class="nav-link " href="#">Manage Orders</a>
-                <a class="nav-link " href="#">Incomplete orders</a>
-                <a class="nav-link " href="#">Order returns</a>
-                <a class="nav-link " href="#">Shipment</a>
-                <a class="nav-link " href="#">Products</a>
-                <a class="nav-link " href="#">Product Categories</a>
-                <a class="nav-link " href="#">Reviews</a>
-                <a class="nav-link " href="#">Discounts</a>
-                <a class="nav-link " href="#">Customers</a>
-              </nav>
-            </div>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#payment" role="button" aria-expanded="false" aria-controls="dashboards">
-                <span class="me-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card-icon lucide-credit-card"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                </span>
-              Payments
-            </a>
-            <div class="collapse" id="payment">
-              <nav class="nav nav-pills">
-                <a class="nav-link " href="#">Transactions</a>
-                <a class="nav-link " href="#">Payment logs</a>
-                <a class="nav-link " href="#">Payment methods</a>
-              </nav>
-            </div>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link " href="#">
+            <a routerLink="/backend" class="nav-link">
               <span class="me-3">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-icon lucide-settings"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg>
-              </span> Settings
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">analytics</span>
+              </span><span class="abayti_secondary_color">Dashboard</span>
+            </a>
+          </div>
+
+
+          <div class="nav-item">
+            <a routerLink="/products" class="nav-link">
+              <span class="me-3">
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">apparel</span>
+              </span> <span class="abayti_secondary_color">Store operations</span>
             </a>
           </div>
           <div class="nav-item">
-            <a class="nav-link " href="#">
+            <a routerLink="/customers" class="nav-link">
               <span class="me-3">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings2-icon lucide-settings-2"><path d="M14 17H5"/><path d="M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
-              </span> Preference
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">for_you</span>
+              </span> <span class="abayti_secondary_color">Customers Operations</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a routerLink="/customers" class="nav-link">
+              <span class="me-3">
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">for_you</span>
+              </span> <span class="abayti_secondary_color">Tickets & Support</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a routerLink="/stores" class="nav-link">
+              <span class="me-3">
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">storefront</span>
+              </span> <span class="abayti_secondary_color">Logistics & Deliveries</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a routerLink="/stores" class="nav-link">
+              <span class="me-3">
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">storefront</span>
+              </span> <span class="abayti_secondary_color">Reports & Analytics</span>
+            </a>
+          </div>
+          <hr>
+          <div class="nav-item">
+            <a routerLink="/collections" class="nav-link">
+              <span class="me-3">
+                <span class="material-symbols-outlined abayti_secondary_color fs-4">folder</span>
+              </span> <span class="abayti_secondary_color">Collections</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a routerLink="/profile" class="nav-link">
+            <span class="me-3">
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">account_box</span>
+            </span> <span class="abayti_secondary_color">User profile</span>
+            </a>
+          </div>
+          <div class="nav-item">
+            <a routerLink="/security" class="nav-link">
+            <span class="me-3">
+              <span class="material-symbols-outlined abayti_secondary_color fs-4">security</span>
+            </span> <span class="abayti_secondary_color">Security</span>
+            </a>
+          </div>
+          <div class="nav-item text-danger">
+            <a (click)="sign_out()" role="link" class="nav-link">
+            <span class="me-3 text-danger">
+              <span class="material-symbols-outlined fs-3"> logout </span>
+            </span><span class="text-danger"> Sign out</span>
             </a>
           </div>
         </nav>

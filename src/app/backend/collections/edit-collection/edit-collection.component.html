@@ -1,0 +1,45 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{update.name}}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <a routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
+          <span class="material-symbols-outlined text-white me-1"> add </span> New
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 offset-3">
+        <div  class="card card mt-2 mt-2">
+          <div class="card-body">
+            <div *ngIf="!ui_controls.is_loading" class="mb-2">
+              <div class="form-label">Name</div>
+              <input [(ngModel)]="update.name" type="text" class="form-control" name="">
+            </div>
+            <div *ngIf="!ui_controls.is_loading" class="mb-2">
+              <label class="form-check">
+                <input [checked]="update.is_active" (change)="update.is_active = !update.is_active" type="checkbox" id="size_xs" name="size_xs" class="form-check-input">
+                <span class="form-check-label"> Status </span>
+              </label>
+            </div>
+            <div class="mb-2">
+              <button  *ngIf="!ui_controls.is_loading" (click)="updateCollection()" type="button" class="btn btn-secondary text-white" name="submit">Submit</button>
+              <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

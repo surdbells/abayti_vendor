@@ -6,7 +6,7 @@
     <div class="row align-items-center">
       <div class="col-12 col-md-auto order-md-1 d-flex align-items-center justify-content-center mb-4 mb-md-0">
         <div class="avatar text-info me-2">
-            <span role="button" (click)="get_dashboard()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+          <span role="button" (click)="get_dashboard()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
         </div>
       </div>
       <div class="col-12 col-md order-md-0 text-center text-md-start">
@@ -23,7 +23,7 @@
           <div class="card-body my-5">
             <div class="row align-items-center">
               <div class="col">
-                <h4 class="fs-sm fw-normal text-white mb-4">PRODUCTS</h4>
+                <h4 class="fs-sm fw-normal text-white mb-4">{{ 'dashboard_products' | translate }}</h4>
                 <div class="fs-2 fw-semibold text-white">{{ total_products }}</div>
               </div>
               <div class="col-auto">
@@ -40,12 +40,12 @@
           <div class="card-body my-5">
             <div class="row align-items-center">
               <div class="col">
-                <h4 class="fs-sm fw-normal text-body-secondary mb-4">ORDERS</h4>
+                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'dashboard_orders' | translate }}</h4>
                 <div class="fs-2 fw-semibold">{{total_orders}}</div>
               </div>
               <div class="col-auto">
                 <div class="avatar avatar-lg bg-body text-primary">
-                    <span class="material-symbols-outlined abayti_secondary_color fs-1"> trolley </span>
+                  <span class="material-symbols-outlined abayti_secondary_color fs-1"> trolley </span>
                 </div>
               </div>
             </div>
@@ -58,12 +58,12 @@
             <div class="row align-items-center">
               <div class="col">
                 <!-- Heading -->
-                <h4 class="fs-sm fw-normal text-body-secondary mb-4">PENDING</h4>
+                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'dashboard_pending' | translate }}</h4>
                 <div class="fs-2 fw-semibold">{{ pending_orders }}</div>
               </div>
               <div class="col-auto">
                 <div class="avatar avatar-lg bg-body text-primary">
-                    <span class="material-symbols-outlined abayti_secondary_color fs-1"> shopping_cart_off </span>
+                  <span class="material-symbols-outlined abayti_secondary_color fs-1"> shopping_cart_off </span>
                 </div>
               </div>
             </div>
@@ -76,12 +76,12 @@
             <div class="row align-items-center">
               <div class="col">
                 <!-- Heading -->
-                <h4 class="fs-sm fw-normal text-body-secondary mb-4">RETURNS</h4>
+                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'dashboard_returns' | translate }}</h4>
                 <div class="fs-2 fw-semibold">{{ return_orders }}</div>
               </div>
               <div class="col-auto">
                 <div class="avatar avatar-lg bg-body text-primary">
-                    <span class="material-symbols-outlined abayti_secondary_color fs-1"> keyboard_return </span>
+                  <span class="material-symbols-outlined abayti_secondary_color fs-1"> keyboard_return </span>
                 </div>
               </div>
             </div>
@@ -90,11 +90,11 @@
       </div>
     </div>
     <div *ngIf="!ui_controls.is_loading" class="row">
-      <div class="col-xxl-6 col-xl-6 col-lg-12 col-12">
+      <div class="col-xxl-12 col-xl-12 col-lg-12 col-12">
         <div class="card card-line mb-6">
           <div class="card-header abayti_secondary_background">
             <div class="card-title">
-              <h3 class="fs-6 mb-0 text-white">Sales Performance</h3>
+              <h3 class="fs-6 mb-0 text-white">{{ 'sales_performance' | translate }}</h3>
             </div>
           </div>
           <div class="card-body p-2">
@@ -115,12 +115,12 @@
           </div>
         </div>
       </div>
-      <div class="col-xxl-6 col-xl-6 col-lg-12 col-12">
+      <!--      <div class="col-xxl-6 col-xl-6 col-lg-12 col-12">
         <div class="card mb-6">
           <div class="card-header abayti_secondary_background">
             <div class="row align-items-center">
               <div class="col">
-                <h3 class="fs-6 text-white mb-0">Top Selling Product</h3>
+                <h3 class="fs-6 text-white mb-0">{{ 'top_selling_product' | translate }}</h3>
               </div>
             </div>
           </div>
@@ -130,8 +130,8 @@
                 <thead class="table-light">
                 <tr>
                   <th style="width:50px;">#</th>
-                  <th>Product</th>
-                  <th class="text-end" style="width:120px;">Orders</th>
+                  <th>{{ 'table_product' | translate }}</th>
+                  <th class="text-end" style="width:120px;">{{ 'table_orders' | translate }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -141,9 +141,9 @@
                     <div class="d-flex align-items-center gap-3">
                       <img
                         [src]="p.image || p.image || 'https://img.freepik.com/premium-vector/image-available-icon-set-default-missing-photo-stock-vector-symbol-black-filled-outlined-style-no-image-found-sign_268104-6708.jpg'"
-                        [alt]="p.name || p.name || 'Product image'"  width="50" height="50" class="rounded border" style="object-fit: cover; object-position: top center"/>
+                        [alt]="p.name || p.name || ('product_image_alt' | translate)"  width="50" height="50" class="rounded border" style="object-fit: cover; object-position: top center"/>
                       <div class="fw-medium text-truncate">
-                        {{ p.name || p.name || 'Unnamed Product' }}
+                        {{ p.name || p.name || ('unnamed_product' | translate) }}
                       </div>
                     </div>
                   </td>
@@ -160,39 +160,39 @@
               <div class="card rounded-3 border-0 text-center p-4">
                 <div class="card-body border-0">
                   <div class="display-6 mb-2">🏆</div>
-                  <h5 class="card-title mb-1">No top-selling products yet</h5>
+                  <h5 class="card-title mb-1">{{ 'no_top_selling_products_title' | translate }}</h5>
                   <p class="card-text text-secondary">
-                    There isn’t enough sales data to rank products. <br> Grow traffic and orders to unlock this chart.
+                    {{ 'no_top_selling_products_body' | translate }}
                   </p>
                   <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                    <a routerLink="/products" class="btn abayti_secondary_background text-white btn-outline-secondary">Tweak Products</a>
+                    <a routerLink="/products" class="btn abayti_secondary_background text-white btn-outline-secondary">{{ 'tweak_products' | translate }}</a>
                   </div>
                   <div class="text-start text-center mx-auto mt-3" style="max-width: 440px;">
                     <ul class="list-unstyled small text-secondary mb-0">
-                      <li class="mb-1">• Feature best items in your store</li>
-                      <li class="mb-1">• Add clear photos & benefit-led titles</li>
+                      <li class="mb-1">• {{ 'tip_feature_best_items' | translate }}</li>
+                      <li class="mb-1">• {{ 'tip_add_photos_titles' | translate }}</li>
                     </ul>
                   </div>
                 </div>
                 <div class="card-footer bg-transparent border-0 text-muted small">
-                  Tip: Rankings appear after you receive a few completed orders.
+                  {{ 'tip_rankings_appear' | translate }}
                 </div>
               </div>
             </ng-template>
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
     <div *ngIf="!ui_controls.is_loading">
       <div *ngIf="!ui_controls.no_recent" class="card p-0">
         <div  class="card-header abayti_secondary_background">
           <div class="row align-items-center">
             <div class="col">
-              <h3 class="fs-6 text-white mb-0">Recent orders</h3>
+              <h3 class="fs-6 text-white mb-0">{{ 'recent_orders' | translate }}</h3>
             </div>
             <div class="col-auto my-n3 me-n3">
-              <a class="btn btn-sm btn-link" href="#">
-                Browse all
+              <a routerLink="/orders" class="btn btn-sm btn-secondary">
+                {{ 'browse_all' | translate }}
                 <span class="material-symbols-outlined">arrow_right_alt</span>
               </a>
             </div>
@@ -202,11 +202,13 @@
           <table class="table table-hover table-select table-round align-middle mb-0">
             <thead>
             <tr>
-              <th>ORDER</th>
-              <th>DATE</th>
-              <th>CUSTOMER</th>
-              <th>TOTAL</th>
-              <th>STATUS</th>
+              <th>{{ 'table_order' | translate }}</th>
+              <th>{{ 'table_date' | translate }}</th>
+              <th>{{ 'table_customer' | translate }}</th>
+              <th>{{ 'product' | translate }}</th>
+              <th>{{ 'quantity' | translate }}</th>
+              <th>{{ 'table_total' | translate }}</th>
+              <th>{{ 'table_status' | translate }}</th>
             </tr>
             </thead>
             <tbody>
@@ -214,17 +216,17 @@
               <td>
                 <div class="d-flex align-items-center">
                   <div class="ms-4">
-                    <div>{{a_recent.code}}</div>
+                    <div>{{a_recent.order_ref}}</div>
                   </div>
                 </div>
               </td>
-              <td>{{a_recent.created_at}}</td>
-              <td>{{a_recent.customer}}</td>
-              <td>{{a_recent.amount}}</td>
+              <td>{{a_recent.added}}</td>
+              <td>{{a_recent.customer_name}}</td>
+              <td>{{a_recent.product_name}}</td>
+              <td>{{a_recent.quantity}}</td>
+              <td>{{a_recent.total_price}}</td>
               <td>
-                <span *ngIf="a_recent.status == 'pending'" class="badge bg-success-subtle text-success">Delivered</span>
-                <span *ngIf="a_recent.status == 'processing'" class="badge bg-danger-subtle text-danger">Processing</span>
-                <span *ngIf="a_recent.status == 'delivered'" class="badge bg-warning-subtle text-warning">Delivered</span>
+                <span *ngIf="a_recent.status == 'Accepted'" class="badge bg-success-subtle text-success">{{ 'status_accepted' | translate }}</span>
               </td>
             </tr>
             </tbody>
@@ -234,14 +236,10 @@
       <div *ngIf="ui_controls.no_recent" class="card shadow-sm border rounded-3 text-center p-4">
         <div class="card-body">
           <div class="display-4 mb-2">🛍️</div>
-          <h5 class="card-title mb-1">Off to a fresh start</h5>
+          <h5 class="card-title mb-1">{{ 'off_to_a_fresh_start_title' | translate }}</h5>
           <p class="card-text text-secondary">
-            Every big shop starts at zero — your first sale is close.<br>
-            Add a launch discount and share your store to spark momentum.
+            {{ 'off_to_a_fresh_start_body' | translate }}
           </p>
-          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-            <a routerLink="/coupons" class="btn abayti_secondary_background btn-secondary text-white">Create 10% Launch Promo</a>
-          </div>
         </div>
       </div>
     </div>

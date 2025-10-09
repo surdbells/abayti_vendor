@@ -1,0 +1,87 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Stores</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_store()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mt-2 mt-2">
+          <div style="min-height: 600px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-bordered table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr class="border-2">
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>PHONE</th>
+                <th>LOCATION</th>
+                <th>LAST&nbsp;LOGIN</th>
+                <th>STORE&nbsp;STATUS</th>
+                <th>APPROVAL</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let a_store of stores; let i = index">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-4">
+                      <div>{{a_store.store_name}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{a_store.store_email}}</td>
+                <td>{{a_store.store_phone}}</td>
+                <td>{{a_store.store_address}}</td>
+                <td>{{a_store.last_login}}</td>
+                <td>
+                  <span *ngIf="a_store.status" class="badge bg-success-subtle text-success">Selling</span>
+                  <span *ngIf="!a_store.status" class="badge bg-danger-subtle text-danger">Not selling</span>
+                </td>
+                <td>
+                  <span *ngIf="a_store.approved" class="badge bg-success-subtle text-success">Approved</span>
+                  <span *ngIf="!a_store.approved" class="badge bg-danger-subtle text-danger">Pending</span>
+                </td>
+                <td class="text-end">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="actionMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                      Actions
+                    </button>
+                    <ul class="dropdown-menu shadow" aria-labelledby="actionMenuButton">
+                      <li><a role="button" (click)="manage_store(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.view" /> MANAGE </a></li>
+                      <li><a role="button" (click)="store_orders(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.folder-kanban" /> ORDERS </a></li>
+                      <li><a role="button" (click)="store_products(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.package-search" /> PRODUCTS </a></li>
+                      <li><a role="button" (click)="store_sales(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.chart-bar-increasing" /> SALES </a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a role="button" (click)="start_activate(a_store.id, a_store.store_name)" *ngIf="!a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Activate</a></li>
+                      <li><a role="button" (click)="start_deactivate(a_store.id, a_store.store_name)" *ngIf="a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.circle-x" /> Deactivate</a></li>
+                      <li><a role="button" (click)="start_delete(a_store.id, a_store.store_name)" *ngIf="!a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.circle-x" /> Delete </a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -5,6 +5,7 @@ import {SideComponent} from '../../partials/side/side.component';
 import {TuiIcon} from '@taiga-ui/core';
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
+import {GlobalComponent} from '../../global-component';
 
 @Component({
   selector: 'app-vendor-coupons',
@@ -43,7 +44,7 @@ export class VendorCouponsComponent implements OnInit {
   };
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     if (!this.user_session.is_active){
       this.router.navigate(['/', '']).then(r => console.log(r)); return;
     }

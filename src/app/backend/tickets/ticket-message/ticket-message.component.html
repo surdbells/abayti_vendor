@@ -1,0 +1,55 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div style="width: 80%; margin: 0 auto"  class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ ticket_name }}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_ticket_messages()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div  style="width: 80%; margin: 0 auto" class="row">
+        <div class="card shadow rounded-4">
+          <div class="card-body">
+            <div class="row">
+              <!-- Left Column: Messages -->
+              <div class="col-md-8 border-end" style="max-height: 400px; overflow-y: auto;">
+                <h5 class="mb-3 abayti_secondary_color">Messages</h5>
+                <div class="mb-3">
+                  @for(a_message of message; track $index){
+                    <div class="bg-light p-2 rounded mb-2">
+                      <strong>{{ a_message.sender }}:</strong> {{ a_message.message }}
+                      <span class="message-time">{{ a_message.timestamp }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="col-md-4">
+                <h5 class="mb-3 abayti_secondary_color">Send Message</h5>
+                <form>
+                  <div class="mb-3">
+                    <textarea [(ngModel)]="add_message.message" name="message" [maxlength]="160" class="form-control" rows="6" placeholder="Type your message..."></textarea>
+                  </div>
+                  <div class="d-grid">
+                    <button *ngIf="!ui_controls.is_loading" (click)="send_messages()" type="submit" class="btn abayti_secondary_background btn-outline-secondary text-white">Send</button>
+                    <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</main>

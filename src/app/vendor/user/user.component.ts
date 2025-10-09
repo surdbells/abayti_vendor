@@ -93,18 +93,19 @@ export class UserComponent implements OnInit {
   };
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
-    this.get_dashboard();
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
+    if (this.session_data !== null) {
+        this.get_dashboard();
+    } else {
+      this.router.navigate(['/']).then(r => console.log(r));
+    }
+
   }
   error_notification(message: string) {
     this.toast.error(message);
   }
   success_notification(message: string) {
     this.toast.success(message);
-  }
-  sign_out(): void {
-    this.success_notification("User logged out successfully.");
-    this.router.navigate(['/']).then(r => console.log(r));
   }
   get_dashboard() {
     this.stats.id = this.user_session.id;
@@ -196,7 +197,7 @@ export class UserComponent implements OnInit {
             if (response.message === 0){
               this.ui_controls.no_recent = true;
             }
-            this.recent =  response.message;
+           // this.recent =  response.message;
             this.get_topSelling()
           }
         }

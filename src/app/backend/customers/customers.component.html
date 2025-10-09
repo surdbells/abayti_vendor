@@ -1,0 +1,68 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Customers</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_customer()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mt-2 mt-2">
+          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr>
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>PHONE</th>
+                <th>ORDERS</th>
+                <th>LAST LOGIN</th>
+                <th>STATUS</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let a_customer of customers; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-4">
+                      <div>{{a_customer.name}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{a_customer.email}}</td>
+                <td>{{a_customer.phone}}</td>
+                <td>{{a_customer.orders}}</td>
+                <td>{{a_customer.last_login}}</td>
+                <td>
+                  <span *ngIf="a_customer.status" class="badge bg-success-subtle text-success">Active</span>
+                  <span *ngIf="!a_customer.status" class="badge bg-danger-subtle text-danger">Inactive</span>
+                </td>
+                <td class="text-end">
+                  <button (click)="start_activate(a_customer.id, a_customer.name)" *ngIf="!a_customer.status" class="btn btn-sm btn-success" type="button">Activate</button>
+                  <button (click)="start_deactivate(a_customer.id, a_customer.name)" *ngIf="a_customer.status" class="btn btn-sm btn-danger" type="button">Deactivate</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

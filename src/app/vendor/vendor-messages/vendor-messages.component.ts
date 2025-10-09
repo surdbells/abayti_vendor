@@ -38,7 +38,4 @@ export class VendorMessagesComponent implements OnInit {
   success_notification(message: string) {
     this.toast.success(message);
   }
-
-  createCoupon() {
-  }
 }

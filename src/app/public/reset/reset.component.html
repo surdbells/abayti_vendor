@@ -1,6 +1,9 @@
 <div class="container container animate__animated animate__fadeIn mt-5">
   <div class="row justify-content-center">
     <div class="col-12" style="max-width: 30rem">
+        <span class="badge abayti_secondary_background rounded-pill mb-3">
+          <a routerLink="/" class="btn px-1 py-0 btn-sm text-white">{{ 'back_to_website' | translate }}</a>
+        </span>
       <div class="card">
         <div class="card-header text-center">
           <div class="row align-items-center">
@@ -27,7 +30,7 @@
           </form>
           <p class="text-center text-body-secondary mb-0">
             {{'have_account' | translate}}
-            <a class="text-black" routerLink="/">{{'sign_in' | translate}}</a>
+            <a class="text-black" routerLink="/login">{{'sign_in' | translate}}</a>
           </p>
         </div>
         <div *ngIf="ui_controls.confirmed && !ui_controls.validated" class="card-body">

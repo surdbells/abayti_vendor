@@ -59,7 +59,7 @@ export class VendorReviewsComponent implements OnInit {
 
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.review.token = this.user_session.token
     this.review.id = this.user_session.id
     this.product_review();
@@ -89,7 +89,7 @@ export class VendorReviewsComponent implements OnInit {
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification(typeof e === 'string' ? e : 'Request failed');
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
           this.ui_controls.no_reviews = true;
         }

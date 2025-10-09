@@ -1,29 +1,60 @@
 import { Routes } from '@angular/router';
 import {LoginComponent} from './public/login/login.component';
 import {UserComponent} from './vendor/user/user.component';
-import {VendorNotificationsComponent} from './settings/vendor-notifications/vendor-notifications.component';
-import {VendorProfileComponent} from './settings/vendor-profile/vendor-profile.component';
+import {VendorNotificationsComponent} from './vendor/vendor-notifications/vendor-notifications.component';
+import {UserProfileComponent} from './shared/user-profile/user-profile.component';
 import {AdminComponent} from './backend/admin/admin.component';
 import {VendorCouponsComponent} from './vendor/vendor-coupons/vendor-coupons.component';
 import {VendorOrdersComponent} from './vendor/vendor-orders/vendor-orders.component';
 import {VendorProductsComponent} from './vendor/vendor-products/vendor-products.component';
 import {VendorReturnsComponent} from './vendor/vendor-returns/vendor-returns.component';
 import {VendorReviewsComponent} from './vendor/vendor-reviews/vendor-reviews.component';
-import {VendorTransactionsComponent} from './vendor/vendor-transactions/vendor-transactions.component';
 import {VendorMessagesComponent} from './vendor/vendor-messages/vendor-messages.component';
 import {RegisterComponent} from './public/register/register.component';
 import {ResetComponent} from './public/reset/reset.component';
 import {CreateProductComponent} from './vendor/create-product/create-product.component';
 import {VendorStoreComponent} from './settings/vendor-store/vendor-store.component';
-import {VendorSecurityComponent} from './settings/vendor-security/vendor-security.component';
+import {UserSecurityComponent} from './shared/user-security/user-security.component';
 import {VendorPaymentComponent} from './settings/vendor-payment/vendor-payment.component';
 import {VendorTaxComponent} from './settings/vendor-tax/vendor-tax.component';
 import {EditProductComponent} from './vendor/edit-product/edit-product.component';
 import {CreateCouponComponent} from './vendor/create-coupon/create-coupon.component';
+import {HomeComponent} from './public/home/home.component';
+import {LabelComponent} from './settings/labels/label.component';
+import {VendorComplianceComponent} from './vendor/vendor-compliance/vendor-compliance.component';
+import {CollectionsComponent} from './backend/collections/collections.component';
+import {CreateCollectionComponent} from './backend/collections/create-collection/create-collection.component';
+import {EditCollectionComponent} from './backend/collections/edit-collection/edit-collection.component';
+import {StoresComponent} from './backend/stores/stores.component';
+import {CustomersComponent} from './backend/customers/customers.component';
+import {ManageStoreComponent} from './backend/stores/manage-store/manage-store.component';
+import {SalesComponent} from './backend/sales/sales.component';
+import {MeasurementsComponent} from './vendor/measurements/measurements.component';
+import {ViewOrderComponent} from './vendor/view-order/view-order.component';
+import {VendorDeliveryComponent} from './vendor/vendor-delivery/vendor-delivery.component';
+import {ReceiptComponent} from './vendor/receipt/receipt.component';
+import {StoreOrdersComponent} from './backend/stores/store-orders/store-orders.component';
+import {StoreMessagesComponent} from './backend/stores/store-messages/store-messages.component';
+import {StoreTicketsComponent} from './backend/stores/store-tickets/store-tickets.component';
+import {StoreReviewsComponent} from './backend/stores/store-reviews/store-reviews.component';
+import {StoreProductsComponent} from './backend/stores/store-products/store-products.component';
+import {AdminViewOrderComponent} from './backend/admin-view-order/admin-view-order.component';
+import {AdminProductsComponent} from './backend/admin-products/admin-products.component';
+import {AdminViewProductComponent} from './backend/admin-view-product/admin-view-product.component';
+import {StoreSalesComponent} from './backend/stores/store-sales/store-sales.component';
+import {TransactionsComponent} from './backend/transactions/transactions.component';
+import {TicketsComponent} from './backend/tickets/tickets.component';
+import {TicketMessageComponent} from './backend/tickets/ticket-message/ticket-message.component';
+import {CommissionsComponent} from './backend/commissions/commissions.component';
+import {LogisticsComponent} from './backend/logistics/logistics.component';
 
 export const routes: Routes = [
   {
     path: '',
+    component: HomeComponent,
+  },
+  {
+    path: 'login',
     component: LoginComponent,
     title: 'Login'
   },{
@@ -40,6 +71,11 @@ export const routes: Routes = [
     path: 'reset',
     component: ResetComponent,
     title: 'Reset password'
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    title: 'Sell More with Abayti'
   },
   {
     path: 'backend',
@@ -63,7 +99,7 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    component: VendorProfileComponent,
+    component: UserProfileComponent,
     title: 'Manage your profile'
   },
   {
@@ -73,7 +109,7 @@ export const routes: Routes = [
   },
   {
     path: 'security',
-    component: VendorSecurityComponent,
+    component: UserSecurityComponent,
     title: 'Security settings'
   },
   {
@@ -84,6 +120,11 @@ export const routes: Routes = [
   {
     path: 'orders',
     component: VendorOrdersComponent,
+    title: 'Orders'
+  },
+  {
+    path: 'admin_order',
+    component: AdminViewOrderComponent,
     title: 'Orders'
   },
   {
@@ -102,9 +143,18 @@ export const routes: Routes = [
     title: 'Create coupons'
   },
   {
-    path: 'edit-product',
+    path: 'edit',
     component: EditProductComponent,
     title: 'Edit product'
+  },
+  {
+    path: 'order',
+    component: ViewOrderComponent,
+    title: 'Manage order'
+  },{
+    path: 'receipt',
+    component: ReceiptComponent,
+    title: 'Receipt'
   },
   {
     path: 'returns',
@@ -117,13 +167,138 @@ export const routes: Routes = [
     title: 'Reviews'
   },
   {
-    path: 'transactions',
-    component: VendorTransactionsComponent,
-    title: 'Transactions'
+    path: 'labels',
+    component: LabelComponent,
+    title: 'Store labels'
   },
   {
     path: 'messages',
     component: VendorMessagesComponent,
     title: 'Messages'
+  },
+  {
+    path: 'labels',
+    component: LabelComponent,
+    title: 'Preference'
+  },
+  {
+    path: 'compliance',
+    component: VendorComplianceComponent,
+    title: 'Compliance'
+  },
+  {
+    path: 'collections',
+    component: CollectionsComponent,
+    title: 'Collections'
+  },
+  {
+    path: 'create_collections',
+    component: CreateCollectionComponent,
+    title: 'Create collection'
+  },
+  {
+    path: 'edit_collection',
+    component: EditCollectionComponent,
+    title: 'Edit collection'
+  },
+  {
+    path: 'stores',
+    component: StoresComponent,
+    title: 'Stores'
+  },
+  {
+    path: 'customers',
+    component: CustomersComponent,
+    title: 'Customers'
+  },
+  {
+    path: 'manage_store',
+    component: ManageStoreComponent,
+    title: 'Manage store'
+  },
+  {
+    path: 'product_sales',
+    component: SalesComponent,
+    title: 'Product Sales'
+  },
+  {
+    path: 'measurements',
+    component: MeasurementsComponent,
+    title: 'Measurements'
+  },
+  {
+    path: 'store_orders',
+    component: StoreOrdersComponent,
+    title: 'StoreOrders'
+  },
+  {
+    path: 'delivery',
+    component: VendorDeliveryComponent,
+    title: 'Delivery list'
+  },
+  {
+    path: 'store_messages',
+    component: StoreMessagesComponent,
+    title: 'Store messages'
+  },
+  {
+    path: 'store_tickets',
+    component: StoreTicketsComponent,
+    title: 'Store tickets'
+  },
+  {
+    path: 'store_products',
+    component: StoreProductsComponent,
+    title: 'Store products'
+  },
+  {
+    path: 'store_sales',
+    component: StoreSalesComponent,
+    title: 'Store sales'
+  },
+  {
+    path: 'store_reviews',
+    component: StoreReviewsComponent,
+    title: 'Store reviews'
+  },
+  {
+    path: 'admin_products',
+    component: AdminProductsComponent,
+    title: 'Products'
+  },
+  {
+    path: 'adminviewproduct',
+    component: AdminViewProductComponent,
+    title: 'View product'
+  },
+  {
+    path: 'adminsales',
+    component: SalesComponent,
+    title: 'View sales'
+  },
+  {
+    path: 'admintransactions',
+    component: TransactionsComponent,
+    title: 'View transactions'
+  },
+  {
+    path: 'admincommissions',
+    component: CommissionsComponent,
+    title: 'View commission'
+  },
+  {
+    path: 'adminlogistics',
+    component: LogisticsComponent,
+    title: 'View delivery'
+  },
+  {
+    path: 'admintickets',
+    component: TicketsComponent,
+    title: 'View ticket'
+  },
+  {
+    path: 'ticket_messages',
+    component: TicketMessageComponent,
+    title: 'Ticket messages'
   }
 ];

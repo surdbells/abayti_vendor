@@ -8,13 +8,13 @@ import {TuiIcon, TuiLoader} from "@taiga-ui/core";
 import {Category} from '../../class/category';
 import {Labels} from '../../class/labels';
 import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
 import {GlobalComponent} from '../../global-component';
 import {TUI_CONFIRM} from '@taiga-ui/kit';
-import {NgxDropzoneChangeEvent, NgxDropzoneModule} from 'ngx-dropzone';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+import {AsideComponent} from '../../partials/aside/aside.component';
 
 interface ColorOption {
   id: string;
@@ -43,8 +43,8 @@ type EncodedFile = {
     TopComponent,
     TuiIcon,
     TuiLoader,
-    NgxDropzoneModule,
-    NgMultiSelectDropDownModule
+    NgMultiSelectDropDownModule,
+    AsideComponent
   ],
   templateUrl: './edit-product.component.html',
   styleUrl: './edit-product.component.css'
@@ -63,6 +63,7 @@ export class EditProductComponent implements OnInit{
   encoded: EncodedFile[] = [];
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private crudService: CrudService,
     private toast: HotToastService,
   ) {}
@@ -72,7 +73,7 @@ export class EditProductComponent implements OnInit{
     page_loading: false
   };
   session_data: any = ""
-  image_url: any = "https://api.3bayti.com/vendors/products/"
+  image_url: any = "https://api.3bayti.ae/vendors/products/"
   user_session = {
     id: 0,
     token: "",
@@ -101,14 +102,9 @@ export class EditProductComponent implements OnInit{
     allow_checkout_when_out_of_stock: false,
     with_storehouse_management: false,
     stock_status: "in_stock",
-    sale_price: 0,
     price: 0,
     minimum_order_quantity: 1,
     maximum_order_quantity: 1,
-    height: 0,
-    weight: 0,
-    wide: 0,
-    length: 0,
     cost_per_item: 0,
     delivery_time: "",
     custom_delivery_time: "",
@@ -118,10 +114,20 @@ export class EditProductComponent implements OnInit{
     size_l: false,
     size_xl: false,
     size_xxl: false,
+    size_50: false,
+    size_52: false,
+    size_54: false,
+    size_56: false,
+    size_58: false,
+    size_60: false,
+    size_62: false,
+    require_extra_msmt: false,
+    extra_msmt: "",
     size_custom: false,
     is_hot: false,
     is_new: false,
     is_sale: false,
+    is_featured: false,
     delivery_note: "",
     colors: "",
     label: 0
@@ -173,50 +179,65 @@ export class EditProductComponent implements OnInit{
   }
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.update.id = this.user_session.id;
     this.update.token = this.user_session.token;
-
-    this.update.name = localStorage.getItem("PRODUCT_NAME") ?? "";
-    const productId = localStorage.getItem("PRODUCT_ID");
-    this.update.product = productId !== null ? Number(productId) : 0;
-
+    this.update.product =  Number(this.route.snapshot.queryParamMap.get('id'));
     this.single_product.id = this.user_session.id;
     this.single_product.token = this.user_session.token;
-    this.single_product.product = this.update.product;
-
+    this.single_product.product =  Number(this.route.snapshot.queryParamMap.get('id'));
     this.vendor_labels.id = this.user_session.id;
     this.vendor_labels.token = this.user_session.token;
     this.vendor_label_create.id = this.user_session.id;
     this.vendor_label_create.token = this.user_session.token;
-
+    this.get_product_by_id();
     this.get_category();
     this.get_collections();
+    this.get_vendor_labels();
     this.colorOptions = [
       { id: 'black', text: 'Black', hex: '#000000' },
       { id: 'white', text: 'White', hex: '#FFFFFF' },
       { id: 'off-white', text: 'Off White', hex: '#FAF9F6' },
       { id: 'charcoal', text: 'Charcoal', hex: '#333333' },
       { id: 'gray', text: 'Gray', hex: '#808080' },
+      { id: 'light-gray', text: 'Light Gray', hex: '#D3D3D3' },
       { id: 'beige', text: 'Beige', hex: '#F5F5DC' },
       { id: 'tan', text: 'Tan', hex: '#D2B48C' },
+      { id: 'camel', text: 'Camel', hex: '#C19A6B' },
       { id: 'brown', text: 'Brown', hex: '#8B4513' },
+      { id: 'chocolate', text: 'Chocolate', hex: '#5D3A00' },
       { id: 'navy', text: 'Navy', hex: '#001F3F' },
       { id: 'blue', text: 'Blue', hex: '#1F75FE' },
       { id: 'light-blue', text: 'Light Blue', hex: '#87CEEB' },
+      { id: 'sky-blue', text: 'Sky Blue', hex: '#00BFFF' },
       { id: 'denim', text: 'Denim', hex: '#274472' },
       { id: 'teal', text: 'Teal', hex: '#008080' },
+      { id: 'aqua', text: 'Aqua', hex: '#00FFFF' },
+      { id: 'mint', text: 'Mint', hex: '#98FF98' },
       { id: 'green', text: 'Green', hex: '#2E8B57' },
+      { id: 'lime', text: 'Lime', hex: '#32CD32' },
       { id: 'olive', text: 'Olive', hex: '#808000' },
+      { id: 'forest', text: 'Forest Green', hex: '#228B22' },
       { id: 'red', text: 'Red', hex: '#C0392B' },
+      { id: 'crimson', text: 'Crimson', hex: '#DC143C' },
       { id: 'burgundy', text: 'Burgundy', hex: '#800020' },
       { id: 'pink', text: 'Pink', hex: '#FFC0CB' },
+      { id: 'hot-pink', text: 'Hot Pink', hex: '#FF69B4' },
+      { id: 'rose', text: 'Rose', hex: '#FF007F' },
       { id: 'purple', text: 'Purple', hex: '#800080' },
+      { id: 'lavender', text: 'Lavender', hex: '#E6E6FA' },
+      { id: 'violet', text: 'Violet', hex: '#8A2BE2' },
       { id: 'orange', text: 'Orange', hex: '#FF8C00' },
+      { id: 'peach', text: 'Peach', hex: '#FFDAB9' },
+      { id: 'coral', text: 'Coral', hex: '#FF7F50' },
       { id: 'yellow', text: 'Yellow', hex: '#FFD200' },
       { id: 'mustard', text: 'Mustard', hex: '#FFDB58' },
       { id: 'gold', text: 'Gold (Metallic)', hex: '#D4AF37' },
-      { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' }
+      { id: 'silver', text: 'Silver (Metallic)', hex: '#C0C0C0' },
+      { id: 'bronze', text: 'Bronze', hex: '#CD7F32' },
+      { id: 'champagne', text: 'Champagne', hex: '#F7E7CE' },
+      { id: 'ivory', text: 'Ivory', hex: '#FFFFF0' },
+      { id: 'multicolor', text: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)' }
     ];
     this.dropdownList = [];
     this.selectedItems = [];
@@ -229,7 +250,6 @@ export class EditProductComponent implements OnInit{
       itemsShowLimit: 3,
       allowSearchFilter: true
     };
-
   }
   onItemSelect(item: any) {
     console.log(item);
@@ -238,7 +258,7 @@ export class EditProductComponent implements OnInit{
     console.log(items);
   }
   goBack() {
-    this.router.navigate(['/products']).then(r => console.log(r));
+      this.router.navigate(['/products']).then(r => console.log(r));
   }
   error_notification(message: string) {
     this.toast.error(message);
@@ -270,6 +290,7 @@ export class EditProductComponent implements OnInit{
         error: (e) => {
           console.error(e);
           this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -311,7 +332,6 @@ export class EditProductComponent implements OnInit{
         }
       }))
   }
-
   select_image_1(event: any) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -338,7 +358,6 @@ export class EditProductComponent implements OnInit{
         next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
             this.labels =  response.data;
-            this.get_product_by_id()
           }
         }
       }))
@@ -349,7 +368,6 @@ export class EditProductComponent implements OnInit{
       .subscribe(({ next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
             this.dropdownList =  response.data;
-            this.get_vendor_labels();
             this.ui_controls.page_loading = false;
           }
         }
@@ -431,43 +449,5 @@ export class EditProductComponent implements OnInit{
           this.updateProduct();
         }
       });
-  }
-  trackByName = (_: number, f: File) => f.name;
-  async onSelect(event: NgxDropzoneChangeEvent) {
-    const added = event.addedFiles ?? [];
-    this.files.push(...added);
-    const results = await Promise.all(
-      added.map(async (f) => {
-        const dataUrl = await this.fileToDataURL(f);
-        const base64 = dataUrl.split(',')[1] ?? '';
-        return {
-          file: f,
-          name: f.name,
-          type: f.type,
-          size: f.size,
-          dataUrl,
-          base64
-        } as EncodedFile;
-      })
-    );
-
-    this.encoded.push(...results);
-    this.update.images = this.getDataUrlArray().slice(0, 10);
-  }
-  onRemove(file: File) {
-    this.files = this.files.filter(f => f !== file);
-    this.encoded = this.encoded.filter(e => e.file !== file);
-    this.update.images = this.getDataUrlArray().slice(0, 10);
-  }
-  private fileToDataURL(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result as string);
-      reader.onerror = () => reject(reader.error);
-      reader.readAsDataURL(file);
-    });
-  }
-  getDataUrlArray(): string[] {
-    return this.encoded.map(e => e.dataUrl).filter(Boolean);
   }
 }

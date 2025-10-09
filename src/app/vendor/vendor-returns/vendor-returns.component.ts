@@ -87,7 +87,7 @@ export class VendorReturnsComponent implements OnInit {
 
   ngOnInit() {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.order.token = this.user_session.token
     this.order.id = this.user_session.id
     this.order_items.token = this.user_session.token
@@ -109,7 +109,7 @@ export class VendorReturnsComponent implements OnInit {
   }
   get_vendor_orders() {
     this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.order, GlobalComponent.getVendorOrders)
+    this.crudService.post_request(this.order, GlobalComponent.getVendorReturnOrders)
       .subscribe(({
         next: (response: any) => {
           if (response.response_code === 200 && response.status === 'success') {
@@ -126,7 +126,7 @@ export class VendorReturnsComponent implements OnInit {
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification(typeof e === 'string' ? e : 'Request failed');
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
           this.ui_controls.no_orders = true;
         },
@@ -150,13 +150,20 @@ export class VendorReturnsComponent implements OnInit {
       }))
   }
 
+  open_order(id: number, name:string) {
+    this.router.navigate(
+      ['/', 'order'],
+      { queryParams: {id, name} }
+    ).then(r => console.log(r));
+  }
+/*
   startStatusChange(order: number, status: string, email: string) {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm status',
+        label: 'Confirm',
         data: {
-          content: 'Your product order status will be changed and customer will be notified',
-          yes: 'Delete',
+          content: 'Confirm to proceed',
+          yes: 'Continue',
           no: 'Cancel',
         },
       })
@@ -181,5 +188,5 @@ export class VendorReturnsComponent implements OnInit {
           }
         }
       }))
-  }
+  }*/
 }

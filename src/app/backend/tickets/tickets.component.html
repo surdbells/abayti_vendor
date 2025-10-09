@@ -1,0 +1,143 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Support tickets</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_tickets()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+
+        <div class="card mt-2 mt-2">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-3">
+                <div class="mb-2">
+                  <label class="form-label">Priority</label>
+                  <select class="form-control form-select" (change)="get_ticketPriority($event)" [(ngModel)]="get_ticket_priority.priority" name="priority">
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="mb-2">
+                  <label class="form-label">Status</label>
+                  <select class="form-control form-select" (change)="get_ticketStatus($event)" [(ngModel)]="get_ticket_status.status" name="status">
+                    <option value="open">Open</option>
+                    <option value="pending">Pending</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="min-height: 650px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr class="border-2">
+                <th>Ticket&nbsp;Id</th>
+                <th>Ticket&nbsp;Ref</th>
+                <th>Store</th>
+                <th>Subject</th>
+                <th>Conversations</th>
+                <th>Message</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Initiated</th>
+                <th>Updated</th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="border-2" *ngFor="let a_ticket of tickets; let i = index">
+                <td>{{ a_ticket.ticket_id }}</td>
+                <td>{{ a_ticket.ticket_ref }}</td>
+                <td>{{ a_ticket.store_name }}</td>
+                <td>{{ a_ticket.subject}}</td>
+                <td><span class="badge bg-warning">{{ a_ticket.messages}}</span></td>
+                <td>
+                  {{ a_ticket.message }}
+                </td>
+                <td>
+                  @if(a_ticket.priority == 'low'){
+                    <span class="badge bg-black-subtle text-black">Low</span>
+                  } @else if (a_ticket.priority == 'medium') {
+                    <span class="badge bg-warning-subtle text-warning">Medium</span>
+                  } @else if (a_ticket.priority == 'high') {
+                    <span class="badge bg-danger-subtle text-danger">High</span>
+                  } @else if (a_ticket.priority == 'urgent') {
+                    <span class="badge bg-secondary-subtle text-primary">Urgent</span>
+                  }
+                </td>
+                <td>
+                  @if(a_ticket.status == 'open'){
+                    <span class="badge bg-primary-subtle text-primary">Open</span>
+                  } @else if (a_ticket.status == 'pending') {
+                    <span class="badge bg-warning-subtle text-warning">Pending</span>
+                  } @else if (a_ticket.status == 'resolved') {
+                    <span class="badge bg-success-subtle text-success">Resolved</span>
+                  } @else if (a_ticket.status == 'close') {
+                    <span class="badge bg-primary-subtle text-primary">Closed</span>
+                  }
+                </td>
+                <td>{{ a_ticket.created }}</td>
+                <td>{{ a_ticket.updated }}</td>
+                <td>
+                  <a role="button" (click)="manage_ticket(a_ticket.ticket_id, a_ticket.subject)" class="dropdown-item"> <tui-icon icon="@tui.view" /> MANAGE </a>
+                </td>
+                <td>
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Priority
+                    </button>
+                    <ul class="dropdown-menu shadow" aria-labelledby="actionMenuButton">
+                      <li *ngIf="a_ticket.priority != 'low'"><a role="button" (click)="start_changePriority(a_ticket.ticket_id, a_ticket.subject, 'low')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Low </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.priority != 'medium'"><a role="button" (click)="start_changePriority(a_ticket.ticket_id, a_ticket.subject, 'medium')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Medium </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.priority != 'high'"><a role="button" (click)="start_changePriority(a_ticket.ticket_id, a_ticket.subject, 'high')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> High </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.priority != 'urgent'"><a role="button" (click)="start_changePriority(a_ticket.ticket_id, a_ticket.subject, 'urgent')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Urgent </a></li><li><hr class="dropdown-divider"></li>
+                    </ul>
+                  </div>
+                </td>
+                <td class="text-end">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="actionMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                      Status
+                    </button>
+                    <ul class="dropdown-menu shadow" aria-labelledby="actionMenuButton">
+                      <li *ngIf="a_ticket.status != 'open'"><a role="button" (click)="start_changeStatus(a_ticket.ticket_id, a_ticket.subject, 'open')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Open </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.status != 'pending'"><a role="button" (click)="start_changeStatus(a_ticket.ticket_id, a_ticket.subject, 'pending')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Pending </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.status != 'resolved'"><a role="button" (click)="start_changeStatus(a_ticket.ticket_id, a_ticket.subject, 'resolved')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Resolved </a></li><li><hr class="dropdown-divider"></li>
+                      <li *ngIf="a_ticket.status != 'closed'"><a role="button" (click)="start_changeStatus(a_ticket.ticket_id, a_ticket.subject, 'closed')" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Closed </a></li><li><hr class="dropdown-divider"></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

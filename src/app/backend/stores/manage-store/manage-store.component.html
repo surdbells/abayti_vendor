@@ -1,0 +1,293 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <div style="width: 80%; margin: 0 auto"  class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ store_name }}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <span role="button" (click)="get_store()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+      </div>
+    </div>
+    <ul class="nav nav-pills justify-content-center">
+      <li class="nav-item me-2">
+        <button
+          class="nav-link"
+          [class.active]="ui_controls.progress"
+          (click)="ui_controls.progress = true; ui_controls.information = false; ui_controls.message = false">
+          <tui-icon icon="@tui.circle-dashed" /> Setup Progress
+        </button>
+      </li>
+      <li class="nav-item me-2">
+        <button
+          class="nav-link"
+          [class.active]="ui_controls.information"
+          (click)="ui_controls.information = true; ui_controls.progress = false; ui_controls.message = false">
+          <tui-icon icon="@tui.badge-info" /> Information
+        </button>
+      </li>
+      <li class="nav-item me-2">
+        <button
+          class="nav-link"
+          [class.active]="ui_controls.information"
+          (click)="ui_controls.message = true; ui_controls.progress = false; ui_controls.information = false;">
+          <tui-icon icon="@tui.message-square-text" /> Message Vendor
+        </button>
+      </li>
+    </ul>
+    <app-account-setup *ngIf="!ui_controls.is_loading && ui_controls.progress" [profile]="store"></app-account-setup>
+    <div style="width: 80%; margin: 0 auto" *ngIf="!ui_controls.is_loading && ui_controls.information" class="row mt-4">
+        <div class="col-12" >
+          <!-- General -->
+          <section class="card card-line bg-body-tertiary border-transparent mb-5">
+            <div class="card-body">
+              <h2 class="fs-5 mb-1">Vendor information</h2>
+              <div class="card border-transparent">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-auto">
+                      <div class="avatar avatar-xl">
+                        <img class="avatar-img" src="{{store.avatar}}" alt="...">
+                      </div>
+                    </div>
+                    <div class="col">
+                      <h2 class="fs-5 mb-0">{{ store.first_name }} {{ store.last_name }}</h2>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <div class="form-label text-body-secondary">Email</div>
+                    <a href="mailto:{{store.email}}" class="text-body"> {{store.email}} </a>
+                  </div>
+                  <div class="mb-4">
+                    <div class="form-label text-body-secondary">Phone</div>
+                    <a href="tel:{{store.phone}}" class="text-body"> {{store.phone}} </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="card card-line bg-body-tertiary border-transparent mb-5">
+            <div class="card-body">
+              <h2 class="fs-5 mb-1">Store information</h2>
+              <div class="card border-transparent">
+                <div class="card-body">
+                  <div class="mb-4">
+                    <label class="form-label required">Store name</label>
+                    <input readonly [maxlength]="50" type="text" [(ngModel)]="store.store_name" name="store_name" class="form-control form-control-sm">
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label required">Store location</label>
+                    <input readonly [maxlength]="255" type="text" [(ngModel)]="store.store_address" name="store_address" class="form-control form-control-sm">
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-6 col-xl-6 col-12">
+                      <div class="mb-4">
+                        <label class="form-label required">Email</label>
+                        <input readonly type="text" [(ngModel)]="store.store_email" name="store_email" class="form-control form-control-sm">
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-xl-6 col-12">
+                      <div class="mb-4">
+                        <label class="form-label required">Phone number</label>
+                        <input readonly [(ngModel)]="store.store_phone" type="text" name="store_phone" class="form-control form-control-sm">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label required">Description</label>
+                    <div class="card card-body" [innerHTML]="store.store_description">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Billing -->
+          <section class="card card-line bg-body-tertiary border-transparent mb-5">
+            <div class="card-body">
+              <h2 class="fs-5 mb-1">Billing</h2>
+              <p class="text-body-secondary">Payment information is only used to settle your sales.</p>
+              <div class="card border-transparent">
+                <div class="card-body py-0">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          Bank name
+                        </div>
+                        <div class="col">{{store.store_bank_name}}</div>
+                      </div>
+                    </li>
+                    <li class="list-group-item px-0">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          Account name
+                        </div>
+                        <div class="col">{{store.store_account_name}}</div>
+                      </div>
+                    </li>
+                    <li class="list-group-item px-0">
+                      <div class="row align-items-center">
+                        <div class="col-auto">
+                          Account number
+                        </div>
+                        <div class="col">{{store.store_account_number}}</div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Tax Information -->
+          <section class="card card-line bg-body-tertiary border-transparent mb-5">
+            <div class="card-body">
+              <h2 class="fs-5 mb-1">Tax Information</h2>
+              <p class="text-body-secondary">To complete your store setup with us, please submit your UAE tax details in your dashboard so we can issue VAT-compliant invoices and process payouts.</p>
+              <div class="card border-transparent">
+                <div class="card-body">
+                  <div class="mb-4">
+                    <fieldset class="form-fieldset stock-status-wrapper">
+                      <label class="form-label me-5"> Tax status </label>
+                      <label class="form-check form-check-inline mb-3">
+                        <input [(ngModel)]="store.vat_status" type="radio" name="vat_status" class="form-check-input" value="registered">
+                        <span class="form-check-label">  Registered  </span>
+                      </label>
+                      <label class="form-check form-check-inline mb-3">
+                        <input [(ngModel)]="store.vat_status" type="radio" name="vat_status" class="form-check-input" value="not_registered">
+                        <span class="form-check-label"> Not registered </span>
+                      </label>
+                      <label class="form-check form-check-inline mb-3">
+                        <input [(ngModel)]="store.vat_status" type="radio" name="vat_status" class="form-check-input" value="exempt">
+                        <span class="form-check-label"> Exempt </span>
+                      </label>
+                    </fieldset>
+                    <div class="form-text text-muted">Select ‘Registered’ only if you have a valid Tax Registration number.</div>
+                  </div>
+                  <div *ngIf="store.vat_status === 'registered'" class="form-group">
+                    <div class="row">
+                      <div class="col-6">
+                        <div  class="mb-4">
+                          <label class="form-label">Registered Business Name (as on Trade License)</label>
+                          <input readonly [(ngModel)]="store.store_legal_name" type="text" name="store_legal_name" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div  class="mb-4">
+                          <label class="form-label">Trade License Number</label>
+                          <input readonly [(ngModel)]="store.trade_license_number" type="text" name="trade_license_number" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <fieldset class="form-fieldset stock-status-wrapper">
+                        <label class="form-label me-5"> Licensing Authority (Dubai DED / Free Zone) </label>
+                        <label class="form-check form-check-inline mb-3">
+                          <input readonly  [(ngModel)]="store.licensing_authority" type="radio" name="licensing_authority" class="form-check-input" value="dubai_ded">
+                          <span class="form-check-label"> Dubai DED  </span>
+                        </label>
+                        <label class="form-check form-check-inline mb-3">
+                          <input readonly [(ngModel)]="store.licensing_authority" type="radio" name="licensing_authority" class="form-check-input" value="free_zone">
+                          <span class="form-check-label"> Free Zone </span>
+                        </label>
+                      </fieldset>
+                    </div>
+                    <div  class="mb-4">
+                      <label class="form-label">Tax Registration Number (TRN) — 15 digits</label>
+                      <input readonly [(ngModel)]="store.tax_registration_number" type="text" name="tax_registration_number" class="form-control">
+                    </div>
+                    <div class="row">
+                      <div class="col-4">
+                        <div class="mb-4">
+                          <label class="form-label">VAT Registration Effective Date</label>
+                          <input readonly [(ngModel)]="store.vat_registration_effective_date" type="date" name="vat_registration_effective_date" class="form-control">
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="mb-4">
+                          <label class="form-label">Registered Tax Address (UAE)</label>
+                          <input readonly [(ngModel)]="store.registered_tax_address" type="text" name="registered_tax_address" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label">Tax Contact Email</label>
+                      <input readonly [(ngModel)]="store.tax_contact_email" type="email" name="tax_contact_email" class="form-control">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Compliance-->
+          <section *ngIf="!ui_controls.is_loading" class="card card-line bg-body-tertiary border-transparent mb-5">
+            <div class="container my-4">
+              <div class="row g-4">
+                <!-- Front of ID -->
+                <div class="col-md-4">
+                  <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header fw-semibold bg-light">ID FRONT</div>
+                    <div class="card-body text-center">
+                      <img id="previewFront" src="{{store.id_front}}" alt="{{ 'upload_front_alt' | translate }}" class="img-fluid rounded mb-3 border" />
+                    </div>
+                  </div>
+                </div>
+                <!-- Back of ID -->
+                <div class="col-md-4">
+                  <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header fw-semibold bg-light">ID BACK</div>
+                    <div class="card-body text-center">
+                      <img id="previewBack" src="{{store.id_back}}" alt="{{ 'upload_back_alt' | translate }}" class="img-fluid rounded mb-3 border" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header fw-semibold bg-light">LICENSE DOCUMENT</div>
+                    <div class="card-body text-center">
+                      <img id="previewLicense" src="{{store.license_doc}}" alt="{{ 'upload_license_alt' | translate }}" class="img-fluid rounded mb-3 border" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+    </div>
+    <div style="width: 80%; margin: 0 auto" *ngIf="!ui_controls.is_loading && ui_controls.message" class="row mt-4">
+      <div *ngIf="!ui_controls.sending_message" class="col-12" >
+        <div class="mb-3 position-relative">
+          <label class="form-label form-label required" for="name"> Subject </label>
+          <input [(ngModel)]="message.subject" class="form-control" [maxlength]="100" data-counter="250" placeholder="Product name" required="required" name="name" type="text" id="name" aria-required="true">
+        </div>
+        <div class="mb-3 position-relative">
+          <label class="form-label required"> Message </label>
+          <angular-editor name="description" [maxlength]="600" [(ngModel)]="message.message" [config]="editorConfig"></angular-editor>
+        </div>
+        <div class="d-grid gap-2">
+          <button  (click)="send_message()" class="btn btn-success btn-sm text-white d-block" type="button">
+            <span class="material-symbols-outlined me-1">publish</span>
+            Send Message
+          </button>
+        </div>
+      </div>
+      <div *ngIf="ui_controls.sending_message" class="col-12">
+        <tui-loader />
+      </div>
+    </div>
+    <div class="row">
+      <div  *ngIf="ui_controls.is_loading" class="col-12">
+        <tui-loader />
+      </div>
+    </div>
+  </div>
+  </main>

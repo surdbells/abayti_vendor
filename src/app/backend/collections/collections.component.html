@@ -1,0 +1,59 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Collections</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <a routerLink="/create_collections" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
+          <span class="material-symbols-outlined text-white me-1"> add </span> New
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card mt-2 mt-2">
+          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let a_collection of collections; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-4">
+                      <div>{{a_collection.label}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span *ngIf="a_collection.is_active" class="badge bg-success-subtle text-success">Active</span>
+                  <span *ngIf="!a_collection.is_active" class="badge bg-danger-subtle text-danger">Inactive</span>
+                </td>
+                <td>
+                 <button (click)="edit_collection(a_collection.id, a_collection.label, a_collection.is_active)" class="btn btn-sm btn-secondary text-white">Edit</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

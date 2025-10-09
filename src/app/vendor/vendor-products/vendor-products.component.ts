@@ -16,6 +16,7 @@ import {TuiHeader} from '@taiga-ui/layout';
 import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
 import { ViewChild, ElementRef } from '@angular/core';
 import {InfiniteScrollDirective} from '../../infinite-scroll.directive';
+import {AsideComponent} from '../../partials/aside/aside.component';
 
 @Component({
   selector: 'app-vendor-products',
@@ -34,7 +35,8 @@ import {InfiniteScrollDirective} from '../../infinite-scroll.directive';
     TuiTitle,
     TuiPopup,
     TuiButton,
-    InfiniteScrollDirective
+    InfiniteScrollDirective,
+    AsideComponent
   ],
   templateUrl: './vendor-products.component.html',
   styleUrl: './vendor-products.component.css'
@@ -57,7 +59,7 @@ export class VendorProductsComponent implements OnInit {
     private crudService: CrudService,
     private toast: HotToastService,
   ) {}
-  image_url: any = "https://api.3bayti.com/vendors/products/"
+  image_url: any = "https://api.3bayti.ae/vendors/products/"
 
   ui_controls = {
     is_loading: false,
@@ -101,14 +103,9 @@ export class VendorProductsComponent implements OnInit {
     allow_checkout_when_out_of_stock: false,
     with_storehouse_management: false,
     stock_status: "in_stock",
-    sale_price: 0,
     price: 0,
     minimum_order_quantity: 1,
     maximum_order_quantity: 1,
-    height: 0,
-    weight: 0,
-    wide: 0,
-    length: 0,
     cost_per_item: 0,
     delivery_time: "",
     custom_delivery_time: "",
@@ -141,7 +138,6 @@ export class VendorProductsComponent implements OnInit {
     product: 0,
     token: ""
   };
-
   delete_product = {
     id: 0,
     product: 0,
@@ -151,7 +147,7 @@ export class VendorProductsComponent implements OnInit {
 
   ngOnInit() {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.product.token = this.user_session.token
     this.product.id = this.user_session.id
     this.product.store = this.user_session.id
@@ -165,7 +161,12 @@ export class VendorProductsComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/account']).then(r => console.log(r));
+    if (this.user_session.is_vendor){
+      this.router.navigate(['/account']).then(r => console.log(r));
+    }
+    if (this.user_session.is_admin){
+      this.router.navigate(['/backend']).then(r => console.log(r));
+    }
   }
   error_notification(message: string) {
     this.toast.error(message);
@@ -183,7 +184,7 @@ export class VendorProductsComponent implements OnInit {
             this.ui_controls.is_loading = false;
             this.dtOptions = {
               pagingType: 'full_numbers',
-              pageLength: 10
+              pageLength: 5
             };
 
             // init grid slice (does NOT affect DataTables/list view)
@@ -198,14 +199,14 @@ export class VendorProductsComponent implements OnInit {
               this.ui_controls.no_products = this.products.length === 0;
             }
           } else {
-            this.error_notification(response.message);
+            // this.error_notification(response.message);
             this.ui_controls.no_products = true;
           }
           this.ui_controls.is_loading = false;
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification(typeof e === 'string' ? e : 'Request failed');
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -222,9 +223,10 @@ export class VendorProductsComponent implements OnInit {
   }
 
   editProduct(id: number, name: string) {
-    localStorage.setItem("PRODUCT_ID", String(id));
-    localStorage.setItem("PRODUCT_NAME", name);
-    this.router.navigate(['/edit-product']).then(r => console.log(r));
+    this.router.navigate(
+      ['/', 'edit'],
+      { queryParams: {id} }
+    ).then(r => console.log(r));
   }
   get_product_by_id(id: number) {
     this.open.set(true)
@@ -287,5 +289,10 @@ export class VendorProductsComponent implements OnInit {
           }
         }
       }))
+  }
+  product_sales(id: number, name: string) {
+    localStorage.setItem("PRODUCT_ID", String(id));
+    localStorage.setItem("PRODUCT_NAME", name);
+    this.router.navigate(['/product_sales']).then(r => console.log(r));
   }
 }

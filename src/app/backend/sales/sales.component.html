@@ -1,0 +1,105 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Sales</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_sales()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+
+        <div class="card mt-2 mt-2">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-3">
+                <div class="mb-2">
+                  <label class="form-label">Start date</label>
+                  <input type="date" class="form-control" name="start_date" [(ngModel)]="get_sale_range.start_date">
+                </div>
+              </div>
+              <div class="col-3">
+                <label class="form-label">End date</label>
+                <input type="date" class="form-control" name="end_date" [(ngModel)]="get_sale_range.end_date">
+              </div>
+              <div class="col-3 mt-5">
+                <button (click)="get_range_sales()" class="btn mt-2 btn-outline-secondary abayti_secondary_background text-white">Submit</button>
+              </div>
+            </div>
+          </div>
+          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr class="border-2" >
+                <th>#</th>
+                <th>Order&nbsp;Ref</th>
+                <th>Product&nbsp;Name</th>
+                <th>Transaction&nbsp;Ref</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total&nbsp;Price</th>
+                <th>Delivery</th>
+                <th>Total&nbsp;Paid</th>
+                <th>Noon</th>
+                <th>Commission</th>
+                <th>Charges</th>
+                <th>Vendor&nbsp;Pay</th>
+                <th>Customer&nbsp;Name</th>
+                <th>Customer&nbsp;Email</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="border-2"  *ngFor="let a_sale of sales; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ a_sale.order_ref }}</td>
+                <td class="text-wrap" style="max-width:250px;">{{ a_sale.product_name }}</td>
+                <td>{{ a_sale.transaction_ref }}</td>
+                <td>{{ a_sale.quantity }}</td>
+
+                <!-- numeric formatting -->
+                <td>{{ a_sale.price}}</td>
+                <td>{{ a_sale.total_price }}</td>
+                <td>{{ a_sale.delivery }}</td>
+                <td>{{ a_sale.total_paid }}</td>
+                <td>{{ a_sale.noon }}</td>
+                <td>{{ a_sale.commission }}</td>
+                <td>{{ a_sale.charges }}</td>
+                <td>{{ a_sale.vendor_pay }}</td>
+
+                <td>{{ a_sale.customer_name }}</td>
+                <td>{{ a_sale.customer_email }}</td>
+
+                <td>
+                  @if(a_sale.status == 'paid'){
+                    <span class="badge bg-success-subtle text-success">Completed</span>
+                  } @else {
+                    <span class="badge bg-danger-subtle text-danger">Pending</span>
+                  }
+
+                </td>
+                <td>{{ a_sale.created }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -34,6 +34,7 @@ export class TopComponent implements OnInit {
     first_name: "",
     last_name: "",
     email: "",
+    avatar: "",
     phone: "",
     is_2fa: false,
     is_active: false,
@@ -43,7 +44,7 @@ export class TopComponent implements OnInit {
   };
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.notification.id =  this.user_session.id;
     this.notification.token =  this.user_session.token;
     this.get_notifications();
@@ -54,7 +55,6 @@ export class TopComponent implements OnInit {
   success_notification(message: string) {
     this.toast.success(message);
   }
-  // ---- API INTEGRATION ----
   notification = {
     id: 0,
     token: ""
@@ -69,14 +69,13 @@ export class TopComponent implements OnInit {
             this.ui_controls.count = response.message;
             this.notifications = response.data;
           } else {
-            this.error_notification(response.message);
             this.ui_controls.is_loading = false;
           }
 
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification(typeof e === 'string' ? e : 'Request failed');
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {
@@ -102,7 +101,7 @@ export class TopComponent implements OnInit {
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification(typeof e === 'string' ? e : 'Request failed');
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.is_loading = false;
         },
         complete: () => {

@@ -1,0 +1,173 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">{{ single.product }}</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+      </div>
+    </div>
+    <!-- Page content -->
+    <div class="row">
+      <div class="col-12">
+        <!-- show only when page not loading -->
+        <div class="invoice-wrap">
+          <div *ngIf="!ui_controls.is_loading" class="invoice-controls d-flex justify-content-end mb-3 gap-2">
+            <button *ngIf="data.status == 'Accepted'" class="btn bg-black text-white" (click)="startStatusChange(data.order, 'Ready for Delivery', data.customer_email)">
+              <i class="bi bi-send"></i> Ready for Delivery
+            </button>
+            <button  *ngIf="data.status == 'Ready for Delivery'"  class="btn btn-secondary text-white" (click)="startStatusChange(data.order, 'Delivered', data.customer_email)">
+              <i class="bi bi-ready"></i> Mark as Delivered
+            </button>
+            <button class="btn btn-secondary text-white" (click)="downloadPdf()">
+              <i class="bi bi-download"></i> Download PDF
+            </button>
+          </div>
+          <div *ngIf="!ui_controls.is_loading" id="invoiceToPrint" class="invoice-box bg-white shadow-sm rounded overflow-hidden">
+            <!-- Header -->
+            <div class="invoice-head d-flex justify-content-between align-items-start px-4 py-3 border-bottom">
+              <div>
+                <div class="small text-muted">
+                  <div class="mb-2"><strong>ORDER NO:</strong> {{data.order_ref || data.order}}</div>
+                  <div class="mb-2"><strong>MERCHANT REF:</strong> {{data.merchantReference}}</div>
+                  <div class="mb-2"><strong>ORDER STATUS:</strong>
+                    <span class="badge status-badge mx-3 rounded-pill bg-black px-3 py-2">
+                          {{data.status}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Addresses -->
+            <div class="px-4 py-3">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6 class="mb-2">Bill To</h6>
+                  <div class="fw-semibold"><strong>NAME:</strong> {{data.customer_name}}</div>
+                  <div class="fw-semibold text-muted"><strong>EMAIL:</strong> {{data.customer_email}}</div>
+                  <div class="fw-semibold text-muted"><strong>PHONE:</strong> {{data.delivery_phone}}</div>
+                </div>
+
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                  <h6 class="mb-2">Deliver To</h6>
+                  <div class="fw-semibold">{{data.delivery_name}}</div>
+                  <div class="small text-muted">
+                    {{data.delivery_street_address}}, {{data.villa_number}}
+                    <br> {{data.delivery_area}}, {{data.delivery_city}}
+                    <br> Phone: {{data.delivery_phone}} • Email: {{data.delivery_email}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="mx-4 my-0">
+
+            <!-- Items table -->
+            <div class="px-4 py-3">
+              <div class="table-responsive">
+                <table class="table align-middle mb-0 invoice-table">
+                  <thead class="table-light">
+                  <tr>
+                    <th style="width:72px">Image</th>
+                    <th>Product</th>
+                    <th>Size</th>
+                    <th>Color</th>
+                    <th class="text-center" style="width:90px">Qty</th>
+                    <th class="text-end" style="width:120px">Price</th>
+                    <th class="text-end" style="width:120px">Total</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr>
+                    <td>
+                      <img [src]="data.image" alt="product" class="product-thumb">
+                    </td>
+
+                    <td>
+                      <div class="fw-semibold">{{data.name}}</div>
+                      <div *ngIf="data.note" class="mt-2">
+                        <span class="badge bg-light border">Note</span>
+                        <div class="small mt-1">{{data.note}}</div>
+                      </div>
+                    </td>
+                    <td class="text-uppercase">{{data.size || '—'}}</td>
+                    <td class="text-uppercase">{{data.color || '—'}}</td>
+                    <td class="text-center">{{data.quantity}}</td>
+                    <td class="text-end">{{data.price}}</td>
+                    <td class="text-end fw-semibold">{{data.total}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Totals -->
+            <div class="px-4 py-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <!-- optional extra content -->
+                  <div *ngIf="data.measurement" class="small fw-bolder">Measurement</div>
+                  <div class="mb-2">
+                    <div class="small fw-bolder">
+                      <span><strong>Bust:</strong> {{data.measurement?.bust || '—'}} </span> |
+                      <span><strong>Neck:</strong> {{data.measurement?.neck || '—'}} </span> |
+                      <span><strong>Waist:</strong> {{data.measurement?.waist || '—'}} </span> |
+                      <span><strong>Length:</strong> {{data.measurement?.length || '—'}} </span> |
+                      <span><strong>Hip:</strong> {{data.measurement?.hip || '—'}} </span> |
+                      <span><strong>Arm:</strong> {{data.measurement?.arm || '—'}} </span>
+                    </div>
+                  </div>
+                  <div *ngIf="data.extra_measurement; else noextra" class="small fw-bolder">Extra measurement</div>
+                  <div *ngIf="data.extra_measurement; else noextra" class="mb-2">{{data.extra_measurement}}</div>
+                  <ng-template #noextra><div class="mb-2 text-muted"></div></ng-template>
+
+                  <div *ngIf="data.note; else nonote" class="small fw-bolder">Note</div>
+                  <div *ngIf="data.note; else nonote" class="mb-2">{{data.note}}</div>
+                  <ng-template #nonote><div class="mb-2 text-muted"></div></ng-template>
+                </div>
+
+                <div class="col-md-6">
+                  <table class="table table-borderless text-end mb-0 totals-table">
+                    <tbody>
+                    <tr>
+                      <td class="small text-muted">Items Subtotal:</td>
+                      <td class="fw-semibold">{{data.price}}</td>
+                    </tr>
+                    <tr class="border-top">
+                      <td class="fw-bold h5">Grand Total</td>
+                      <td class="fw-bold h5">{{data.total}}</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="invoice-foot px-4 py-3 border-top small text-muted d-flex justify-content-between">
+              <div>
+                {{data.cart_code}}
+
+              </div>
+              <div>
+                <div>This order is no longer editable.</div>
+              </div>
+            </div>
+          </div>
+          <tui-loader *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

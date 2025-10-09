@@ -1,0 +1,95 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Logistics</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_logistics()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+
+        <div class="card mt-2 mt-2">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-3">
+                <div class="mb-2">
+                  <label class="form-label">Status</label>
+                  <select class="form-control form-select" (change)="get_status_logistics($event)" [(ngModel)]="get_del_status.status" name="priority">
+                    <option value="Ready for Delivery">Ready for Delivery</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr class="border-2" >
+                <th>#</th>
+                <th>Order&nbsp;Ref</th>
+                <th>Product</th>
+                <th>Transaction&nbsp;Ref</th>
+                <th>Qty</th>
+                <th>Delivery&nbsp;Fee</th>
+                <th>Total&nbsp;Paid</th>
+                <th>Recipient&nbsp;Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Area</th>
+                <th>Villa</th>
+                <th>Status</th>
+                <th>Created</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="border-2"  *ngFor="let a_logistic of logistic; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ a_logistic.order_ref }}</td>
+                <td class="text-wrap" style="max-width:250px;">{{ a_logistic.product_name }}</td>
+                <td>{{ a_logistic.transaction_ref }}</td>
+                <td>{{ a_logistic.quantity }}</td>
+                <td>{{ a_logistic.delivery }}</td>
+                <td>{{ a_logistic.total_paid }}</td>
+                <td>{{ a_logistic.delivery_name }}</td>
+                <td>{{ a_logistic.delivery_email }}</td>
+                <td>{{ a_logistic.delivery_phone }}</td>
+                <td class="text-wrap" style="max-width:250px;">{{ a_logistic.delivery_street_address }}</td>
+                <td>{{ a_logistic.delivery_city }}</td>
+                <td>{{ a_logistic.delivery_area }}</td>
+                <td>{{ a_logistic.villa_number }}</td>
+                <td>
+                  <span [ngClass]="{
+                    'badge bg-warning-subtle text-warning': a_logistic.status === 'Ready for Delivery',
+                    'badge bg-success-subtle text-success': a_logistic.status === 'Delivered'
+                  }">
+                    {{ a_logistic.status }}
+                  </span>
+                </td>
+                <td>{{ a_logistic.created || '—' }}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

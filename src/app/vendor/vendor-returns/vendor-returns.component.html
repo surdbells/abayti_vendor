@@ -21,52 +21,33 @@
     <!-- Page content -->
     <div class="row">
       <div class="col-12">
-        <div class="card border-0 mt-2">
-          <div *ngIf="!ui_controls.no_orders && !ui_controls.is_loading" class="card-body text-center">
+        <div class="card mt-2">
+          <div *ngIf="!ui_controls.no_orders && !ui_controls.is_loading" class="card-body p-0">
             <div style="min-height: 350px" class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <table datatable [dtOptions]="dtOptions" class="table table-sm table-hover table-borderless table-round mb-0">
                 <thead>
-                <tr>
-                  <th>ORDER ID</th>
+                <tr class="border-2 rounded-2">
                   <th>DATE</th>
+                  <th>PRODUCT</th>
+                  <th>QUANTITY</th>
                   <th>CUSTOMER</th>
+                  <th>PRICE</th>
                   <th>STATUS</th>
-                  <th>ITEMS</th>
                   <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let a_orders of orders; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
-                  <td><h4>{{a_orders.code}}</h4></td>
+                <tr *ngFor="let a_orders of orders; let i = index" class="border-2 rounded-2">
                   <td>{{a_orders.created}}</td>
-                  <td>{{a_orders.customer}}</td>
+                  <td>{{a_orders.product}}</td>
+                  <td>{{a_orders.quantity}}</td>
+                  <td>{{a_orders.name}}</td>
+                  <td>{{a_orders.total_price}}</td>
+                  <td> {{a_orders.status}} </td>
                   <td>
-                    <span *ngIf="a_orders.status == 'pending'" class="badge bg-danger-subtle text-danger">Pending</span>
-                    <span *ngIf="a_orders.status == 'processing'" class="badge bg-warning-subtle text-warning">Processing</span>
-                    <span *ngIf="a_orders.status == 'ready_pickup'" class="badge bg-secondary-subtle text-secondary">Ready for Pickup</span>
-                    <span *ngIf="a_orders.status == 'delivered'" class="badge bg-success-subtle text-success">Delivered</span>
-                  </td>
-                  <td><button  class="btm btn-sm" (click)="get_order_items(a_orders.cart)"></button></td>
-                  <td style="width: 0px">
-                    <div class="dropdown">
-                      <button class="btn btn-sm btn-link text-body-tertiary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="material-symbols-outlined fs-4 scale-125">read_more</span>
-                      </button>
-                      <ul class="dropdown-menu" style="">
-                        <li>
-                          <a class="dropdown-item" (click)="startStatusChange(a_orders.id, 'accept_return', a_orders.email)">
-                            <span class="material-symbols-outlined text-success">check</span>
-                            Accept
-                          </a>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" (click)="startStatusChange(a_orders.id, 'reject_return', a_orders.email)">
-                            <span class="material-symbols-outlined text-warning">close</span>
-                            Reject
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                    <span role="button" (click)="open_order(a_orders.id, a_orders.product)" class="badge d-flex align-items-center py-1 px-2 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-pill">
+                      <span class="float-end">&nbsp;View</span>
+                    </span>
                   </td>
                 </tr>
                 </tbody>

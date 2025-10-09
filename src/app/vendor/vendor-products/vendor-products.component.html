@@ -1,5 +1,5 @@
-<app-side></app-side>
-<app-top></app-top>
+<app-side *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
 <main class="main ml-desktop-22rem px-lg-6">
   <div class="container-lg">
     <!-- Page header -->
@@ -16,19 +16,19 @@
       </div>
       <div class="col-12 col-sm-auto mt-4 mt-sm-0">
         <div class="row">
-          <div class="col-2">
+          <div class="col-4">
             <button (click)="switch_grid()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
               <span class="material-symbols-outlined text-white abayti_secondary_color fs-4"> flex_wrap </span>
             </button>
           </div>
-          <div class="col-2">
+          <div class="col-4">
             <button (click)="switch_list()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
               <span class="material-symbols-outlined text-white fs-4"> list </span>
             </button>
           </div>
-          <div class="col-8">
-            <a routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
-              <span class="material-symbols-outlined text-white me-1"> add </span> New Product
+          <div *ngIf="user_session.is_vendor"  class="col-4">
+            <a  routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
+              <span class="material-symbols-outlined text-white me-1 fs-6"> add </span>
             </a>
           </div>
         </div>
@@ -41,18 +41,19 @@
         <tui-loader class="p-5" *ngIf="ui_controls.deleting" />
         <div *ngIf="ui_controls.list_view" class="card card mt-2 mt-2">
             <div style="min-height: 350px" *ngIf="!ui_controls.no_products && !ui_controls.is_loading" class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <table datatable [dtOptions]="dtOptions" class="table table-hover table-borderless table-select table-round align-middle mb-0">
                 <thead>
-                <tr>
+                <tr class="border-2 rounded-2 mb-2">
                   <th>Name</th>
                   <th>Category</th>
+                  <th>Quantity</th>
                   <th>Price</th>
                   <th>Stock</th>
                   <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let a_products of products; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                <tr class="border-2 rounded-2 mb-2" *ngFor="let a_products of products; let i = index" role="button">
                   <td>
                     <div class="d-flex align-items-center">
                       <div class="avatar">
@@ -64,6 +65,7 @@
                     </div>
                   </td>
                   <td>{{a_products.category}}</td>
+                  <td>{{a_products.quantity}}</td>
                   <td>{{a_products.price}}</td>
                   <td>
                     <span *ngIf="a_products.stock_status == 'in_stock'" class="badge bg-success-subtle text-success">In Stock</span>
@@ -162,85 +164,80 @@
           </div>
       </div>
     </div>
-    <tui-drawer class="drawer" [overlay]="true" *tuiPopup="open()">
-      <header>
-        <h2 tuiHeader>
-          <div tuiTitle>Preview</div>
-          <div tuiAccessories>
-            <button tuiButton (click)="open.set(false)">Close</button>
-          </div>
-        </h2>
-      </header>
-      <div *ngIf="ui_controls.loaded_preview" class="row g-4">
-        <div  class="col-12">
-          <div class="card p-3">
-            <div id="productCarousel" class="carousel slide" data-bs-ride="false">
-              <div class="carousel-inner rounded">
-                <div class="carousel-item active">
-                  <img src="{{image_url+single_product.image_1}}" class="d-block w-100" alt="">
-                </div>
-                <div *ngFor="let src of single_product.images; index as i;" class="carousel-item">
-                  <img *ngIf="src.length > 100" src="{{src}}" class="d-block w-100" alt="">
-                  <img *ngIf="src.length < 100" src="{{image_url+src}}" class="d-block w-100" alt="">
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
 
-            <!-- Thumbnails -->
-            <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 g-2 mt-2" id="thumbs">
-              <div class="col">
-                <div class="thumb active" data-bs-target="#productCarousel" data-bs-slide-to="0">
-                  <img src="{{image_url+single_product.image_1}}" class="w-100" alt="Thumb 1">
-                </div>
-              </div>
-              <div *ngFor="let src of single_product.images; index as i;" class="col">
-                <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="1">
-                  <img *ngIf="src.length > 100" src="{{src}}" class="w-100" alt="Thumb 2">
-                  <img *ngIf="src.length < 100" src="{{image_url+src}}" class="w-100" alt="Thumb 2">
-                </div>
-              </div>
-            </div>
+  </div>
+</main>
+<tui-drawer class="drawer" direction="right" [overlay]="true" *tuiPopup="open()">
+  <header>
+    <h2 tuiHeader>
+      <div tuiTitle>Preview {{single_product.name}}</div>
+      <div tuiAccessories>
+        <button tuiButton (click)="open.set(false)">Close</button>
+      </div>
+    </h2>
+  </header>
+  <div *ngIf="ui_controls.loaded_preview" class="row g-4">
+    <div  class="col-12">
+      <div id="productCarousel" class="carousel slide" data-bs-ride="false">
+        <div class="carousel-inner rounded">
+          <div class="carousel-item active">
+            <img src="{{image_url+single_product.image_1}}" class="d-block w-100" alt="">
           </div>
-          <div class="mt-4">
-            <ul class="nav nav-tabs" id="detailTabs" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
-              </li>
-            </ul>
-            <div class="tab-content border border-top-0 p-3 rounded-bottom" id="detailTabsContent">
-              <div [innerHTML]="single_product.description" class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-              </div>
-            </div>
+          <div *ngFor="let src of single_product.images; index as i;" class="carousel-item">
+            <img *ngIf="src.length > 100" src="{{src}}" class="d-block w-100" alt="">
+            <img *ngIf="src.length < 100" src="{{image_url+src}}" class="d-block w-100" alt="">
           </div>
         </div>
-        <div class="col-12">
-          <div class="vstack gap-3 sticky-lg-top-80">
-            <div class="card p-3">
-              <div class="d-flex align-items-start justify-content-between gap-3">
-                <div>
-                  <h1 class="h3 mb-1">{{ single_product.name }}</h1>
-                </div>
-              </div>
-              <hr>
-              <div class="d-flex align-items-baseline gap-3">
-                <div class="price-now">{{ formatCurrency(single_product.sale_price, 'en', 'AED') }}</div>
-                <div class="price-was">{{  formatCurrency(single_product.price, 'en', 'AED') }}</div>
-                <span class="badge text-bg-danger">Save 20%</span>
-              </div>
-            </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 g-2 mt-2" id="thumbs">
+        <div class="col">
+          <div class="thumb active" data-bs-target="#productCarousel" data-bs-slide-to="0">
+            <img src="{{image_url+single_product.image_1}}" class="w-100" alt="Thumb 1">
+          </div>
+        </div>
+        <div *ngFor="let src of single_product.images; index as i;" class="col">
+          <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="1">
+            <img *ngIf="src.length > 100" src="{{src}}" class="w-100" alt="Thumb 2">
+            <img *ngIf="src.length < 100" src="{{image_url+src}}" class="w-100" alt="Thumb 2">
           </div>
         </div>
       </div>
-      <tui-loader class="p-5" *ngIf="!ui_controls.loaded_preview" />
-      <div *ngIf="!ui_controls.is_loading"></div>
-    </tui-drawer>
+      <div class="mt-4">
+        <ul class="nav nav-tabs" id="detailTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+          </li>
+        </ul>
+        <div class="tab-content border border-top-0 p-3 rounded-bottom" id="detailTabsContent">
+          <div [innerHTML]="single_product.description" class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="vstack gap-3 sticky-lg-top-80">
+        <div class="card p-3">
+          <div class="d-flex align-items-start justify-content-between gap-3">
+            <div>
+              <h1 class="h3 mb-1">{{ single_product.name }}</h1>
+            </div>
+          </div>
+          <hr>
+          <div class="d-flex align-items-baseline gap-3">
+            <div class="price-now">{{ formatCurrency(single_product.price, 'en', 'AED') }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</main>
+  <tui-loader class="p-5" *ngIf="!ui_controls.loaded_preview" />
+  <div *ngIf="!ui_controls.is_loading"></div>
+</tui-drawer>

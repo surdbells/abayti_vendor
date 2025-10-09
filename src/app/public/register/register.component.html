@@ -4,6 +4,9 @@
 </style>
 
 <div style="max-width: 55rem; padding-top: 3%" class="container animate__animated animate__fadeIn">
+    <span class="badge abayti_secondary_background rounded-pill mb-3">
+    <a routerLink="/" class="btn px-1 py-0 btn-sm text-white">{{ 'back_to_website' | translate }}</a>
+  </span>
   <div  class="row justify-content-center align-items-stretch g-4">
     <div class="col-12 col-lg-6 d-none d-md-flex">
       <div class="card shadow-lg w-100 h-100 overflow-hidden">
@@ -26,7 +29,7 @@
         <div *ngIf="!ui_controls.registered" class="card-body">
           <h1 class="fs-2">{{ 'register' | translate }}</h1>
           <p class="lead text-body-secondary">{{'create_account' | translate}}</p>
-          <form (ngSubmit)="send_otp()"  method="post"  class="mb-5">
+          <form (ngSubmit)="user_register()"  method="post"  class="mb-5">
             <div class="row">
               <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
                 <div class="mb-2">
@@ -59,7 +62,7 @@
                 </div>
               </div>
               <div class="col-12">
-                <small class="form-text">Add your business name and license number if available.</small>
+                <small class="form-text">{{'add_business_lic_instruction' | translate}}</small>
               </div>
             </div>
             <div class="mb-2">
@@ -102,37 +105,8 @@
             </button>
           </form>
           <p class="text-center text-body-secondary mb-0">{{ 'have_account' | translate }}
-            <a class="text-black" routerLink="/">{{'sign_in' | translate }}</a>
+            <a class="text-black" routerLink="/login">{{'sign_in' | translate }}</a>
           </p>
-        </div>
-        <div *ngIf="ui_controls.registered" class="card-body">
-          <h1 class="fs-1">{{ 'confirm_email' | translate }}</h1>
-          <p class="lead text-body-secondary">{{ 'otp_message' | translate }}</p>
-          <form (ngSubmit)="user_validate()"  method="post"  class="mb-5">
-            <div class="mb-2">
-              <label for="otp" class="form-label">{{ 'otp' | translate }}</label>
-              <input [max]="6" [(ngModel)]="confirm.input_otp" name="otp" class="form-control form-control-sm" id="otp" type="text" />
-            </div>
-            <tui-loader *ngIf="ui_controls.loading" />
-              <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold abayti_secondary_background text-white btn-secondary text-white w-100" type="submit">
-                {{ 'validate' | translate }}
-              </button>
-            <div class="row mt-4">
-              <div class="col-12">
-                <p>
-                  Didn’t get the otp email? Please check your inbox and spam folder.
-                  If the email address you entered is incorrect, click the button below to update and try again.
-                </p>
-              </div>
-              <div class="col-md-6 col-12">
-                <button type="button" class="text-black abayti_secondary_background text-white btn-secondary w-100 btn btn-sm" (click)="ui_controls.registered=false"> Change Email </button>
-              </div>
-              <div class="col-md-6 col-12">
-                <tui-loader *ngIf="ui_controls.loading" />
-                <button *ngIf="!ui_controls.loading" type="button" class="text-black w-100 abayti_secondary_color abayti_primary_background btn-secondary btn btn-sm" (click)="send_otp()"> Resend OTP </button>
-              </div>
-            </div>
-          </form>
         </div>
         <div class="card-footer">
           <p class="text-center text-body-secondary mb-0">{{ 'forgot_password_message' | translate }}

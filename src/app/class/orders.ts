@@ -1,12 +1,14 @@
 export class Orders {
   constructor(
     public id: number,
-    public code: string,
-    public cart: number,
-    public created: string,
-    public customer: string,
+    public order_ref: string,
+    public product: string,
+    public image: string,
+    public quantity: number,
     public email: string,
-    public reason: string,
+    public total_price: string,
+    public name: string,
+    public created: string,
     public status: string,
   ){  }
 }

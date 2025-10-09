@@ -1,5 +1,5 @@
-<app-side></app-side>
-<app-top></app-top>
+<app-side *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
 <main class="main ml-desktop-22rem px-lg-6">
   <div class="container-lg">
     <!-- Page header -->
@@ -35,13 +35,13 @@
                           </div>
                           <div class="mb-3 position-relative">
                             <label class="form-label required"> Description </label>
-                            <angular-editor name="description" [config]="editorConfig" [maxlength]="200" [(ngModel)]="create.description"></angular-editor>
+                          <angular-editor name="description" [maxlength]="600" [(ngModel)]="create.description" [config]="editorConfig"></angular-editor>
                           </div>
                           <div class="mb-3 position-relative">
                             <label class="form-label">Product gallery</label>
                             <div class="row">
                               <div class="col-12">
-                                <ngx-dropzone class="mt-5" (change)="onSelect($event)" [multiple]="true" accept=".png,.jpeg,.jpeg,.webp">
+                                <ngx-dropzone class="mt-5" (change)="onSelect($event)" [multiple]="true" accept=".png,.jpeg,.jpg,.webp">
                                   <ngx-dropzone-label>Drag & drop files here, or click to browse.</ngx-dropzone-label>
                                   <ngx-dropzone-image-preview
                                     *ngFor="let f of files; trackBy: trackByName"
@@ -65,18 +65,8 @@
                                 <label class="form-label required" for="price"> Price </label>
                                 <div class="input-group input-group-flat">
                                   <span class="input-group-text">AED</span>
-                                  <input [(ngModel)]="create.price" class="form-control input-mask-number" [min]="1" [step]="1" type="number" name="price" id="price">
+                                  <input [(ngModel)]="create.price" class="form-control input-mask-number" [min]="0.1" [step]="0.5" type="number" name="price" id="price">
                                 </div>
-                              </div>
-                            </div>
-                            <div class="col-md-4">
-                              <div class="mb-3 position-relative">
-                                <label class="form-label" for="sale_price"> Price sale </label>
-                                <div class="input-group input-group-flat">
-                                  <span class="input-group-text">AED</span>
-                                  <input [(ngModel)]="create.sale_price" class="form-control input-mask-number" [max]="create.price" [step]="1" type="number" name="sale_price" id="sale_price">
-                                </div>
-                                <small class="form-hint">Discount <strong></strong> from original price.</small>
                               </div>
                             </div>
                             <div class="col-md-4">
@@ -84,7 +74,7 @@
                                 <label class="form-label required" for="cost_per_item"> Cost per item </label>
                                 <div class="input-group input-group-flat">
                                   <span class="input-group-text">AED</span>
-                                  <input [(ngModel)]="create.cost_per_item" class="form-control input-mask-number" [max]="create.price" [step]="1" type="number" name="cost_per_item" id="cost_per_item">
+                                  <input [(ngModel)]="create.cost_per_item" class="form-control input-mask-number" [max]="create.price" [step]="0.5" type="number" name="cost_per_item" id="cost_per_item">
                                 </div>
                                 <small class="form-hint">Customers won't see this price.</small>
                               </div>
@@ -96,7 +86,27 @@
                               <span class="form-check-label"> With storehouse management </span>
                             </label>
                           </div>
-
+                          <div class="mb-3 position-relative">
+                            <label class="form-check">
+                              <input [checked]="create.is_featured" (change)="create.is_featured = !create.is_featured" type="checkbox" name="is_featured" class="form-check-input storehouse-management-status">
+                              <span class="form-check-label"> Feature product </span>
+                            </label>
+                          </div>
+                          @if (create.category == 1 || create.category == 2 || create.category == 3 || create.category == 6 || create.category == 7) {
+                            <div class="mb-3 position-relative">
+                              <label class="form-check">
+                                <input [checked]="create.require_extra_msmt" (change)="create.require_extra_msmt = !create.require_extra_msmt" type="checkbox" name="require_extra_msmt" class="form-check-input storehouse-management-status">
+                                <span class="form-check-label"> Requires extra measurement </span>
+                              </label>
+                            </div>
+                          }
+                          @if (create.category == 1 || create.category == 2 || create.category == 3 || create.category == 6 || create.category == 7) {
+                          <div  *ngIf="create.require_extra_msmt" class="mb-3 position-relative">
+                            <label class="form-label" for="require_extra_msmt"> Extra measurement details </label>
+                            <textarea class="form-control" placeholder="provide details for extra measurement required" [maxlength]="200" name="require_extra_msmt" id="require_extra_msmt" [(ngModel)]="create.extra_msmt">
+                            </textarea>
+                          </div>
+                          }
                           <fieldset class="form-fieldset storehouse-info">
 
                             <div class="mb-3 position-relative">
@@ -131,50 +141,6 @@
                               </div>
                             </div>
                           </div>
-                          <fieldset class="form-fieldset">
-                            <legend>
-                              <h3>Shipping</h3>
-                            </legend>
-                            <div class="row">
-                              <div class="col-md-3 col-md-6">
-                                <div class="mb-3 position-relative">
-                                  <label class="form-label" for="weight"> Weight (g) </label>
-                                  <div class="input-group input-group-flat">
-                                    <span class="input-group-text">g</span>
-                                    <input [(ngModel)]="create.weight" class="form-control input-mask-number" type="number" name="weight" id="weight" [min]="1" [step]="0.1">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-md-3 col-md-6">
-                                <div class="mb-3 position-relative">
-                                  <label class="form-label" for="length">  Length (cm) </label>
-                                  <div class="input-group input-group-flat">
-                                    <span class="input-group-text">cm</span>
-                                    <input [(ngModel)]="create.length" class="form-control input-mask-number" type="number" name="length" id="length" [min]="1" [step]="0.1">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-md-3 col-md-6">
-                                <div class="mb-3 position-relative">
-                                  <label class="form-label" for="wide"> Wide (cm) </label>
-                                  <div class="input-group input-group-flat">
-                                    <span class="input-group-text">cm</span>
-                                    <input [(ngModel)]="create.wide" class="form-control input-mask-number" type="number" name="wide" id="wide" [min]="1" [step]="0.1">
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="col-md-3 col-md-6">
-                                <div class="mb-3 position-relative">
-                                  <label class="form-label" for="height"> Height (cm) </label>
-                                  <div class="input-group input-group-flat">
-                                    <span class="input-group-text">cm</span>
-                                    <input [(ngModel)]="create.height" class="form-control input-mask-number" type="number" name="height" id="height" [min]="1" [step]="0.1">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </fieldset>
-
                           <div class="mb-3">
                             <label for="delivery_time" class="form-label required"> Delivery Time </label>
                             <select [(ngModel)]="create.delivery_time" id="delivery_time" name="delivery_time" class="form-select">
@@ -309,61 +275,105 @@
                         </div>
                       </div>
                     </div>
-                    <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sizing" aria-expanded="false" aria-controls="sizing">
-                          <label class="form-label required"> Sizing options </label>
-                        </button>
-                      </h2>
-                      <div id="sizing" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
-                        <div class="accordion-body">
-                          <div class="row">
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_xs" (change)="create.size_xs = !create.size_xs" type="checkbox" id="size_xs" name="size_xs" class="form-check-input">
-                                <span class="form-check-label"> XS </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_s" (change)="create.size_s = !create.size_s" type="checkbox" id="size_s" name="size_s" class="form-check-input">
-                                <span class="form-check-label"> S </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_m" (change)="create.size_m = !create.size_m" type="checkbox" id="size_m" name="size_m" class="form-check-input">
-                                <span class="form-check-label"> M </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_l" (change)="create.size_l = !create.size_l" type="checkbox" id="size_l" name="size_l" class="form-check-input">
-                                <span class="form-check-label"> L </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_xl" (change)="create.size_xl = !create.size_xl" type="checkbox" id="size_xl" name="size_xl" class="form-check-input">
-                                <span class="form-check-label"> XL </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_xxl" (change)="create.size_xxl = !create.size_xxl" type="checkbox" id="size_xxl" name="size_xxl" class="form-check-input">
-                                <span class="form-check-label"> XXL </span>
-                              </label>
-                            </div>
-                            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-12">
-                              <label class="form-check">
-                                <input [checked]="create.size_custom" (change)="create.size_custom = !create.size_custom" type="checkbox" id="size_custom" name="size_custom" class="form-check-input">
-                                <span class="form-check-label"> Custom </span>
-                              </label>
+                    @if (create.category == 1 || create.category == 2 || create.category == 3 || create.category == 6 || create.category == 7) {
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sizing" aria-expanded="false" aria-controls="sizing">
+                            <label class="form-label required"> Sizing options </label>
+                          </button>
+                        </h2>
+                        <div id="sizing" class="accordion-collapse collapse" data-bs-parent="#accordionSide">
+                          <div class="accordion-body">
+                            <div class="row">
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_xs" (change)="create.size_xs = !create.size_xs" type="checkbox" id="size_xs" name="size_xs" class="form-check-input">
+                                  <span class="form-check-label"> XS </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_s" (change)="create.size_s = !create.size_s" type="checkbox" id="size_s" name="size_s" class="form-check-input">
+                                  <span class="form-check-label"> S </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_m" (change)="create.size_m = !create.size_m" type="checkbox" id="size_m" name="size_m" class="form-check-input">
+                                  <span class="form-check-label"> M </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_l" (change)="create.size_l = !create.size_l" type="checkbox" id="size_l" name="size_l" class="form-check-input">
+                                  <span class="form-check-label"> L </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_xl" (change)="create.size_xl = !create.size_xl" type="checkbox" id="size_xl" name="size_xl" class="form-check-input">
+                                  <span class="form-check-label"> XL </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_xxl" (change)="create.size_xxl = !create.size_xxl" type="checkbox" id="size_xxl" name="size_xxl" class="form-check-input">
+                                  <span class="form-check-label"> XXL </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_50" (change)="create.size_50 = !create.size_50" type="checkbox" id="size_50" name="size_50" class="form-check-input">
+                                  <span class="form-check-label"> 50 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_52" (change)="create.size_52 = !create.size_52" type="checkbox" id="size_52" name="size_52" class="form-check-input">
+                                  <span class="form-check-label"> 52 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_54" (change)="create.size_54 = !create.size_54" type="checkbox" id="size_54" name="size_54" class="form-check-input">
+                                  <span class="form-check-label"> 54 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_56" (change)="create.size_56 = !create.size_56" type="checkbox" id="size_56" name="size_56" class="form-check-input">
+                                  <span class="form-check-label"> 56 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_58" (change)="create.size_58 = !create.size_58" type="checkbox" id="size_58" name="size_58" class="form-check-input">
+                                  <span class="form-check-label"> 58 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_60" (change)="create.size_60 = !create.size_60" type="checkbox" id="size_60" name="size_60" class="form-check-input">
+                                  <span class="form-check-label"> 60 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_62" (change)="create.size_62 = !create.size_62" type="checkbox" id="size_62" name="size_62" class="form-check-input">
+                                  <span class="form-check-label"> 62 </span>
+                                </label>
+                              </div>
+                              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-12 col-12">
+                                <label class="form-check">
+                                  <input [checked]="create.size_custom" (change)="create.size_custom = !create.size_custom" type="checkbox" id="size_custom" name="size_custom" class="form-check-input">
+                                  <span class="form-check-label"> Custom </span>
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    }
                     <div class="accordion-item">
                       <h2 class="accordion-header">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#color" aria-expanded="false" aria-controls="color">

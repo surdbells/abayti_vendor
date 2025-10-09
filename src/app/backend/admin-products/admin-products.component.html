@@ -1,0 +1,79 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Products</h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <select  (change)="get_product_status($event)" class="form-select form-select-sm" [(ngModel)]="product_S.status">
+          <option value="draft">Draft</option>
+          <option value="published">Published</option>
+          <option value="deleted">Deleted</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        <div *ngIf="!ui_controls.is_loading" class="card card mt-2 mt-2">
+          <div style="min-height: 350px"  class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-borderless table-select table-round align-middle mb-0">
+              <thead>
+              <tr class="border-2 rounded-2 mb-2">
+                <th>Name</th>
+                <th>Category</th>
+                <th>Store</th>
+                <th>Email</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Created</th>
+                <th>Last updated</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr class="border-2 rounded-2 mb-2" *ngFor="let a_products of products; let i = index" role="button">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-4">
+                      <div>{{a_products.name}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{a_products.category}}</td>
+                <td>{{a_products.first_name}} {{a_products.last_name}} - ( {{a_products.store_name}} )</td>
+                <td>{{a_products.email}}</td>
+                <td>{{a_products.quantity}}</td>
+                <td>{{a_products.price}}</td>
+                <td>
+                  <span *ngIf="a_products.stock_status == 'in_stock'" class="badge bg-success-subtle text-success">In Stock</span>
+                  <span *ngIf="a_products.stock_status == 'out_of_stock'" class="badge bg-danger-subtle text-danger">Out of stock</span>
+                  <span *ngIf="a_products.stock_status == 'on_backorder'" class="badge bg-warning-subtle text-warning">On backorder</span>
+                </td>
+                <td>{{a_products.created}}</td>
+                <td>{{a_products.updated}}</td>
+                <td>
+                  <span *ngIf="a_products.status == 'deleted'" class="badge bg-danger-subtle text-danger">Deleted</span>
+                  <span *ngIf="a_products.status == 'published'" class="badge bg-success-subtle text-success">Published</span>
+                  <span *ngIf="a_products.status == 'draft'" class="badge bg-warning-subtle text-warning">Draft</span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

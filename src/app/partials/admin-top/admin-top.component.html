@@ -1,0 +1,70 @@
+<nav class="navbar abayti_secondary_background topnav-toolbar d-none d-xl-flex px-xl-6">
+  <div class="flex-column align-items-stretch">
+    <div class="row">
+      <div class="col">
+        <!-- Search -->
+        <!--        <div class="input-group" style="max-width: 400px">
+                  <input class="form-control" id="topnavSearchInput" type="search" placeholder="Search" aria-label="Search" aria-describedby="navbarSearch" />
+                  <span class="input-group-text" id="navbarSearch">
+                        <kbd class="badge bg-body-secondary text-body">⌘</kbd>
+                        <kbd class="badge bg-body-secondary text-body ms-1">K</kbd>
+                   </span>
+                </div>-->
+      </div>
+      <div class="col-auto d-flex">
+        <div class="dropdown my-n2">
+            <a class="btn btn-link btn-sm mt-2 d-inline-flex align-items-center dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           <span class="avatar avatar-sm avatar-status avatar-status-light me-3">
+                <img class="avatar-img" src="{{user_session.avatar}}" alt="..." />
+              </span>
+              <span class="d-none d-xl-block text-black">Hello, {{user_session.first_name}}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" (click)="sign_out()">Sign out</a></li>
+            </ul>
+          </div>
+        <div class="vr align-self-center bg-dark mx-2"></div>
+        <app-language-switcher></app-language-switcher>
+
+        <!-- Divider -->
+        <div class="vr align-self-center bg-dark mx-2"></div>
+
+        <!-- Notifications -->
+        <div  class="dropdown ">
+          <button (click)="get_notifications()" class="btn btn-link" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+            <span class="material-symbols-outlined text-white scale-125">notifications</span>
+            <span class="position-absolute top-0 end-0 m-3 p-1 bg-warning rounded-circle">
+                  <span class="visually-hidden">New notifications</span>
+                </span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end" style="width: 350px">
+            <!-- Header -->
+            <div class="row">
+              <div class="col">
+                <h6 class="dropdown-header me-auto">Notifications</h6>
+              </div>
+              <div class="col-auto">
+                <button (click)="mark_notifications()"  class="btn btn-sm btn-link" type="button"><span class="material-symbols-outlined me-1">done_all</span> Mark all as read</button>
+                <button class="btn btn-sm btn-link" type="button"><span class="material-symbols-outlined text-secondary">notifications</span>{{ui_controls.count}}</button>
+              </div>
+            </div>
+
+            <!-- Items -->
+            <div *ngIf="!ui_controls.is_loading" class="list-group list-group-flush px-4">
+              <div  *ngFor="let a_notification of notifications; let i = index"  class="list-group-item border-style-dashed px-0">
+                <div class="row gx-3">
+                  <div class="col">
+                    <div class="card">
+                      <div [ngClass]="{'fw-bolder': !a_notification.is_read}" class="card-body p-3">{{a_notification.message}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <tui-loader *ngIf="ui_controls.is_loading" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

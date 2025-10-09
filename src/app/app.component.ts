@@ -1,7 +1,8 @@
 import { TuiRoot } from "@taiga-ui/core";
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {filter} from 'rxjs';
+declare let gtag: Function;
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, TuiRoot],
@@ -10,5 +11,15 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'ThreeBayti';
+  title = '3bayti.ae';
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      gtag('event', 'page_view', {
+        page_path: event.urlAfterRedirects
+      });
+    });
+  }
 }

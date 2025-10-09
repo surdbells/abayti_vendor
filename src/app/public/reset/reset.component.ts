@@ -91,7 +91,7 @@ export class ResetComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.loading = false;
         },
         complete: () => {
@@ -125,7 +125,7 @@ export class ResetComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.loading = false;
         },
         complete: () => {
@@ -166,7 +166,7 @@ export class ResetComponent implements OnInit{
         },
         error: (e) => {
           console.error(e);
-          this.error_notification(e);
+          this.error_notification("Unable to complete your request at this time.");
           this.ui_controls.loading = false;
         },
         complete: () => {

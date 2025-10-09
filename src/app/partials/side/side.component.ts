@@ -4,10 +4,12 @@ import {TuiIcon} from '@taiga-ui/core';
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
 import {LanguageSwitcherComponent} from "../../language-switcher.component";
+import {GlobalComponent} from '../../global-component';
+import {TranslatePipe} from '../../translate.pipe';
 
 @Component({
   selector: 'app-side',
-    imports: [ RouterLink ],
+  imports: [RouterLink, TranslatePipe],
   standalone: true,
   templateUrl: './side.component.html',
   styleUrl: './side.component.css'
@@ -37,7 +39,7 @@ export class SideComponent implements OnInit {
   };
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem("SESSION");
-    this.user_session = JSON.parse(atob(this.session_data));
+    this.user_session = GlobalComponent.decodeBase64(this.session_data);
   }
   error_notification(message: string) {
     this.toast.error(message);
