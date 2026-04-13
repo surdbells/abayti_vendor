@@ -66,6 +66,8 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
+                <th></th>
               </tr>
               </thead>
               <tbody>
@@ -101,7 +103,15 @@
                   }
                 </td>
                 <td>{{ a_ticket.created }}</td>
+                <td>
+                  <span *ngIf="a_ticket.minutes_after_created > 60" class="badge bg-danger-subtle text-danger">Urgent Attention</span>
+                  <span *ngIf="a_ticket.minutes_after_created < 60" class="badge bg-success-subtle text-success"> Created {{a_ticket.minutes_after_updated}} ago </span>
+                </td>
                 <td>{{ a_ticket.updated }}</td>
+                <td>
+                  <span *ngIf="a_ticket.minutes_after_updated > 60" class="badge bg-danger-subtle text-danger">Urgent Attention</span>
+                  <span *ngIf="a_ticket.minutes_after_updated < 60" class="badge bg-success-subtle text-success"> Last updated {{a_ticket.minutes_after_updated}} ago </span>
+                </td>
                 <td>
                   <a role="button" (click)="manage_ticket(a_ticket.ticket_id, a_ticket.subject)" class="dropdown-item"> <tui-icon icon="@tui.view" /> MANAGE </a>
                 </td>

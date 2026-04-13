@@ -2,242 +2,474 @@
 <app-aside *ngIf="user_session.is_admin"></app-aside>
 <main class="main ml-desktop-22rem px-lg-6">
   <div class="container-lg">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  PAGE HEADER                                               -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="row align-items-center mb-4">
       <div (click)="goBack()" role="button" class="col-auto">
         <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
+          <i class="fs-5"><tui-icon icon="@tui.chevron-left" /></i>
         </div>
       </div>
       <div class="col">
         <h1 class="fs-4 mb-0">Products</h1>
+        <small *ngIf="pagination.total > 0" class="text-muted">{{ pagination.total }} product{{ pagination.total !== 1 ? 's' : '' }}</small>
       </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <div class="row">
-          <div class="col-4">
-            <button (click)="switch_grid()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
-              <span class="material-symbols-outlined text-white abayti_secondary_color fs-4"> flex_wrap </span>
+      <div class="col-12 col-sm-auto mt-3 mt-sm-0">
+        <div class="d-flex gap-2 align-items-center justify-content-end">
+          <!-- View toggle -->
+          <div class="btn-group btn-group-sm" role="group">
+            <button (click)="switchList()" class="btn" [class.btn-secondary]="ui.list_view" [class.btn-outline-secondary]="!ui.list_view" [class.abayti_secondary_background]="ui.list_view" [class.text-white]="ui.list_view">
+              <span class="material-symbols-outlined fs-6">list</span>
+            </button>
+            <button (click)="switchGrid()" class="btn" [class.btn-secondary]="ui.grid_view" [class.btn-outline-secondary]="!ui.grid_view" [class.abayti_secondary_background]="ui.grid_view" [class.text-white]="ui.grid_view">
+              <span class="material-symbols-outlined fs-6">flex_wrap</span>
             </button>
           </div>
-          <div class="col-4">
-            <button (click)="switch_list()" class="btn btn-sm btn-outline-secondary abayti_secondary_background p-0">
-              <span class="material-symbols-outlined text-white fs-4"> list </span>
-            </button>
+          <!-- Filter toggle -->
+          <button (click)="toggleFilters()" class="btn btn-sm btn-outline-secondary position-relative">
+            <span class="material-symbols-outlined fs-6">tune</span>
+            <span *ngIf="activeFilterCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+              {{ activeFilterCount }}
+            </span>
+          </button>
+          <!-- Add product -->
+          <a *ngIf="user_session.is_vendor" routerLink="/create-product" class="btn btn-sm abayti_secondary_background text-white">
+            <span class="material-symbols-outlined fs-6 me-1">add</span> New
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  SEARCH BAR                                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-white border-end-0">
+            <span class="material-symbols-outlined fs-6 text-muted">search</span>
+          </span>
+          <input type="text" class="form-control border-start-0"
+                 placeholder="Search products by name..."
+                 [(ngModel)]="filters.search"
+                 (ngModelChange)="onSearchInput()"
+                 name="search">
+          <button *ngIf="filters.search" class="btn btn-outline-secondary border-start-0" (click)="filters.search = ''; onSearchInput()">
+            <span class="material-symbols-outlined fs-6">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  FILTERS PANEL (collapsible)                               -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="ui.filters_open" class="card card-body mb-3 bg-body-tertiary border-0 shadow-sm">
+      <div class="row g-3 align-items-end">
+        <!-- Status -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <label class="form-label small mb-1">Status</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.status" name="filter_status">
+            <option value="">All</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+        <!-- Stock -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <label class="form-label small mb-1">Stock</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.stock_status" name="filter_stock">
+            <option value="">All</option>
+            <option value="in_stock">In Stock</option>
+            <option value="out_of_stock">Out of Stock</option>
+            <option value="on_backorder">On Backorder</option>
+          </select>
+        </div>
+        <!-- Category -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <label class="form-label small mb-1">Category</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.category_id" name="filter_category">
+            <option [ngValue]="null">All</option>
+            <option *ngFor="let cat of categories" [ngValue]="cat.id">{{ cat.name }}</option>
+          </select>
+        </div>
+        <!-- Price range preset -->
+        <div class="col-6 col-md-3 col-lg-2">
+          <label class="form-label small mb-1">Price Range</label>
+          <select class="form-select form-select-sm" [(ngModel)]="price_preset" (ngModelChange)="onPricePresetChange()" name="filter_price_preset">
+            <option value="">All</option>
+            <option value="under_100">Under AED 100</option>
+            <option value="100_300">AED 100 – 300</option>
+            <option value="300_500">AED 300 – 500</option>
+            <option value="500_plus">AED 500+</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+        <!-- Custom price min/max (shown when "custom" selected) -->
+        <ng-container *ngIf="price_preset === 'custom'">
+          <div class="col-6 col-md-3 col-lg-1">
+            <label class="form-label small mb-1">Min</label>
+            <input type="number" class="form-control form-control-sm" placeholder="0" [(ngModel)]="filters.price_min" name="filter_price_min" [min]="0">
           </div>
-          <div *ngIf="user_session.is_vendor"  class="col-4">
-            <a  routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
-              <span class="material-symbols-outlined text-white me-1 fs-6"> add </span>
-            </a>
+          <div class="col-6 col-md-3 col-lg-1">
+            <label class="form-label small mb-1">Max</label>
+            <input type="number" class="form-control form-control-sm" placeholder="∞" [(ngModel)]="filters.price_max" name="filter_price_max" [min]="0">
+          </div>
+        </ng-container>
+        <!-- Apply / Clear -->
+        <div class="col-12 col-lg-auto d-flex gap-2">
+          <button class="btn btn-sm abayti_secondary_background text-white" (click)="applyFilters()">
+            <span class="material-symbols-outlined fs-6 me-1">filter_list</span> Apply
+          </button>
+          <button *ngIf="hasActiveFilters" class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">
+            <span class="material-symbols-outlined fs-6 me-1">filter_list_off</span> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  LOADING OVERLAY (delete)                                  -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <tui-loader class="p-5" *ngIf="ui.deleting" />
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  LIST VIEW                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="ui.list_view && !ui.no_products && !ui.loading" class="card mt-2">
+      <div class="table-responsive" style="min-height: 300px;">
+        <table class="table table-hover table-borderless align-middle mb-0">
+          <thead>
+            <tr class="border-bottom">
+              <th class="fw-semibold text-muted small">Product</th>
+              <th class="fw-semibold text-muted small">Category</th>
+              <th class="fw-semibold text-muted small">Status</th>
+              <th class="fw-semibold text-muted small text-end">Price</th>
+              <th class="fw-semibold text-muted small text-center">Qty</th>
+              <th class="fw-semibold text-muted small">Stock</th>
+              <th style="width: 50px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of products; trackBy: trackById" class="border-bottom">
+              <!-- Product name + image -->
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <img [src]="p.image"
+                       alt=""
+                       class="rounded"
+                       style="width: 44px; height: 44px; object-fit: cover; object-position: top center;"
+                       loading="lazy">
+                  <div>
+                    <div class="fw-medium text-truncate" style="max-width: 200px;">{{ p.name }}</div>
+                    <small *ngIf="p.store_name" class="text-muted">{{ p.store_name }}</small>
+                  </div>
+                </div>
+              </td>
+              <!-- Category -->
+              <td><span class="small">{{ p.category }}</span></td>
+              <!-- Status -->
+              <td>
+                <span class="badge" [ngClass]="getStatusBadgeClass(p.status)">{{ p.status }}</span>
+              </td>
+              <!-- Price -->
+              <td class="text-end fw-semibold">{{ p.price_formatted }}</td>
+              <!-- Quantity -->
+              <td class="text-center">{{ p.quantity }}</td>
+              <!-- Stock -->
+              <td>
+                <span class="badge" [ngClass]="getStockBadgeClass(p.stock_status)">
+                  {{ getStockLabel(p.stock_status) }}
+                </span>
+              </td>
+              <!-- Actions -->
+              <td>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-link text-body-tertiary p-0" data-bs-toggle="dropdown">
+                    <span class="material-symbols-outlined fs-5">more_vert</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="preview(p.id)">
+                        <span class="material-symbols-outlined fs-6 abayti_secondary_color">visibility</span>
+                        Preview
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="editProduct(p.id)">
+                        <span class="material-symbols-outlined fs-6">edit</span>
+                        Edit
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="productSales(p.id, p.name)">
+                        <span class="material-symbols-outlined fs-6">bar_chart</span>
+                        Sales
+                      </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2 text-danger" (click)="startDelete(p.id, p.name)">
+                        <span class="material-symbols-outlined fs-6">delete</span>
+                        Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  GRID VIEW                                                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="ui.grid_view && !ui.no_products && !ui.loading" class="row mt-2">
+      <div *ngFor="let p of products; trackBy: trackById" class="col-xxl-3 col-xl-4 col-lg-4 col-6 mb-4">
+        <div class="card shadow-sm h-100 product-grid-card">
+          <div class="position-relative">
+            <img [src]="p.image" [alt]="p.name" class="card-img-top"
+                 style="object-fit: cover; object-position: top center; height: 200px;"
+                 loading="lazy">
+            <span class="badge position-absolute top-0 end-0 m-2" [ngClass]="getStatusBadgeClass(p.status)">
+              {{ p.status }}
+            </span>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="card-title mb-0 text-truncate flex-grow-1 me-2">{{ p.name }}</h6>
+            </div>
+            <small class="text-muted mb-2">{{ p.category }}</small>
+            <div class="d-flex justify-content-between align-items-center mt-auto">
+              <div class="fw-semibold">{{ p.price_formatted }}</div>
+              <span class="badge" [ngClass]="getStockBadgeClass(p.stock_status)">
+                {{ getStockLabel(p.stock_status) }}
+              </span>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-link p-0 text-muted" title="Preview" (click)="preview(p.id)">
+                <span class="material-symbols-outlined fs-6">visibility</span>
+              </button>
+              <button class="btn btn-sm btn-link p-0 text-muted" title="Edit" (click)="editProduct(p.id)">
+                <span class="material-symbols-outlined fs-6">edit</span>
+              </button>
+              <button class="btn btn-sm btn-link p-0 text-danger" title="Delete" (click)="startDelete(p.id, p.name)">
+                <span class="material-symbols-outlined fs-6">delete</span>
+              </button>
+            </div>
+            <small class="text-muted">Qty: {{ p.quantity }}</small>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Page content -->
-    <div class="row">
-      <div class="col-12">
-        <tui-loader class="p-5" *ngIf="ui_controls.deleting" />
-        <div *ngIf="ui_controls.list_view" class="card card mt-2 mt-2">
-            <div style="min-height: 350px" *ngIf="!ui_controls.no_products && !ui_controls.is_loading" class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-hover table-borderless table-select table-round align-middle mb-0">
-                <thead>
-                <tr class="border-2 rounded-2 mb-2">
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="border-2 rounded-2 mb-2" *ngFor="let a_products of products; let i = index" role="button">
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <div class="avatar">
-                        <img style="object-fit: cover; object-position: top center" class="avatar-img rounded" src="{{a_products.image}}" alt="...">
-                      </div>
-                      <div class="ms-4">
-                        <div>{{a_products.name}}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{{a_products.category}}</td>
-                  <td>{{a_products.quantity}}</td>
-                  <td>{{a_products.price}}</td>
-                  <td>
-                    <span *ngIf="a_products.stock_status == 'in_stock'" class="badge bg-success-subtle text-success">In Stock</span>
-                    <span *ngIf="a_products.stock_status == 'out_of_stock'" class="badge bg-danger-subtle text-danger">Out of stock</span>
-                    <span *ngIf="a_products.stock_status == 'on_backorder'" class="badge bg-warning-subtle text-warning">On backorder</span>
-                  </td>
-                  <td style="width: 0px">
-                    <div class="dropdown">
-                      <button class="btn btn-sm btn-link text-body-tertiary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="material-symbols-outlined fs-4 scale-125">read_more</span>
-                      </button>
-                      <ul class="dropdown-menu" style="">
-                        <li>
-                          <a class="dropdown-item" (click)="preview(a_products.id)">
-                            <span class="material-symbols-outlined abayti_secondary_color">preview</span>
-                            Preview
-                          </a>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" (click)="editProduct(a_products.id, a_products.name)">
-                            <span class="material-symbols-outlined text-black">edit</span>
-                            Edit
-                          </a>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" (click)="startDeleteProduct(a_products.id, a_products.name)">
-                            <span class="material-symbols-outlined text-danger">delete</span>
-                            Delete
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-        </div>
-        <div *ngIf="ui_controls.grid_view" class="card border-0 mt-2">
-          <div *ngIf="!ui_controls.no_products && !ui_controls.is_loading" #gridScrollRegion style="max-height:160vh; overflow:auto;" class="row">
-            <div *ngFor="let a_products of visibleGridProducts; trackBy: trackByIdGrid" class="col-xxl-3 col-xl-4 col-lg-4 col-6 mb-4">
-              <div class="card shadow-sm">
-                <img src="{{a_products.image}}" alt="{{a_products.name}}" class="card-img-top" style="object-fit:cover; object-position: top center; height: 200px"/>
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="card-title mb-0 text-truncate">
-                      {{ a_products.name }}
-                    </h6>
-                    <span class="badge abayti_secondary_background text-white">
-                      {{ a_products.category}}
-                    </span>
-                  </div>
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  PAGINATION                                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="!ui.loading && !ui.no_products && pagination.total_pages > 0" class="d-flex flex-wrap justify-content-between align-items-center mt-3 mb-4 gap-3">
+      <!-- Per page -->
+      <div class="d-flex align-items-center gap-2">
+        <small class="text-muted">Show</small>
+        <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="pagination.per_page" (ngModelChange)="onPerPageChange()" name="per_page">
+          <option *ngFor="let n of per_page_options" [ngValue]="n">{{ n }}</option>
+        </select>
+        <small class="text-muted">per page</small>
+      </div>
 
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="fs-5 fw-semibold">
-                      {{ a_products.price }}
-                    </div>
-                    <span class="badge"
-                          [ngClass]="(a_products.quantity || 0) > 0 ? 'bg-success' : 'bg-danger'">
-                      {{ (a_products.quantity || 0) > 0 ? ('In stock: ' + a_products.quantity) : 'Out of stock' }}
-                    </span>
-                  </div>
-                </div>
-                <div class="card-footer">
-                  <span (click)="editProduct(a_products.id, a_products.name)" class="material-symbols-outlined text-start abayti_secondary_color fs-6 me-1"> east </span>
-                </div>
-              </div>
-            </div>
-            <!-- Sentinel just for GRID -->
-            <div class="col-12 text-center py-3"
-                 appInfiniteScroll
-                 [root]="gridScrollRegion || null"
-                 [canLoadMore]="canLoadMoreGrid"
-                 (loadMore)="onLoadMoreGrid()">
-              <ng-container *ngIf="canLoadMoreGrid; else gridEndTpl">Loading more…</ng-container>
-              <ng-template #gridEndTpl><span class="alert alert-success abayti_primary_background abayti_secondary_color"> All Products Loaded</span></ng-template>
-            </div>
-          </div>
-          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+      <!-- Page info -->
+      <small class="text-muted">
+        Showing {{ ((pagination.page - 1) * pagination.per_page) + 1 }}–{{ [pagination.page * pagination.per_page, pagination.total] | slice:0:1 }}{{ pagination.total < pagination.page * pagination.per_page ? pagination.total : pagination.page * pagination.per_page }} of {{ pagination.total }}
+      </small>
+
+      <!-- Page buttons -->
+      <nav *ngIf="pagination.total_pages > 1">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="pagination.page === 1">
+            <a class="page-link" (click)="goToPage(pagination.page - 1)" role="button">
+              <span class="material-symbols-outlined fs-6">chevron_left</span>
+            </a>
+          </li>
+          <ng-container *ngFor="let pn of pageNumbers">
+            <li *ngIf="pn === -1" class="page-item disabled">
+              <span class="page-link">…</span>
+            </li>
+            <li *ngIf="pn !== -1" class="page-item" [class.active]="pn === pagination.page">
+              <a class="page-link" (click)="goToPage(pn)" role="button">{{ pn }}</a>
+            </li>
+          </ng-container>
+          <li class="page-item" [class.disabled]="pagination.page === pagination.total_pages">
+            <a class="page-link" (click)="goToPage(pagination.page + 1)" role="button">
+              <span class="material-symbols-outlined fs-6">chevron_right</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  LOADING STATE                                             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <tui-loader class="p-5" *ngIf="ui.loading" />
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  EMPTY STATE                                               -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="ui.no_products && !ui.loading" class="card border-0 shadow-sm rounded-3 text-center p-4 mt-2">
+      <div class="card-body">
+        <div class="display-6 mb-2">📦</div>
+        <h5 class="card-title mb-1" *ngIf="!hasActiveFilters">No products yet</h5>
+        <h5 class="card-title mb-1" *ngIf="hasActiveFilters">No matching products</h5>
+        <p class="card-text text-secondary" *ngIf="!hasActiveFilters">
+          Add your first product to open your storefront.
+        </p>
+        <p class="card-text text-secondary" *ngIf="hasActiveFilters">
+          Try adjusting your search or filter criteria.
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a *ngIf="!hasActiveFilters" routerLink="/create-product" class="btn abayti_secondary_background btn-secondary text-white">
+            Add First Product
+          </a>
+          <button *ngIf="hasActiveFilters" class="btn btn-outline-secondary" (click)="clearFilters()">
+            Clear Filters
+          </button>
         </div>
-        <div *ngIf="ui_controls.no_products && !ui_controls.is_loading" class="card border-0 shadow-sm border rounded-3 text-center p-4">
-            <div class="card-body">
-              <div class="display-6 mb-2">📦</div>
-              <h5 class="card-title mb-1">No products yet</h5>
-              <p class="card-text text-secondary">
-                Add your first product to open your storefront. You can create one manually.
-              </p>
-              <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                <a routerLink="/create-product" class="btn abayti_secondary_background btn-secondary text-white">Add First Product</a>
-              </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 text-muted small">
-              Tip: clear photos + short, benefit-led titles help you convert faster.
-            </div>
-          </div>
+      </div>
+      <div *ngIf="!hasActiveFilters" class="card-footer bg-transparent border-0 text-muted small">
+        Tip: clear photos + short, benefit-led titles help you convert faster.
       </div>
     </div>
 
   </div>
 </main>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  PREVIEW DRAWER — Mobile App Preview                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
 <tui-drawer class="drawer" direction="right" [overlay]="true" *tuiPopup="open()">
   <header>
     <h2 tuiHeader>
-      <div tuiTitle>Preview {{single_product.name}}</div>
+      <div tuiTitle>Mobile Preview</div>
       <div tuiAccessories>
-        <button tuiButton (click)="open.set(false)">Close</button>
+        <button tuiButton appearance="outline" (click)="open.set(false)">Close</button>
       </div>
     </h2>
   </header>
-  <div *ngIf="ui_controls.loaded_preview" class="row g-4">
-    <div  class="col-12">
-      <div id="productCarousel" class="carousel slide" data-bs-ride="false">
-        <div class="carousel-inner rounded">
-          <div class="carousel-item active">
-            <img src="{{image_url+single_product.image_1}}" class="d-block w-100" alt="">
-          </div>
-          <div *ngFor="let src of single_product.images; index as i;" class="carousel-item">
-            <img *ngIf="src.length > 100" src="{{src}}" class="d-block w-100" alt="">
-            <img *ngIf="src.length < 100" src="{{image_url+src}}" class="d-block w-100" alt="">
-          </div>
+
+  <!-- Phone frame -->
+  <div *ngIf="ui.loaded_preview" class="phone-frame mx-auto">
+    <div class="phone-screen">
+      <!-- Status bar -->
+      <div class="phone-status-bar">
+        <span class="small">1:37</span>
+        <div class="d-flex gap-1 align-items-center">
+          <span class="material-symbols-outlined" style="font-size: 14px;">signal_cellular_alt</span>
+          <span class="material-symbols-outlined" style="font-size: 14px;">wifi</span>
+          <span class="material-symbols-outlined" style="font-size: 14px;">battery_5_bar</span>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
+      </div>
+
+      <!-- App header -->
+      <div class="phone-app-header">
+        <span class="phone-back-btn">
+          <span class="material-symbols-outlined">arrow_back</span>
+        </span>
+        <div class="d-flex gap-3">
+          <span class="material-symbols-outlined">favorite_border</span>
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </div>
+      </div>
+
+      <!-- Product image carousel -->
+      <div class="phone-image-section">
+        <img [src]="getImageUrl(previewImages[previewImageIndex])" alt="" class="phone-product-image">
+        <!-- Nav arrows -->
+        <button *ngIf="previewImageIndex > 0" class="phone-img-nav phone-img-nav-prev" (click)="prevImage()">
+          <span class="material-symbols-outlined">chevron_left</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
+        <button *ngIf="previewImageIndex < previewImages.length - 1" class="phone-img-nav phone-img-nav-next" (click)="nextImage()">
+          <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
-      <div class="row row-cols-3 row-cols-sm-4 row-cols-md-5 g-2 mt-2" id="thumbs">
-        <div class="col">
-          <div class="thumb active" data-bs-target="#productCarousel" data-bs-slide-to="0">
-            <img src="{{image_url+single_product.image_1}}" class="w-100" alt="Thumb 1">
-          </div>
-        </div>
-        <div *ngFor="let src of single_product.images; index as i;" class="col">
-          <div class="thumb" data-bs-target="#productCarousel" data-bs-slide-to="1">
-            <img *ngIf="src.length > 100" src="{{src}}" class="w-100" alt="Thumb 2">
-            <img *ngIf="src.length < 100" src="{{image_url+src}}" class="w-100" alt="Thumb 2">
-          </div>
-        </div>
+
+      <!-- Dots indicator -->
+      <div class="phone-dots">
+        <span *ngFor="let img of previewImages; let i = index"
+              class="phone-dot"
+              [class.phone-dot-active]="i === previewImageIndex"
+              (click)="selectImage(i)"></span>
       </div>
-      <div class="mt-4">
-        <ul class="nav nav-tabs" id="detailTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
-          </li>
-        </ul>
-        <div class="tab-content border border-top-0 p-3 rounded-bottom" id="detailTabsContent">
-          <div [innerHTML]="single_product.description" class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+
+      <!-- Product details (scrollable) -->
+      <div class="phone-content">
+        <!-- Category + name + qty control -->
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <div class="phone-category">{{ single_product.category_name || 'PRODUCT' }}</div>
+            <div class="phone-product-name">{{ single_product.name }}</div>
+          </div>
+          <div class="phone-qty-control">
+            <span class="phone-qty-btn">−</span>
+            <span class="phone-qty-val">1</span>
+            <span class="phone-qty-btn">+</span>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="col-12">
-      <div class="vstack gap-3 sticky-lg-top-80">
-        <div class="card p-3">
-          <div class="d-flex align-items-start justify-content-between gap-3">
-            <div>
-              <h1 class="h3 mb-1">{{ single_product.name }}</h1>
+
+        <!-- Description -->
+        <div class="phone-description" [innerHTML]="single_product.description"></div>
+
+        <!-- Delivery time -->
+        <div *ngIf="previewDeliveryTime" class="phone-delivery-badge">
+          <span class="material-symbols-outlined" style="font-size: 16px;">local_shipping</span>
+          Delivery Time: {{ previewDeliveryTime }}
+        </div>
+
+        <!-- Colors -->
+        <div *ngIf="previewColors.length > 0" class="mt-3">
+          <div class="phone-section-label">Color</div>
+          <div class="phone-color-chips">
+            <div *ngFor="let c of previewColors" class="phone-color-chip">
+              <span class="phone-color-swatch"
+                    [style.backgroundColor]="c.hex"
+                    [class.phone-color-swatch-border]="needsBorder(c.hex)"></span>
+              <span class="phone-color-name">{{ c.id }}</span>
             </div>
           </div>
-          <hr>
-          <div class="d-flex align-items-baseline gap-3">
-            <div class="price-now">{{ formatCurrency(single_product.price, 'en', 'AED') }}</div>
+        </div>
+
+        <!-- Sizes -->
+        <div *ngIf="previewSizes.length > 0" class="mt-3">
+          <div class="phone-section-label">Size</div>
+          <div class="phone-size-chips">
+            <span *ngFor="let s of previewSizes" class="phone-size-chip">{{ s }}</span>
           </div>
+        </div>
+
+        <!-- Delivery note -->
+        <div *ngIf="single_product.delivery_note" class="mt-3">
+          <div class="phone-section-label">Note</div>
+          <div class="phone-note-box">{{ single_product.delivery_note }}</div>
+        </div>
+      </div>
+
+      <!-- Bottom bar (Add to Cart) -->
+      <div class="phone-bottom-bar">
+        <div>
+          <div class="phone-total-label">Total</div>
+          <div class="phone-total-price">{{ formatCurrency(single_product.price, 'en', 'AED ') }}</div>
+        </div>
+        <div class="phone-add-to-cart">
+          <span class="material-symbols-outlined me-1" style="font-size: 18px;">shopping_cart</span>
+          Add to Cart
         </div>
       </div>
     </div>
   </div>
-  <tui-loader class="p-5" *ngIf="!ui_controls.loaded_preview" />
-  <div *ngIf="!ui_controls.is_loading"></div>
+
+  <tui-loader class="p-5" *ngIf="!ui.loaded_preview" />
 </tui-drawer>

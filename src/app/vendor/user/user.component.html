@@ -18,7 +18,7 @@
     <hr class="my-8">
     <!-- Stats -->
     <div *ngIf="!ui_controls.is_loading" class="row mb-8">
-      <div class="col-xxl-3 col-xl-3 col-md-6 col-6 mb-4 mb-xxl-0">
+      <div class="col-xxl-4 col-xl-4 col-md-6 col-6 mb-4 mb-xxl-0">
         <div role="button" routerLink="/products" class="card abayti_secondary_background border-transparent shadow-lg">
           <div class="card-body my-5">
             <div class="row align-items-center">
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xxl-3 col-xl-3 col-md-6 col-6 mb-4 mb-xxl-0">
+      <div class="col-xxl-4 col-xl-4 col-md-6 col-6 mb-4 mb-xxl-0">
         <div role="button" routerLink="/orders" class="card animate bg-white border-transparent shadow-lg">
           <div class="card-body my-5">
             <div class="row align-items-center">
@@ -52,32 +52,14 @@
           </div>
         </div>
       </div>
-      <div class="col-xxl-3 col-xl-3 col-md-6 col-6 mb-4 mb-md-0">
-        <div class="card bg-white border-transparent shadow-lg">
-          <div class="card-body my-5">
-            <div class="row align-items-center">
-              <div class="col">
-                <!-- Heading -->
-                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'dashboard_pending' | translate }}</h4>
-                <div class="fs-2 fw-semibold">{{ pending_orders }}</div>
-              </div>
-              <div class="col-auto">
-                <div class="avatar avatar-lg bg-body text-primary">
-                  <span class="material-symbols-outlined abayti_secondary_color fs-1"> shopping_cart_off </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xxl-3 col-xl-3 col-md-6 col-6 mb-4 mb-md-0">
+      <div class="col-xxl-4 col-xl-4 col-md-6 col-6 mb-4 mb-md-0">
         <div role="button" routerLink="/returns" class="card bg-white border-transparent shadow-lg">
           <div class="card-body my-5">
             <div class="row align-items-center">
               <div class="col">
                 <!-- Heading -->
-                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'dashboard_returns' | translate }}</h4>
-                <div class="fs-2 fw-semibold">{{ return_orders }}</div>
+                <h4 class="fs-sm fw-normal text-body-secondary mb-4">{{ 'sold' | translate }}</h4>
+                <div class="fs-2 fw-semibold">{{ products_sold }}</div>
               </div>
               <div class="col-auto">
                 <div class="avatar avatar-lg bg-body text-primary">

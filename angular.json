@@ -37,7 +37,6 @@
               }
             ],
             "styles": [
-              "node_modules/datatables.net-dt/css/dataTables.dataTables.min.css",
               "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css",
               "node_modules/@ngneat/hot-toast/src/styles/styles.css",
               "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
@@ -60,8 +59,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "5MB",
-                  "maximumError": "5MB"
+                  "maximumWarning": "10MB",
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",

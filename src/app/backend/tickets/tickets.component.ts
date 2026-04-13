@@ -24,6 +24,8 @@ export interface Tickets {
   status: string;
   created: string;
   updated: string;
+  minutes_after_created: number;
+  minutes_after_updated: number;
 }
 @Component({
   selector: 'app-sales',

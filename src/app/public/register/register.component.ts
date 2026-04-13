@@ -44,11 +44,6 @@ export class RegisterComponent implements OnInit{
     this.register.countryCode = d.code;
     this.codeSearch = '';
   }
-
-  // Optional: full E.164 if you need it
-  get fullPhone(): string {
-    return `${this.register.countryCode}${(this.register.phone || '').replace(/\D/g, '')}`;
-  }
   ui_controls = {
     loading: false,
     registered: false
@@ -123,7 +118,10 @@ export class RegisterComponent implements OnInit{
           if (response.response_code === 200 && response.status === "success") {
             this.ui_controls.loading = false;
             this.success_notification(response.message);
-            this.router.navigate(['/']).then(r => console.log(r));
+            this.router.navigate(['/login']).then(r => console.log(r));
+          }else{
+            this.error_notification(response.message);
+            this.ui_controls.loading = false;
           }
         },
         error: (e) => {

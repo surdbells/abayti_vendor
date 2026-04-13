@@ -40,49 +40,19 @@
             <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
               <thead>
               <tr class="border-2" >
-                <th>#</th>
-                <th>Order&nbsp;Ref</th>
-                <th>Product</th>
-                <th>Transaction&nbsp;Ref</th>
-                <th>Qty</th>
-                <th>Delivery&nbsp;Fee</th>
-                <th>Total&nbsp;Paid</th>
-                <th>Recipient&nbsp;Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Area</th>
-                <th>Villa</th>
-                <th>Status</th>
-                <th>Created</th>
+                <th>STORE NAME</th>
+                <th>LOCATION</th>
+                <th>EMAIL</th>
+                <th>PHONE</th>
               </tr>
               </thead>
               <tbody>
               <tr class="border-2"  *ngFor="let a_logistic of logistic; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>{{ a_logistic.order_ref }}</td>
-                <td class="text-wrap" style="max-width:250px;">{{ a_logistic.product_name }}</td>
-                <td>{{ a_logistic.transaction_ref }}</td>
-                <td>{{ a_logistic.quantity }}</td>
-                <td>{{ a_logistic.delivery }}</td>
-                <td>{{ a_logistic.total_paid }}</td>
-                <td>{{ a_logistic.delivery_name }}</td>
-                <td>{{ a_logistic.delivery_email }}</td>
-                <td>{{ a_logistic.delivery_phone }}</td>
-                <td class="text-wrap" style="max-width:250px;">{{ a_logistic.delivery_street_address }}</td>
-                <td>{{ a_logistic.delivery_city }}</td>
-                <td>{{ a_logistic.delivery_area }}</td>
-                <td>{{ a_logistic.villa_number }}</td>
-                <td>
-                  <span [ngClass]="{
-                    'badge bg-warning-subtle text-warning': a_logistic.status === 'Ready for Delivery',
-                    'badge bg-success-subtle text-success': a_logistic.status === 'Delivered'
-                  }">
-                    {{ a_logistic.status }}
-                  </span>
-                </td>
-                <td>{{ a_logistic.created || '—' }}</td>
+                <td><a class="link-danger" role="link" (click)="openPopup('/deliveries?vendor=' + a_logistic.store)">{{ a_logistic.store_name }}</a></td>
+                <td>{{ a_logistic.store_address }}</td>
+                <td>{{ a_logistic.store_email }}</td>
+                <td>{{ a_logistic.store_phone }}</td>
+
               </tr>
               </tbody>
             </table>

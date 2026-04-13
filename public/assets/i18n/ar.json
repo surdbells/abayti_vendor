@@ -193,6 +193,7 @@
   "table_order": "الطلب",
   "table_date": "التاريخ",
   "table_customer": "العميل",
+  "table_store": "اسم المتجر",
   "table_total": "الإجمالي",
   "table_status": "الحالة",
   "status_delivered": "تم التسليم",
@@ -217,7 +218,7 @@
   "label_length": "الطول",
   "label_neck": "الرقبة",
   "label_armhole": "فتحة الذراع",
-  "label_shoulder": "كتف",
+  "label_shoulder": "عرض الكتف",
   "label_arm": "طول الذراع",
   "table_size": "المقاس",
   "table_bust": "الصدر",
@@ -305,5 +306,6 @@
   "email_edit_notice": "لأسباب أمنية، لا يمكن تعديل الاسم أو البريد الإلكتروني هنا. يرجى الاتصال بالدعم لطلب التحديث: support@3bayti.ae.",
   "product": "المنتج",
   "quantity": "الكمية",
-  "delivery_list":  "قائمة التسليم"
+  "delivery_list":  "قائمة التسليم",
+  "sold":  "مُباع"
 }

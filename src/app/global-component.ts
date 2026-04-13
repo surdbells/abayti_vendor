@@ -8,6 +8,11 @@ export class GlobalComponent {
   public static getAdminProducts = GlobalComponent.baseURL + 'admin/common/products';
   public static messageVendor = GlobalComponent.baseURL + 'admin/message-vendor';
   public static sales = GlobalComponent.baseURL + 'admin/common/sales';
+  public static processing = GlobalComponent.baseURL + 'admin/common/processing';
+  public static processingById = GlobalComponent.baseURL + 'admin/common/processingById';
+  public static pluralById = GlobalComponent.baseURL + 'admin/common/pluralById';
+  public static productsByProcessingId = GlobalComponent.baseURL + 'admin/common/productsByProcessingId';
+  public static productsByVendorId = GlobalComponent.baseURL + 'admin/common/productsByVendorId';
   public static logistics = GlobalComponent.baseURL + 'admin/common/logistics';
   public static commissions = GlobalComponent.baseURL + 'admin/common/commissions';
   public static transactions = GlobalComponent.baseURL + 'admin/common/transactions';
@@ -16,6 +21,8 @@ export class GlobalComponent {
   public static sendTicketMessage = GlobalComponent.baseURL + 'admin/common/send-ticket-message';
   public static ticketsStatus = GlobalComponent.baseURL + 'admin/common/ticket-status';
   public static ticketsPriority = GlobalComponent.baseURL + 'admin/common/ticket-priority';
+  public static AdminUserRegister = GlobalComponent.baseURL + 'admin/common/register';
+  public static AdminUserPassword = GlobalComponent.baseURL + 'admin/common/password';
 
 
   // POST REQUEST
@@ -100,7 +107,7 @@ export class GlobalComponent {
   public static getMeasurementById = GlobalComponent.baseURL + 'vendors/measurement/getMeasurementById';
 
   public static getOrderById = GlobalComponent.baseURL + 'vendors/orders/getOrderById';
-
+  public static getUsers = GlobalComponent.baseURL + 'admin/common/get-users';
   static validateEmail(email: string) {
     return !!email.match(/(?:[a-z0-9+!#$%&'*\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/gi);
   }

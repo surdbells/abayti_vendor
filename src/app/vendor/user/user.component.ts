@@ -53,13 +53,12 @@ export class UserComponent implements OnInit {
 
   total_products = 0;
   total_orders = 0;
-  pending_orders = 0;
+  products_sold = 0;
   return_orders = 0;
-
 
   total_products_stats: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   total_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  pending_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  products_sold_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   return_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   constructor(
@@ -118,29 +117,21 @@ export class UserComponent implements OnInit {
             this.ui_controls.is_loading = false;
             this.total_products =  response.total_products;
             this.total_orders =  response.total_orders;
-            this.pending_orders =  response.pending_orders;
+            this.products_sold =  response.products_sold;
             this.return_orders =  response.return_orders;
             this.total_products_stats =  response.total_products_stats;
             this.total_orders_stats =  response.total_orders_stats;
-            this.pending_orders_stats =  response.pending_orders_stats;
+            this.products_sold_stats =  response.products_sold_stats;
             this.return_orders_stats =  response.return_orders_stats;
             this.chartOptions = {
               series: [
                 {
-                  name: "PRODUCTS",
+                  name: "PRODUCTS SOLD",
                   data: this.total_products_stats
                 },
                 {
                   name: "TOTAL ORDERS",
                   data: this.total_orders_stats
-                },
-                {
-                  name: "PENDING ORDERS",
-                  data: this.pending_orders_stats
-                },
-                {
-                  name: "RETURNED ORDER",
-                  data: this.return_orders_stats
                 }
               ],
               chart: {
@@ -194,25 +185,13 @@ export class UserComponent implements OnInit {
               }
             };
             this.recent =  response.data;
+            this.dtOptions = {
+              pagingType: 'full_numbers',
+              pageLength: 10
+            };
             if (response.message === 0){
               this.ui_controls.no_recent = true;
             }
-           // this.recent =  response.message;
-            this.get_topSelling()
-          }
-        }
-      }))
-  }
-  get_topSelling() {
-    this.stats.id = this.user_session.id;
-    this.stats.token = this.user_session.token;
-    this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.stats, GlobalComponent.topSelling)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.ui_controls.is_loading = false;
-            this.topProducts =  response.data;
           }
         }
       }))

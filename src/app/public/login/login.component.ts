@@ -53,6 +53,9 @@ export class LoginComponent implements OnInit{
     is_2fa: false,
     is_active: false,
     is_admin: false,
+    is_support: false,
+    is_finance: false,
+    _sub_admin: false,
     is_vendor: false,
     is_customer: false
   };
@@ -82,9 +85,23 @@ export class LoginComponent implements OnInit{
                 sessionStorage.setItem('SESSION', this.user_session_string);
                 if (this.user_session.is_admin){
                   this.router.navigate(['/', 'backend']).then(r => console.log(r));
+                  return;
+                }
+                if (this.user_session.is_finance){
+                  this.router.navigate(['/', 'backend']).then(r => console.log(r));
+                  return;
+                }
+                if (this.user_session.is_support){
+                  this.router.navigate(['/', 'backend']).then(r => console.log(r));
+                  return;
+                }
+                if (this.user_session._sub_admin){
+                  this.router.navigate(['/', 'backend']).then(r => console.log(r));
+                  return;
                 }
                 if (this.user_session.is_vendor){
                   this.router.navigate(['/', 'account']).then(r => console.log(r));
+                  return;
                 }
             }
           }

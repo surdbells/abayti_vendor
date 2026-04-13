@@ -47,6 +47,11 @@ import {TicketsComponent} from './backend/tickets/tickets.component';
 import {TicketMessageComponent} from './backend/tickets/ticket-message/ticket-message.component';
 import {CommissionsComponent} from './backend/commissions/commissions.component';
 import {LogisticsComponent} from './backend/logistics/logistics.component';
+import {ProcessingComponent} from './backend/processing/processing.component';
+import {SingleComponent} from './backend/processing/single/single.component';
+import {PluralComponent} from './backend/sales/plural/plural.component';
+import {UsersComponent} from './backend/users/users.component';
+import {DeliveriesComponent} from './backend/logistics/deliveries/deliveries.component';
 
 export const routes: Routes = [
   {
@@ -300,5 +305,30 @@ export const routes: Routes = [
     path: 'ticket_messages',
     component: TicketMessageComponent,
     title: 'Ticket messages'
+  },
+  {
+    path: 'processing',
+    component: ProcessingComponent,
+    title: 'ORDER PROCESSING'
+  },
+  {
+    path: 'single',
+    component: SingleComponent,
+    title: 'MANAGE ORDER'
+  },
+  {
+    path: 'plural',
+    component: PluralComponent,
+    title: 'VENDOR ORDERS'
+  },
+  {
+    path: 'deliveries',
+    component: DeliveriesComponent,
+    title: 'VENDOR ORDERS'
+  },
+  {
+    path: 'adminusers',
+    component: UsersComponent,
+    title: 'Platform Users'
   }
 ];

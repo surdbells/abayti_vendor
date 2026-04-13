@@ -62,12 +62,12 @@ export class AdminComponent implements OnInit {
   topProducts?: Products[];
   total_products = 0;
   total_orders = 0;
-  pending_orders = 0;
+  products_sold = 0;
   return_orders = 0;
 
   total_products_stats: Array<number> = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   total_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  pending_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  products_sold_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   return_orders_stats: Array<number> =  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   constructor(
     private router: Router,
@@ -99,6 +99,9 @@ export class AdminComponent implements OnInit {
     is_active: false,
     is_admin: false,
     is_vendor: false,
+    is_finance: false,
+    is_support: false,
+    _sub_admin: false,
     is_customer: false
   };
   ngOnInit(): void {
@@ -127,29 +130,21 @@ export class AdminComponent implements OnInit {
             this.ui_controls.is_loading = false;
             this.total_products =  response.total_products;
             this.total_orders =  response.total_orders;
-            this.pending_orders =  response.pending_orders;
+            this.products_sold =  response.products_sold;
             this.return_orders =  response.return_orders;
             this.total_products_stats =  response.total_products_stats;
             this.total_orders_stats =  response.total_orders_stats;
-            this.pending_orders_stats =  response.pending_orders_stats;
+            this.products_sold_stats =  response.products_sold_stats;
             this.return_orders_stats =  response.return_orders_stats;
             this.chartOptions = {
               series: [
                 {
-                  name: "PRODUCTS",
+                  name: "PRODUCTS SOLD",
                   data: this.total_products_stats
                 },
                 {
                   name: "TOTAL ORDERS",
                   data: this.total_orders_stats
-                },
-                {
-                  name: "PENDING ORDERS",
-                  data: this.pending_orders_stats
-                },
-                {
-                  name: "RETURNED ORDER",
-                  data: this.return_orders_stats
                 }
               ],
               chart: {
@@ -214,17 +209,49 @@ export class AdminComponent implements OnInit {
         }
       }))
   }
-  actions: Action[] = [
+  super_admin: Action[] = [
     { id: 'vendors', title: 'Vendors', desc: 'Manage and onboard vendors', icon: 'shop', route: '/stores' },
     { id: 'customers', title: 'Customers', desc: 'View and manage customers', icon: 'people', route: '/customers' },
     { id: 'products', title: 'Products', desc: 'Track and manage products', icon: 'box-seam', route: '/admin_products' },
+    { id: 'orders', title: 'Orders', desc: 'Monitor orders activities', icon: 'cart-check', route: '/processing' },
     { id: 'sales', title: 'Sales', desc: 'Monitor sales activities', icon: 'cart-check', route: '/adminsales' },
-    { id: 'transactions', title: 'Transactions', desc: 'Manage financial records', icon: 'credit-card', route: '/admintransactions' },
     { id: 'tickets', title: 'Tickets', desc: 'Support and issue tracking', icon: 'ticket-detailed', route: '/admintickets' },
     { id: 'commissions', title: 'Commissions', desc: 'Track vendor commissions', icon: 'cash-coin', route: '/admincommissions' },
     { id: 'logistics', title: 'Logistics', desc: 'Manage deliveries & shipping', icon: 'truck', route: '/adminlogistics' },
-   // { id: 'messages', title: 'Messages', desc: 'Chat and notifications', icon: 'chat-dots', route: '/messages' },
-   // { id: 'auditlog', title: 'Audit log', desc: 'Platform wise user action logs', icon: 'list', route: '/auditloog' },
+    { id: 'collections', title: 'Collections', desc: 'Collections management', icon: 'folder', route: '/collections' },
+    { id: 'users', title: 'Users', desc: 'Manage User', icon: 'person', route: '/adminusers' }
+  ];
+
+  admin: Action[] = [
+    { id: 'vendors', title: 'Vendors', desc: 'Manage and onboard vendors', icon: 'shop', route: '/stores' },
+    { id: 'customers', title: 'Customers', desc: 'View and manage customers', icon: 'people', route: '/customers' },
+    { id: 'products', title: 'Products', desc: 'Track and manage products', icon: 'box-seam', route: '/admin_products' },
+    { id: 'orders', title: 'Orders', desc: 'Monitor orders activities', icon: 'cart-check', route: '/processing' },
+    { id: 'tickets', title: 'Tickets', desc: 'Support and issue tracking', icon: 'ticket-detailed', route: '/admintickets' },
+    { id: 'commissions', title: 'Commissions', desc: 'Track vendor commissions', icon: 'cash-coin', route: '/admincommissions' },
+    { id: 'logistics', title: 'Logistics', desc: 'Manage deliveries & shipping', icon: 'truck', route: '/adminlogistics' },
     { id: 'collections', title: 'Collections', desc: 'Collections management', icon: 'folder', route: '/collections' }
   ];
+
+  support: Action[] = [
+    { id: 'vendors', title: 'Vendors', desc: 'Manage and onboard vendors', icon: 'shop', route: '/stores' },
+    { id: 'products', title: 'Products', desc: 'Track and manage products', icon: 'box-seam', route: '/admin_products' },
+    { id: 'tickets', title: 'Tickets', desc: 'Support and issue tracking', icon: 'ticket-detailed', route: '/admintickets' }
+  ];
+
+  finance: Action[] = [
+    { id: 'transactions', title: 'Transactions', desc: 'Manage financial records', icon: 'credit-card', route: '/admintransactions' },
+  ];
+
+  open_processing() {
+    this.router.navigate(['/processing']).then(r => console.log(r));
+  }
+
+  open_sales() {
+    this.router.navigate(['/adminsales']).then(r => console.log(r));
+  }
+
+  open_products() {
+    this.router.navigate(['/admin_products']).then(r => console.log(r));
+  }
 }

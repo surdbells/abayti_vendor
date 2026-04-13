@@ -101,7 +101,6 @@ export class TicketMessageComponent implements OnInit{
     this.ui_controls.is_loading = true;
     this.crudService.post_request(this.get_msg_t, GlobalComponent.ticketsMessages)
       .subscribe(({ next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
             this.message = response.data;
             this.ui_controls.is_loading = false;
             this.dtOptions = {
@@ -109,7 +108,7 @@ export class TicketMessageComponent implements OnInit{
               pageLength: 10
             };
           }
-        }
+
       }))
   }
  send_messages() {

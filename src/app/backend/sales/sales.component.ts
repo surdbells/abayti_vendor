@@ -19,14 +19,13 @@ export interface Sales {
   quantity: number;
   price: number;
   total_price: string;
-  delivery: string;
-  total_paid: string;
   noon: string;
   commission: string;
   charges: string;
   vendor_pay: string;
-  customer_email: string;
   customer_name: string;
+  store_name: string;
+  store: number;
   status: string;
   created: string;
 }
@@ -137,5 +136,23 @@ export class SalesComponent implements OnInit{
           }
         }
       }))
+  }
+  openPopup(route: string) {
+    const baseUrl = window.location.origin;
+    const fullUrl = `${baseUrl}/${route.replace(/^\/+/, '')}`;
+    const screenWidth = window.screen.availWidth;
+    const screenHeight = window.screen.availHeight;
+    const width = screenWidth * 0.8;
+    const height = screenHeight * 0.8;
+    const left = (screenWidth - width) / 2;
+    const top = (screenHeight - height) / 2;
+    const features = `
+    width=${width},
+    height=${height},
+    left=${left},
+    top=${top},
+    scrollbars=yes,
+    resizable=yes`.replace(/\s+/g, '');
+    window.open(fullUrl, 'popupWindow', features);
   }
 }

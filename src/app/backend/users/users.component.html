@@ -1,0 +1,233 @@
+<app-admin-top></app-admin-top>
+<main class="main">
+  <div class="container-fluid">
+    <!-- Page header -->
+    <div class="row align-items-center mb-7">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5">
+            <tui-icon icon="@tui.chevron-left" />
+          </i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0"> System Users </h1>
+      </div>
+      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+        <div class="avatar text-info me-2">
+          <span role="button" (click)="get_users()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <form autocomplete="off" (ngSubmit)="user_register()" method="post" class="mb-5">
+          <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+              <div class="mb-2">
+                <label for="first_name" class="required">{{ 'first_name' | translate }}</label>
+                <input autocomplete="off" [(ngModel)]="register.first_name" name="first_name" class="form-control form-control-sm" id="first_name" type="text" />
+              </div>
+            </div>
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+              <div class="mb-2">
+                <label for="last_name" class="required">{{ 'last_name' | translate }}</label>
+                <input autocomplete="off" [(ngModel)]="register.last_name" name="last_name" class="form-control form-control-sm" id="last_name" type="text" />
+              </div>
+            </div>
+          </div>
+          <div class="mb-2">
+            <label for="email" class="required">{{ 'email' | translate }}</label>
+            <input autocomplete="off" [(ngModel)]="register.email" name="email" class="form-control form-control-sm" id="email" type="email" />
+          </div>
+          <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+              <div class="mb-4">
+                <label for="password" class="required">{{ 'password' | translate }}</label>
+                <input autocomplete="off" class="form-control form-control-sm" name="password" id="password" [(ngModel)]="register.password"  type="text"/>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+              <div class="mb-4">
+                <label for="password" class="required">{{ 'confirm_password' | translate }}</label>
+                <input autocomplete="off"  class="form-control form-control-sm" name="confirm_password" id="confirm_password" [(ngModel)]="register.confirm_password"  type="text">
+              </div>
+            </div>
+          </div>
+          <div class="row my-5">
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+              <label class="form-check">
+                <input [checked]="register.is_finance" (change)="register.is_finance = !register.is_finance" type="checkbox" id="size_xs" name="size_xs" class="form-check-input">
+                <span class="form-check-label"> FINANCE MANAGER </span>
+              </label>
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+              <label class="form-check">
+                <input [checked]="register._sub_admin" (change)="register._sub_admin = !register._sub_admin" type="checkbox" id="size_s" name="size_s" class="form-check-input">
+                <span class="form-check-label"> SUB ADMIN </span>
+              </label>
+            </div>
+            <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+              <label class="form-check">
+                <input [checked]="register.is_support" (change)="register.is_support = !register.is_support" type="checkbox" id="size_m" name="size_m" class="form-check-input">
+                <span class="form-check-label"> CUSTOMER SUPPORT </span>
+              </label>
+            </div>
+          </div>
+          <tui-loader *ngIf="ui_controls.is_loading" />
+          <button *ngIf="!ui_controls.is_loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">
+            ADD NEW USER
+          </button>
+        </form>
+      </div>
+      <div class="col-9">
+        <div class="card mt-2 mt-2">
+          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
+            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
+              <thead>
+              <tr>
+                <th>NAME</th>
+                <th>EMAIL</th>
+                <th>LAST LOGIN</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>STATUS</th>
+                <th></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let a_customer of customers; let i = index" role="button" data-bs-toggle="offcanvas" data-bs-target="#productModal" aria-controls="productModal">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="ms-4">
+                      <div>{{a_customer.first_name}} {{a_customer.last_name}}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{a_customer.email}}</td>
+                <td>{{a_customer.last_login}}</td>
+                <td>
+                  <label class="form-check">
+                    <input readonly [checked]="a_customer.is_finance" (change)="a_customer.is_finance = !a_customer.is_finance" type="checkbox" id="is_finance" name="is_finance" class="form-check-input">
+                    <span class="form-check-label"> FINANCE MANAGER </span>
+                  </label>
+                </td>
+                <td>
+                  <label class="form-check">
+                    <input readonly [checked]="a_customer.is_sub_admin" (change)="a_customer.is_sub_admin = !a_customer.is_sub_admin" type="checkbox" id="is_sub_admin" name="is_sub_admin" class="form-check-input">
+                    <span class="form-check-label"> SUB ADMIN </span>
+                  </label>
+                </td>
+                <td>
+                  <label class="form-check">
+                    <input readonly [checked]="a_customer.is_support" (change)="a_customer.is_support = !a_customer.is_support" type="checkbox" id="is_support" name="is_support" class="form-check-input">
+                    <span class="form-check-label"> SUPPORT </span>
+                  </label>
+                </td>
+                <td>
+                  <span *ngIf="a_customer.status" class="badge bg-success-subtle text-success">Active</span>
+                  <span *ngIf="!a_customer.status" class="badge bg-danger-subtle text-danger">Inactive</span>
+                </td>
+                <td class="text-end">
+                  <button (click)="start_activate(a_customer.id, a_customer.first_name)" *ngIf="!a_customer.status" class="btn btn-sm btn-success" type="button">Activate</button>
+                  <button (click)="start_deactivate(a_customer.id, a_customer.first_name)" *ngIf="a_customer.status" class="btn btn-sm btn-danger" type="button">Deactivate</button>
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm" tuiButton type="button" (click)="start_edit(a_customer)">Update</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+        </div>
+      </div>
+    </div>
+
+    <tui-drawer
+      *tuiPopup="open()"
+      direction="left"
+      class="drawer"
+      [overlay]="true"
+      (click.self)="onClose()">
+      <header class="header">
+        <h2 tuiHeader>
+          <div tuiTitle>Sticky header</div>
+          <div tuiAccessories>
+            <button
+              tuiButton
+              type="button"
+              (click)="onClose()">
+              Close
+            </button>
+          </div>
+        </h2>
+      </header>
+      <div class="card mb-3">
+        <div class="card-body">
+          <form autocomplete="off" (ngSubmit)="update_user()" method="post" class="mb-5">
+            <div class="row">
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-2">
+                  <label for="first_name" class="required">{{ 'first_name' | translate }}</label>
+                  <input autocomplete="off" [(ngModel)]="single.first_name" name="first_name" class="form-control form-control-sm" type="text" />
+                </div>
+              </div>
+              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
+                <div class="mb-2">
+                  <label for="last_name" class="required">{{ 'last_name' | translate }}</label>
+                  <input autocomplete="off" [(ngModel)]="single.last_name" name="last_name" class="form-control form-control-sm" type="text" />
+                </div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="email" class="required">{{ 'email' | translate }}</label>
+              <input autocomplete="off" [(ngModel)]="single.email" name="email" class="form-control form-control-sm" type="email" />
+            </div>
+            <div class="row my-5">
+              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                <label class="form-check">
+                  <input [checked]="single.is_finance" (change)="register.is_finance = !register.is_finance" type="checkbox" class="form-check-input">
+                  <span class="form-check-label"> FINANCE MANAGER </span>
+                </label>
+              </div>
+              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                <label class="form-check">
+                  <input [checked]="single.is_sub_admin" (change)="register._sub_admin = !register._sub_admin" type="checkbox" class="form-check-input">
+                  <span class="form-check-label"> SUB ADMIN </span>
+                </label>
+              </div>
+              <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-12 col-12">
+                <label class="form-check">
+                  <input [checked]="single.is_support" (change)="register.is_support = !register.is_support" type="checkbox" class="form-check-input">
+                  <span class="form-check-label"> CUSTOMER SUPPORT </span>
+                </label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form autocomplete="off" (ngSubmit)="update_password()" method="post" class="mb-5">
+            <div class="row">
+              <div class="col-12">
+                <div class="mb-4">
+                  <label for="password" class="required">{{ 'password' | translate }}</label>
+                  <input autocomplete="off" class="form-control form-control-sm" name="password" [(ngModel)]="password_c.password"  type="text"/>
+                </div>
+              </div>
+            </div>
+            <tui-loader *ngIf="ui_controls.is_loading" />
+            <button (click)="update_password()" *ngIf="!ui_controls.is_loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">
+              UPDATE PASSWORD
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </tui-drawer>
+  </div>
+</main>

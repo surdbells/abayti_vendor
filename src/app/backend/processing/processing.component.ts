@@ -5,18 +5,22 @@ import {HotToastService} from '@ngneat/hot-toast';
 import {GlobalComponent} from '../../global-component';
 import {AsideComponent} from '../../partials/aside/aside.component';
 import {DataTablesModule} from 'angular-datatables';
-import {CommonModule, NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {TopComponent} from '../../partials/top/top.component';
 import {TuiIcon, TuiLoader} from '@taiga-ui/core';
 import {Config} from 'datatables.net';
 import {AdminTopComponent} from '../../partials/admin-top/admin-top.component';
 import {FormsModule} from '@angular/forms';
-export interface Logistics {
-  store: number;
-  store_name: string;
-  store_email: string;
-  store_address: string;
-  store_phone: string;
+export interface Transaction {
+  id: number;
+  order_id: string;
+  transaction_id: string;
+  merchantReference: string;
+  customer: string;
+  total_paid: string;
+  delivery_fee: string;
+  status: string;
+  created: string;
 }
 @Component({
   selector: 'app-sales',
@@ -28,16 +32,15 @@ export interface Logistics {
     NgIf,
     TopComponent,
     TuiIcon,
-    CommonModule,
     TuiLoader,
     AdminTopComponent,
     FormsModule
   ],
-  templateUrl: './logistics.component.html',
-  styleUrl: './logistics.component.css'
+  templateUrl: './processing.component.html',
+  styleUrl: './processing.component.css'
 })
-export class LogisticsComponent implements OnInit{
-  logistic?: Logistics[];
+export class ProcessingComponent implements OnInit{
+  transaction?: Transaction[];
   dtOptions: Config = {};
   ui_controls = {
     is_loading: false,
@@ -67,48 +70,75 @@ export class LogisticsComponent implements OnInit{
   ngOnInit() {
     this.session_data = sessionStorage.getItem("SESSION");
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
-    this.get_del.id = this.user_session.id;
-    this.get_del.token = this.user_session.token;
-    this.get_del_status.id = this.user_session.id;
-    this.get_del_status.token = this.user_session.token
-    this.get_logistics();
-  }
 
-  get_del = {
+    this.get_processing_s.id = this.user_session.id;
+    this.get_processing_s.token = this.user_session.token
+
+    this.get_processing_r.id = this.user_session.id;
+    this.get_processing_r.token = this.user_session.token
+
+    this.getProcessingById.id = this.user_session.id;
+    this.getProcessingById.token = this.user_session.token
+    this.get_processing();
+  }
+  getProcessingById = {
+    id: 0,
+    token: "",
+    order: "",
+  }
+ get_processing_s = {
     id: 0,
     token: ""
   }
-  get_del_status = {
+  get_processing_r = {
     id: 0,
     token: "",
-    status: "Ready for Delivery"
+    start_date: "",
+    end_date: ""
   }
   goBack() {
     this.router.navigate(['/backend']).then(r => console.log(r));
   }
 
-  get_logistics() {
+  get_processing() {
     this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.get_del, GlobalComponent.logistics)
+    this.crudService.post_request(this.get_processing_s, GlobalComponent.processing)
       .subscribe(({ next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
-            this.logistic = response.data;
+            this.transaction = response.data;
             this.ui_controls.is_loading = false;
             this.dtOptions = {
               pagingType: 'full_numbers',
-              pageLength: 5
+              pageLength: 10,
+              order: [0, "desc"]
             };
           }
         }
       }))
   }
-  get_status_logistics(event: Event) {
-    this.get_del_status.status = (event.target as HTMLSelectElement).value;
+  get_processingById(order: string) {
+    this.getProcessingById.order = order;
     this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.get_del_status, GlobalComponent.logistics)
+    this.crudService.post_request(this.getProcessingById, GlobalComponent.processingById)
       .subscribe(({ next: (response) => {
           if (response.response_code === 200 && response.status === "success") {
-            this.logistic = response.data;
+            this.transaction = response.data;
+            this.ui_controls.is_loading = false;
+            this.dtOptions = {
+              pagingType: 'full_numbers',
+              pageLength: 10,
+              order: [0, "desc"]
+            };
+          }
+        }
+      }))
+  }
+  get_processing_range() {
+    this.ui_controls.is_loading = true;
+    this.crudService.post_request(this.get_processing_r, GlobalComponent.processing)
+      .subscribe(({ next: (response) => {
+          if (response.response_code === 200 && response.status === "success") {
+            this.transaction = response.data;
             this.ui_controls.is_loading = false;
             this.dtOptions = {
               pagingType: 'full_numbers',
@@ -119,7 +149,7 @@ export class LogisticsComponent implements OnInit{
       }))
   }
   openPopup(route: string) {
-    const baseUrl = window.location.origin;
+    const baseUrl = window.location.origin; // e.g., https://myapp.com
     const fullUrl = `${baseUrl}/${route.replace(/^\/+/, '')}`;
     const screenWidth = window.screen.availWidth;
     const screenHeight = window.screen.availHeight;
@@ -136,4 +166,5 @@ export class LogisticsComponent implements OnInit{
     resizable=yes`.replace(/\s+/g, '');
     window.open(fullUrl, 'popupWindow', features);
   }
+
 }

@@ -7,6 +7,7 @@ export class Products {
     public category: string,
     public name: string,
     public price: string,
+    public colors: string,
     public sales: string,
     public vendor: string,
     public email: string,

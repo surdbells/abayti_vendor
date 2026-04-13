@@ -32,12 +32,11 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Store</th>
-                <th>Email</th>
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Stock</th>
-                <th>Created</th>
-                <th>Last updated</th>
+                <th>Timestamp</th>
+                <th>Colors</th>
                 <th>Status</th>
               </tr>
               </thead>
@@ -51,8 +50,7 @@
                   </div>
                 </td>
                 <td>{{a_products.category}}</td>
-                <td>{{a_products.first_name}} {{a_products.last_name}} - ( {{a_products.store_name}} )</td>
-                <td>{{a_products.email}}</td>
+                <td role="button" (click)="manage_store(a_products.store, a_products.store_name)">{{a_products.first_name}} {{a_products.last_name}} - ( {{a_products.store_name}} )</td>
                 <td>{{a_products.quantity}}</td>
                 <td>{{a_products.price}}</td>
                 <td>
@@ -60,8 +58,14 @@
                   <span *ngIf="a_products.stock_status == 'out_of_stock'" class="badge bg-danger-subtle text-danger">Out of stock</span>
                   <span *ngIf="a_products.stock_status == 'on_backorder'" class="badge bg-warning-subtle text-warning">On backorder</span>
                 </td>
-                <td>{{a_products.created}}</td>
-                <td>{{a_products.updated}}</td>
+                <td>
+                  <div class="fs-sm text-body-secondary">{{a_products.created}}</div>
+                  <div>Last updated: {{a_products.updated}}</div>
+                </td>
+                <td>
+                  <span *ngIf="a_products.colors.length == 0" class="badge bg-danger-subtle text-danger">NO COLORS</span>
+                  <span *ngIf="a_products.colors.length > 0" class="badge bg-success-subtle text-success"> {{ a_products.colors.length }} COLORS </span>
+                </td>
                 <td>
                   <span *ngIf="a_products.status == 'deleted'" class="badge bg-danger-subtle text-danger">Deleted</span>
                   <span *ngIf="a_products.status == 'published'" class="badge bg-success-subtle text-success">Published</span>

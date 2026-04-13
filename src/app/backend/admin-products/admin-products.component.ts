@@ -137,4 +137,9 @@ export class AdminProductsComponent implements OnInit{
         }
       }));
   }
+  manage_store(id: number, name: string) {
+    const urlTree = this.router.createUrlTree(['/manage_store'], { queryParams: { id, name } });
+    const fullUrl = this.router.serializeUrl(urlTree);
+    window.open(fullUrl, '_blank');
+  }
 }

@@ -51,14 +51,11 @@
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>Total&nbsp;Price</th>
-                <th>Delivery</th>
-                <th>Total&nbsp;Paid</th>
                 <th>Noon</th>
                 <th>Commission</th>
                 <th>Charges</th>
                 <th>Vendor&nbsp;Pay</th>
                 <th>Customer&nbsp;Name</th>
-                <th>Customer&nbsp;Email</th>
                 <th>Status</th>
                 <th>Date</th>
               </tr>
@@ -76,21 +73,14 @@
                 <td class="text-wrap" style="max-width:250px;">{{ a_sale.product_name }}</td>
                 <td>{{ a_sale.transaction_ref }}</td>
                 <td>{{ a_sale.quantity }}</td>
-
                 <!-- numeric formatting -->
                 <td>{{ a_sale.price}}</td>
                 <td>{{ a_sale.total_price }}</td>
-                <td>{{ a_sale.delivery }}</td>
-                <td>{{ a_sale.total_paid }}</td>
                 <td>{{ a_sale.noon }}</td>
                 <td>{{ a_sale.commission }}</td>
                 <td>{{ a_sale.charges }}</td>
                 <td>{{ a_sale.vendor_pay }}</td>
-
                 <td>{{ a_sale.customer_name }}</td>
-                <td>{{ a_sale.customer_email }}</td>
-
-
                 <td>
                   @if(a_sale.status == 'paid'){
                     <span class="badge bg-success-subtle text-success">Completed</span>

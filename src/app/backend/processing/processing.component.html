@@ -11,11 +11,11 @@
         </div>
       </div>
       <div class="col">
-        <h1 class="fs-4 mb-0">Sales</h1>
+        <h1 class="fs-4 mb-0">Orders</h1>
       </div>
       <div class="col-12 col-sm-auto mt-4 mt-sm-0">
         <div class="avatar text-info me-2">
-          <span role="button" (click)="get_sales()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+          <span role="button" (click)="get_processing()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
         </div>
       </div>
     </div>
@@ -28,15 +28,15 @@
               <div class="col-3">
                 <div class="mb-2">
                   <label class="form-label">Start date</label>
-                  <input type="date" class="form-control" name="start_date" [(ngModel)]="get_sale_range.start_date">
+                  <input type="date" class="form-control" name="start_date" [(ngModel)]="get_processing_r.start_date">
                 </div>
               </div>
               <div class="col-3">
                 <label class="form-label">End date</label>
-                <input type="date" class="form-control" name="end_date" [(ngModel)]="get_sale_range.end_date">
+                <input type="date" class="form-control" name="end_date" [(ngModel)]="get_processing_r.end_date">
               </div>
               <div class="col-3 mt-5">
-                <button (click)="get_range_sales()" class="btn mt-2 btn-outline-secondary abayti_secondary_background text-white">Submit</button>
+                <button (click)="get_processing_range()" class="btn mt-2 btn-outline-secondary abayti_secondary_background text-white">Filter</button>
               </div>
             </div>
           </div>
@@ -45,45 +45,33 @@
               <thead>
               <tr class="border-2" >
                 <th>#</th>
-                <th>Product&nbsp;Name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total&nbsp;Price</th>
-                <th>Noon</th>
-                <th>Commission</th>
-                <th>Charges</th>
-                <th>Vendor&nbsp;Pay</th>
-                <th>Customer&nbsp;Name</th>
-                <th>Store&nbsp;Name</th>
-                <th>Status</th>
-                <th>Date</th>
+                <th>ORDER&nbsp;ID</th>
+                <th>TRANSACTION&nbsp;ID</th>
+                <th>MERCHANT&nbsp;REF</th>
+                <th>CUSTOMER</th>
+                <th>DELIVERY&nbsp;FEE</th>
+                <th>TOTAL&nbsp;AMOUNT&nbsp;PAID</th>
+                <th>STATUS</th>
+                <th>DATE</th>
               </tr>
               </thead>
               <tbody>
-              <tr class="border-2"  *ngFor="let a_sale of sales; let i = index">
+              <tr class="border-2"  *ngFor="let a_transaction of transaction; let i = index">
                 <td>{{ i + 1 }}</td>
-                <td class="text-wrap" style="max-width:250px;">{{ a_sale.product_name }}</td>
-                <td>{{ a_sale.quantity }}</td>
-
-                <!-- numeric formatting -->
-                <td>{{ a_sale.price}}</td>
-                <td>{{ a_sale.total_price }}</td>
-                <td>{{ a_sale.noon }}</td>
-                <td>{{ a_sale.commission }}</td>
-                <td>{{ a_sale.charges }}</td>
-                <td>{{ a_sale.vendor_pay }}</td>
-
-                <td>{{ a_sale.customer_name }}</td>
-                <td><a class="link-danger" role="link" (click)="openPopup('/plural?vendor=' + a_sale.store)">{{ a_sale.store_name }}</a></td>
+                <td><a class="link-danger" role="link" (click)="openPopup('/single?order=' + a_transaction.id)">{{ a_transaction.order_id }}</a></td>
+                <td>{{ a_transaction.transaction_id }}</td>
+                <td>{{ a_transaction.merchantReference }}</td>
+                <td>{{ a_transaction.customer }}</td>
+                <td>{{ a_transaction.delivery_fee}}</td>
+                <td>{{ a_transaction.total_paid }}</td>
                 <td>
-                  @if(a_sale.status == 'paid'){
+                  @if(a_transaction.status == 'paid'){
                     <span class="badge bg-success-subtle text-success">Completed</span>
                   } @else {
                     <span class="badge bg-danger-subtle text-danger">Pending</span>
                   }
-
                 </td>
-                <td>{{ a_sale.created }}</td>
+                <td>{{ a_transaction.created }}</td>
               </tr>
               </tbody>
             </table>

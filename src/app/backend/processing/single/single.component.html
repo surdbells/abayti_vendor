@@ -1,0 +1,126 @@
+<main class="main">
+  <div style="width: 90%; margin: 0 auto" class="container-fluid">
+    @if(!ui_controls.is_loading){
+      <div class="row">
+        <div class="col-12">
+          <div class="card shadow-sm border-0 rounded-4 my-3">
+            <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center px-4 py-3">
+              <h6 class="mb-0 fw-bold text-primary">
+                <i class="bi bi-receipt-cutoff me-2"></i>Order #{{ single_order.order_id || '—' }}
+              </h6>
+              <span class="badge px-3 py-2 text-capitalize"
+                    [ngClass]="{
+                              'bg-success-subtle text-success': single_order.status === 'paid',
+                              'bg-warning-subtle text-warning': single_order.status === 'pending',
+                              'bg-danger-subtle text-danger': single_order.status === 'failed'
+                            }">
+                            {{ single_order.status || 'unknown' }}
+                          </span>
+                          </div>
+
+            <div class="table-responsive px-3 pb-3">
+              <table class="table table-sm align-middle mb-0">
+                <tbody>
+                <tr>
+                  <th>Transaction ID</th>
+                  <td>{{ single_order.transaction_id || '—' }}</td>
+                </tr>
+                <tr>
+                  <th>Merchant Reference</th>
+                  <td>{{ single_order.merchantReference || '—' }}</td>
+                </tr>
+                <tr>
+                  <th class="align-top">Delivery</th>
+                  <td>
+                    <div class="delivery-block">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <div>
+                          <div class="fw-semibold">{{ single_order.delivery_name || '—' }}</div>
+                          <div class="small text-muted">
+                            <span *ngIf="single_order.delivery_city">{{ single_order.delivery_city }}</span>
+                            <span *ngIf="single_order.delivery_area"> • {{ single_order.delivery_area }}</span>
+                          </div>
+                        </div>
+
+                        <div class="text-end small">
+                          <div class="text-muted">Villa</div>
+                          <div class="fw-semibold">{{ single_order.villa_number || '—' }}</div>
+                        </div>
+                      </div>
+
+                      <div class="mb-2 address small text-truncate" title="{{ single_order.delivery_street_address }}">
+                        <i class="bi bi-geo-alt-fill me-1 text-secondary"></i>
+                        {{ single_order.delivery_street_address || '—' }}
+                      </div>
+
+                      <div class="d-flex gap-2 flex-wrap">
+                        <span *ngIf="single_order.delivery_phone"
+                           class="delivery-link small d-inline-flex align-items-center">
+                          <i class="bi bi-telephone me-1"></i>{{ single_order.delivery_phone }}
+                        </span>
+
+                        <span *ngIf="single_order.delivery_email"
+                           class="delivery-link small d-inline-flex align-items-center">
+                          <i class="bi bi-envelope me-1"></i>{{ single_order.delivery_email }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="row">
+          <div class="row align-items-center mb-5">
+            <div class="col">
+
+            </div>
+          </div>
+          <div class="card p-0 mb-7 mb-xxl-0">
+            <div class="card-header">
+              <h6 class="mb-0">ORDER ITEMS</h6>
+            </div>
+            <div class="table-responsive table-sm">
+              <table class="table table-sm table-hover mb-0">
+                <thead>
+                <tr>
+                  <th class="fs-sm">NAME</th>
+                  <th class="fs-sm">STORE</th>
+                  <th class="fs-sm">QUANTITY</th>
+                  <th class="fs-sm">PRICE</th>
+                  <th class="fs-sm">TOTAL&nbsp;PRICE</th>
+                  <th class="fs-sm">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for(a_item of items; track $index){
+                  <tr class="border-2">
+                    <td>{{ a_item.product_name }}</td>
+                    <td>{{ a_item.store }}</td>
+                    <td>{{ a_item.quantity }}</td>
+                    <td>{{ a_item.price }}</td>
+                    <td>{{ a_item.total_price }}</td>
+                    <td>
+                      <span *ngIf="a_item.status == 'Accepted'" class="badge bg-danger-subtle text-danger">{{ a_item.status }}</span>
+                      <span *ngIf="a_item.status == 'Ready for Delivery'" class="badge bg-warning-subtle text-warning">{{ a_item.status }}</span>
+                      <span *ngIf="a_item.status == 'Delivered'" class="badge bg-success-subtle text-success">{{ a_item.status }}</span>
+                    </td>
+                  </tr>
+                }
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+    }
+
+    @if (ui_controls.is_loading){
+      <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+    }
+
+  </div>
+</main>

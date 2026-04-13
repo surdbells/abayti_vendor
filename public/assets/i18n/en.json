@@ -195,6 +195,7 @@
   "table_order": "ORDER",
   "table_date": "DATE",
   "table_customer": "CUSTOMER",
+  "table_store": "STORE NAME",
   "table_total": "TOTAL",
   "table_status": "STATUS",
   "status_delivered": "Delivered",
@@ -220,7 +221,7 @@
   "label_neck": "Neck",
   "label_arm": "Arm length",
   "label_armhole": "Armhole",
-  "label_shoulder": "Shoulder",
+  "label_shoulder": "Shoulder length",
   "table_size": "Size",
   "table_bust": "Bust",
   "table_waist": "Waist",
@@ -305,5 +306,7 @@
   "profile_preview": "Profile Preview",
   "email_address": "Email address",
   "email_edit_notice": "For security reasons, your name and email can’t be edited here. Please contact Support to request an update: support@3bayti.ae.",
-  "delivery_list":  "Delivery list"
+  "delivery_list":  "Delivery list",
+  "sold":  "Sold"
+
 }
