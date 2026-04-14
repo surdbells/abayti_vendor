@@ -108,6 +108,21 @@ export class GlobalComponent {
 
   public static getOrderById = GlobalComponent.baseURL + 'vendors/orders/getOrderById';
   public static getUsers = GlobalComponent.baseURL + 'admin/common/get-users';
+
+  public static UtilityStores= GlobalComponent.baseURL + 'utility/stores';
+  public static createCoupon= GlobalComponent.baseURL + 'vendors/coupons/create-coupon';
+  public static getCouponById= GlobalComponent.baseURL + 'vendors/coupons/get-coupon-by-id';
+  public static couponAnalytics= GlobalComponent.baseURL + 'vendors/coupons/coupon-analytics';
+  public static getCoupons= GlobalComponent.baseURL + 'vendors/coupons/get-coupons';
+  public static toggleCouponStatus= GlobalComponent.baseURL + 'vendors/coupons/toggle-coupon-status';
+  public static deleteCoupon= GlobalComponent.baseURL + 'vendors/coupons/delete-coupon';
+  public static updateCoupon= GlobalComponent.baseURL + 'vendors/coupons/update-coupon';
+  public static validateCoupon= GlobalComponent.baseURL + 'vendors/coupons/validate-coupon';
+  public static applyCoupon= GlobalComponent.baseURL + 'vendors/coupons/apply-coupon';
+
+
+
+
   static validateEmail(email: string) {
     return !!email.match(/(?:[a-z0-9+!#$%&'*\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/gi);
   }

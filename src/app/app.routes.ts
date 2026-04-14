@@ -4,7 +4,6 @@ import {UserComponent} from './vendor/user/user.component';
 import {VendorNotificationsComponent} from './vendor/vendor-notifications/vendor-notifications.component';
 import {UserProfileComponent} from './shared/user-profile/user-profile.component';
 import {AdminComponent} from './backend/admin/admin.component';
-import {VendorCouponsComponent} from './vendor/vendor-coupons/vendor-coupons.component';
 import {VendorOrdersComponent} from './vendor/vendor-orders/vendor-orders.component';
 import {VendorProductsComponent} from './vendor/vendor-products/vendor-products.component';
 import {VendorReturnsComponent} from './vendor/vendor-returns/vendor-returns.component';
@@ -18,7 +17,6 @@ import {UserSecurityComponent} from './shared/user-security/user-security.compon
 import {VendorPaymentComponent} from './settings/vendor-payment/vendor-payment.component';
 import {VendorTaxComponent} from './settings/vendor-tax/vendor-tax.component';
 import {EditProductComponent} from './vendor/edit-product/edit-product.component';
-import {CreateCouponComponent} from './vendor/create-coupon/create-coupon.component';
 import {HomeComponent} from './public/home/home.component';
 import {LabelComponent} from './settings/labels/label.component';
 import {VendorComplianceComponent} from './vendor/vendor-compliance/vendor-compliance.component';
@@ -52,6 +50,10 @@ import {SingleComponent} from './backend/processing/single/single.component';
 import {PluralComponent} from './backend/sales/plural/plural.component';
 import {UsersComponent} from './backend/users/users.component';
 import {DeliveriesComponent} from './backend/logistics/deliveries/deliveries.component';
+import {CouponListComponent} from './coupon/coupon-list/coupon-list.component';
+import {CreateCouponComponent} from './coupon/create-coupon/create-coupon.component';
+import {EditCouponComponent} from './coupon/edit-coupon/edit-coupon.component';
+import {CouponAnalyticsComponent} from './coupon/coupon-analytics/coupon-analytics.component';
 
 export const routes: Routes = [
   {
@@ -118,11 +120,6 @@ export const routes: Routes = [
     title: 'Security settings'
   },
   {
-    path: 'coupons',
-    component: VendorCouponsComponent,
-    title: 'Coupons & Discounts'
-  },
-  {
     path: 'orders',
     component: VendorOrdersComponent,
     title: 'Orders'
@@ -141,11 +138,6 @@ export const routes: Routes = [
     path: 'create-product',
     component: CreateProductComponent,
     title: 'Create product'
-  },
-  {
-    path: 'create-coupons',
-    component: CreateCouponComponent,
-    title: 'Create coupons'
   },
   {
     path: 'edit',
@@ -330,5 +322,25 @@ export const routes: Routes = [
     path: 'adminusers',
     component: UsersComponent,
     title: 'Platform Users'
+  },
+  {
+    path: 'coupons',
+    component: CouponListComponent,
+    title: 'Coupons and Discounts'
+  },
+  {
+    path: 'create-coupon',
+    component: CreateCouponComponent,
+    title: 'Create Coupon'
+  },
+  {
+    path: 'edit-coupon',       // accessed via /edit-coupon?id=123
+    component: EditCouponComponent,
+    title: 'Edit Coupon'
+  },
+  {
+    path: 'coupon-analytics',  // /coupon-analytics for overview, /coupon-analytics?id=123 for single coupon
+    component: CouponAnalyticsComponent,
+    title: 'Coupon Analytics'
   }
 ];

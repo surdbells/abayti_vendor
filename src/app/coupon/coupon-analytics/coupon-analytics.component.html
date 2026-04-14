@@ -1,0 +1,248 @@
+<app-side *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
+<main class="main ml-desktop-22rem px-lg-6">
+  <div class="container-lg">
+
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5"><tui-icon icon="@tui.chevron-left" /></i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0" *ngIf="coupon_id === 0">Coupon Analytics</h1>
+        <h1 class="fs-4 mb-0" *ngIf="coupon_id > 0">{{ coupon_name }}</h1>
+        <small *ngIf="coupon_id > 0" class="text-muted" style="font-family: Consolas, monospace;">{{ coupon_code }}</small>
+      </div>
+      <div *ngIf="coupon_id > 0" class="col-auto">
+        <div class="live-counter">
+          <span class="live-dot"></span>
+          <span class="fw-bold">{{ live_count }}</span> uses
+        </div>
+      </div>
+    </div>
+
+    <tui-loader class="p-5" *ngIf="ui.loading" />
+
+    <div *ngIf="!ui.loading">
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!--  STATS CARDS                                           -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+
+      <!-- Overview mode -->
+      <div *ngIf="coupon_id === 0" class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-blue">confirmation_number</span>
+            <div class="stat-value">{{ overview.active_coupons }}</div>
+            <div class="stat-label">Active Coupons</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-green">receipt_long</span>
+            <div class="stat-value">{{ overview.total_redemptions }}</div>
+            <div class="stat-label">Total Redemptions</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-amber">sell</span>
+            <div class="stat-value">AED {{ overview.total_discount_given | number:'1.0-0' }}</div>
+            <div class="stat-label">Total Discount Given</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-purple">trending_up</span>
+            <div class="stat-value">AED {{ overview.total_revenue_with_coupons | number:'1.0-0' }}</div>
+            <div class="stat-label">Revenue w/ Coupons</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-coupon mode -->
+      <div *ngIf="coupon_id > 0" class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-blue">receipt_long</span>
+            <div class="stat-value">{{ coupon_stats.total_uses }}</div>
+            <div class="stat-label">Total Uses</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-green">group</span>
+            <div class="stat-value">{{ coupon_stats.unique_customers }}</div>
+            <div class="stat-label">Unique Customers</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-amber">sell</span>
+            <div class="stat-value">AED {{ coupon_stats.total_discount_given | number:'1.2-2' }}</div>
+            <div class="stat-label">Discount Given</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="stat-card">
+            <span class="material-symbols-outlined stat-icon stat-icon-purple">trending_up</span>
+            <div class="stat-value">AED {{ coupon_stats.total_revenue_generated | number:'1.2-2' }}</div>
+            <div class="stat-label">Revenue Generated</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!--  USAGE OVER TIME — CSS Bar Chart                       -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Usage Over Time</h6>
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="chart_group_by" (ngModelChange)="onChartSettingsChange()" name="chart_group">
+              <option value="day">Daily</option>
+              <option value="week">Weekly</option>
+              <option value="month">Monthly</option>
+            </select>
+            <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="chart_days_back" (ngModelChange)="onChartSettingsChange()" name="chart_days">
+              <option [ngValue]="7">7 days</option>
+              <option [ngValue]="30">30 days</option>
+              <option [ngValue]="90">90 days</option>
+              <option [ngValue]="180">6 months</option>
+              <option [ngValue]="365">1 year</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="usage_series.length > 0" class="chart-container">
+            <div class="chart-bars">
+              <div *ngFor="let s of usage_series" class="chart-bar-group" [title]="s.period + ': ' + s.uses + ' uses, AED ' + s.total_revenue + ' revenue'">
+                <div class="chart-bar" [style.height.%]="getBarHeight(s.uses)">
+                  <span class="chart-bar-value" *ngIf="s.uses > 0">{{ s.uses }}</span>
+                </div>
+                <div class="chart-bar-label">{{ getBarLabel(s.period) }}</div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="usage_series.length === 0" class="text-center text-muted py-4">
+            No usage data for the selected period.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!--  TOP COUPONS (overview mode only)                      -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div *ngIf="coupon_id === 0" class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Top Coupons</h6>
+          <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="top_sort_by" (ngModelChange)="onTopSortChange()" name="top_sort">
+            <option value="uses">By Uses</option>
+            <option value="revenue">By Revenue</option>
+            <option value="discount">By Discount</option>
+          </select>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr class="border-bottom">
+                  <th class="small text-muted fw-semibold">Coupon</th>
+                  <th class="small text-muted fw-semibold text-center">Uses</th>
+                  <th class="small text-muted fw-semibold text-center">Customers</th>
+                  <th class="small text-muted fw-semibold text-end">Discount Given</th>
+                  <th class="small text-muted fw-semibold text-end">Revenue</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tc of top_coupons" class="border-bottom">
+                  <td>
+                    <span class="fw-bold" style="font-family: Consolas, monospace;">{{ tc.code }}</span>
+                    <div class="small text-muted">{{ tc.name }}</div>
+                  </td>
+                  <td class="text-center fw-semibold">{{ tc.total_uses }}</td>
+                  <td class="text-center">{{ tc.unique_customers }}</td>
+                  <td class="text-end">AED {{ tc.total_discount | number:'1.2-2' }}</td>
+                  <td class="text-end fw-semibold">AED {{ tc.total_revenue | number:'1.2-2' }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-link p-0" (click)="viewCouponAnalytics(tc.coupon_id)" title="View details">
+                      <span class="material-symbols-outlined fs-6">arrow_forward</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="top_coupons.length === 0" class="text-center text-muted py-4">No coupon data yet.</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!--  USAGE LOG (per-coupon mode)                           -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div *ngIf="coupon_id > 0" class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">Usage History</h6>
+        </div>
+        <div class="card-body p-0">
+          <tui-loader *ngIf="ui.log_loading" />
+          <div class="table-responsive" *ngIf="!ui.log_loading">
+            <table class="table table-hover align-middle mb-0">
+              <thead>
+                <tr class="border-bottom">
+                  <th class="small text-muted fw-semibold">Customer</th>
+                  <th class="small text-muted fw-semibold text-center">Order #</th>
+                  <th class="small text-muted fw-semibold text-end">Cart Before</th>
+                  <th class="small text-muted fw-semibold text-end">Discount</th>
+                  <th class="small text-muted fw-semibold text-end">Cart After</th>
+                  <th class="small text-muted fw-semibold">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let u of usage_log" class="border-bottom">
+                  <td>
+                    <div class="fw-medium">{{ u.customer_name }}</div>
+                    <small class="text-muted">{{ u.customer_email }}</small>
+                  </td>
+                  <td class="text-center">#{{ u.order_id }}</td>
+                  <td class="text-end">AED {{ u.order_total_before | number:'1.2-2' }}</td>
+                  <td class="text-end text-danger fw-semibold">-AED {{ u.discount_amount | number:'1.2-2' }}</td>
+                  <td class="text-end fw-semibold">AED {{ u.order_total_after | number:'1.2-2' }}</td>
+                  <td><small>{{ u.used_at | date:'MMM d, y HH:mm' }}</small></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="usage_log.length === 0 && !ui.log_loading" class="text-center text-muted py-4">
+            No usage recorded yet.
+          </div>
+          <!-- Log pagination -->
+          <div *ngIf="log_pagination.total_pages > 1" class="d-flex justify-content-center py-3">
+            <nav>
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" [class.disabled]="log_pagination.page === 1">
+                  <a class="page-link" (click)="goToLogPage(log_pagination.page - 1)">
+                    <span class="material-symbols-outlined fs-6">chevron_left</span>
+                  </a>
+                </li>
+                <li class="page-item">
+                  <span class="page-link">{{ log_pagination.page }} / {{ log_pagination.total_pages }}</span>
+                </li>
+                <li class="page-item" [class.disabled]="log_pagination.page === log_pagination.total_pages">
+                  <a class="page-link" (click)="goToLogPage(log_pagination.page + 1)">
+                    <span class="material-symbols-outlined fs-6">chevron_right</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>

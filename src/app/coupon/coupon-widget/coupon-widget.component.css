@@ -1,0 +1,18 @@
+.coupon-widget { border-radius: 12px; }
+
+.widget-stat {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.widget-stat-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.widget-stat-label {
+  font-size: 0.7rem;
+  color: #999;
+  margin-top: 2px;
+}

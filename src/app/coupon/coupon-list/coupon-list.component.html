@@ -1,0 +1,250 @@
+<app-side *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
+<main class="main ml-desktop-22rem px-lg-6">
+  <div class="container-lg">
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  PAGE HEADER                                               -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="row align-items-center mb-4">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5"><tui-icon icon="@tui.chevron-left" /></i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Coupons</h1>
+        <small *ngIf="pagination.total > 0" class="text-muted">{{ pagination.total }} coupon{{ pagination.total !== 1 ? 's' : '' }}</small>
+      </div>
+      <div class="col-12 col-sm-auto mt-3 mt-sm-0">
+        <div class="d-flex gap-2 align-items-center justify-content-end">
+          <button (click)="toggleFilters()" class="btn btn-sm btn-outline-secondary position-relative">
+            <span class="material-symbols-outlined fs-6">tune</span>
+            <span *ngIf="activeFilterCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">{{ activeFilterCount }}</span>
+          </button>
+          <a routerLink="/create-coupon" class="btn btn-sm abayti_secondary_background text-white">
+            <span class="material-symbols-outlined fs-6 me-1">add</span> New Coupon
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  SEARCH BAR                                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="input-group input-group-sm">
+          <span class="input-group-text bg-white border-end-0">
+            <span class="material-symbols-outlined fs-6 text-muted">search</span>
+          </span>
+          <input type="text" class="form-control border-start-0"
+                 placeholder="Search by code or name..."
+                 [(ngModel)]="filters.search"
+                 (ngModelChange)="onSearchInput()"
+                 name="search">
+          <button *ngIf="filters.search" class="btn btn-outline-secondary border-start-0" (click)="filters.search = ''; onSearchInput()">
+            <span class="material-symbols-outlined fs-6">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  FILTERS PANEL                                             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="ui.filters_open" class="card card-body mb-3 bg-body-tertiary border-0 shadow-sm">
+      <div class="row g-3 align-items-end">
+        <div class="col-6 col-md-3">
+          <label class="form-label small mb-1">Status</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.status" name="filter_status">
+            <option value="">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="expired">Expired</option>
+          </select>
+        </div>
+        <div class="col-6 col-md-3">
+          <label class="form-label small mb-1">Type</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.discount_type" name="filter_type">
+            <option value="">All</option>
+            <option value="percentage">Percentage</option>
+            <option value="fixed_amount">Fixed Amount</option>
+            <option value="free_shipping">Free Shipping</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-auto d-flex gap-2">
+          <button class="btn btn-sm abayti_secondary_background text-white" (click)="applyFilters()">
+            <span class="material-symbols-outlined fs-6 me-1">filter_list</span> Apply
+          </button>
+          <button *ngIf="hasActiveFilters" class="btn btn-sm btn-outline-secondary" (click)="clearFilters()">
+            <span class="material-symbols-outlined fs-6 me-1">filter_list_off</span> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  LOADING / DELETING OVERLAY                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <tui-loader class="p-5" *ngIf="ui.deleting || ui.toggling" />
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  COUPON TABLE                                              -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="!ui.no_coupons && !ui.loading" class="card mt-2">
+      <div class="table-responsive" style="min-height: 300px;">
+        <table class="table table-hover table-borderless align-middle mb-0">
+          <thead>
+            <tr class="border-bottom">
+              <th class="fw-semibold text-muted small">Code</th>
+              <th class="fw-semibold text-muted small">Discount</th>
+              <th class="fw-semibold text-muted small">Status</th>
+              <th class="fw-semibold text-muted small text-center">Usage</th>
+              <th class="fw-semibold text-muted small">Expires</th>
+              <th style="width: 50px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of coupons; trackBy: trackById" class="border-bottom">
+              <!-- Code + name -->
+              <td>
+                <div>
+                  <span class="coupon-code fw-bold">{{ c.code }}</span>
+                  <span *ngIf="c.first_order_only" class="badge badge-first-order ms-2">1st order</span>
+                </div>
+                <small class="text-muted">{{ c.name }}</small>
+              </td>
+              <!-- Discount -->
+              <td>
+                <span class="badge" [ngClass]="getDiscountTypeBadge(c.discount_type)">
+                  {{ getDiscountTypeLabel(c.discount_type) }}
+                </span>
+                <div class="small mt-1">{{ getDiscountLabel(c) }}</div>
+                <div *ngIf="c.min_order_amount > 0" class="text-muted" style="font-size: 0.75rem;">
+                  Min: AED {{ c.min_order_amount }}
+                </div>
+              </td>
+              <!-- Status -->
+              <td>
+                <span class="badge" [ngClass]="getStatusBadge(c.status)">{{ c.status }}</span>
+                <div *ngIf="isScheduled(c)" class="text-muted" style="font-size: 0.7rem;">Starts {{ c.starts_at | date:'MMM d' }}</div>
+              </td>
+              <!-- Usage -->
+              <td class="text-center">
+                <div class="fw-semibold small">{{ getUsageText(c) }}</div>
+                <div *ngIf="c.max_uses" class="progress mt-1" style="height: 4px;">
+                  <div class="progress-bar" role="progressbar"
+                       [style.width.%]="getUsagePercent(c)"
+                       [class.bg-danger]="getUsagePercent(c) >= 90"
+                       [class.bg-warning]="getUsagePercent(c) >= 70 && getUsagePercent(c) < 90"
+                       [class.bg-success]="getUsagePercent(c) < 70">
+                  </div>
+                </div>
+              </td>
+              <!-- Expires -->
+              <td>
+                <span *ngIf="c.expires_at && !isExpired(c)" class="small">{{ c.expires_at | date:'MMM d, y' }}</span>
+                <span *ngIf="c.expires_at && isExpired(c)" class="small text-danger">Expired {{ c.expires_at | date:'MMM d' }}</span>
+                <span *ngIf="!c.expires_at" class="small text-muted">Never</span>
+              </td>
+              <!-- Actions -->
+              <td>
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-link text-body-tertiary p-0" data-bs-toggle="dropdown">
+                    <span class="material-symbols-outlined fs-5">more_vert</span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="viewAnalytics(c.coupon_id)">
+                        <span class="material-symbols-outlined fs-6 abayti_secondary_color">bar_chart</span>
+                        Analytics
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="editCoupon(c.coupon_id)">
+                        <span class="material-symbols-outlined fs-6">edit</span>
+                        Edit
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2" (click)="toggleStatus(c)">
+                        <span class="material-symbols-outlined fs-6" [class.text-success]="c.status === 'inactive'" [class.text-warning]="c.status === 'active'">
+                          {{ c.status === 'active' ? 'pause_circle' : 'play_circle' }}
+                        </span>
+                        {{ c.status === 'active' ? 'Deactivate' : 'Activate' }}
+                      </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                      <a class="dropdown-item d-flex align-items-center gap-2 text-danger" (click)="startDelete(c)">
+                        <span class="material-symbols-outlined fs-6">delete</span>
+                        Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  PAGINATION                                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div *ngIf="!ui.loading && !ui.no_coupons && pagination.total_pages > 0" class="d-flex flex-wrap justify-content-between align-items-center mt-3 mb-4 gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <small class="text-muted">Show</small>
+        <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="pagination.per_page" (ngModelChange)="onPerPageChange()" name="per_page">
+          <option *ngFor="let n of per_page_options" [ngValue]="n">{{ n }}</option>
+        </select>
+        <small class="text-muted">per page</small>
+      </div>
+      <small class="text-muted">
+        {{ ((pagination.page - 1) * pagination.per_page) + 1 }}–{{ [pagination.page * pagination.per_page, pagination.total] | slice:0:1 }}{{ pagination.total < pagination.page * pagination.per_page ? pagination.total : pagination.page * pagination.per_page }} of {{ pagination.total }}
+      </small>
+      <nav *ngIf="pagination.total_pages > 1">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="pagination.page === 1">
+            <a class="page-link" (click)="goToPage(pagination.page - 1)" role="button">
+              <span class="material-symbols-outlined fs-6">chevron_left</span>
+            </a>
+          </li>
+          <ng-container *ngFor="let pn of pageNumbers">
+            <li *ngIf="pn === -1" class="page-item disabled"><span class="page-link">…</span></li>
+            <li *ngIf="pn !== -1" class="page-item" [class.active]="pn === pagination.page">
+              <a class="page-link" (click)="goToPage(pn)" role="button">{{ pn }}</a>
+            </li>
+          </ng-container>
+          <li class="page-item" [class.disabled]="pagination.page === pagination.total_pages">
+            <a class="page-link" (click)="goToPage(pagination.page + 1)" role="button">
+              <span class="material-symbols-outlined fs-6">chevron_right</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!--  LOADING / EMPTY STATE                                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <tui-loader class="p-5" *ngIf="ui.loading" />
+
+    <div *ngIf="ui.no_coupons && !ui.loading" class="card border-0 shadow-sm rounded-3 text-center p-4 mt-2">
+      <div class="card-body">
+        <div class="display-6 mb-2">🏷️</div>
+        <h5 *ngIf="!hasActiveFilters">No coupons yet</h5>
+        <h5 *ngIf="hasActiveFilters">No matching coupons</h5>
+        <p class="text-secondary" *ngIf="!hasActiveFilters">Create your first coupon to start driving sales.</p>
+        <p class="text-secondary" *ngIf="hasActiveFilters">Try adjusting your search or filter criteria.</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <a *ngIf="!hasActiveFilters" routerLink="/create-coupon" class="btn abayti_secondary_background text-white">Create First Coupon</a>
+          <button *ngIf="hasActiveFilters" class="btn btn-outline-secondary" (click)="clearFilters()">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>

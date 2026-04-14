@@ -1,0 +1,251 @@
+<app-side *ngIf="user_session.is_vendor"></app-side>
+<app-aside *ngIf="user_session.is_admin"></app-aside>
+<main class="main ml-desktop-22rem px-lg-6">
+  <div class="container-lg">
+
+    <!-- Header -->
+    <div class="row align-items-center mb-5">
+      <div (click)="goBack()" role="button" class="col-auto">
+        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
+          <i class="fs-5"><tui-icon icon="@tui.chevron-left" /></i>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="fs-4 mb-0">Create Coupon</h1>
+      </div>
+    </div>
+
+    <div *ngIf="!ui.page_loading" class="row">
+      <!-- ─── LEFT: Main form ─────────────────────────────────── -->
+      <div class="col-lg-8">
+
+        <!-- Code & Name -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label required">Coupon Code</label>
+              <div class="input-group">
+                <input [(ngModel)]="form.code" name="code" type="text" class="form-control" placeholder="Leave empty to auto-generate" [maxlength]="20" style="text-transform: uppercase; font-family: Consolas, monospace; letter-spacing: 1px;">
+                <button class="btn btn-outline-secondary" type="button" (click)="generateCode()">
+                  <span class="material-symbols-outlined fs-6">casino</span> Generate
+                </button>
+              </div>
+              <small class="form-hint">12-character alphanumeric code. Leave blank for auto-generation.</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label required">Name</label>
+              <input [(ngModel)]="form.name" name="name" type="text" class="form-control" placeholder="E.g. Summer Sale 20%" [maxlength]="255">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea [(ngModel)]="form.description" name="description" class="form-control" rows="2" placeholder="Internal notes (customers won't see this)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Discount type & value -->
+        <div class="card mb-3">
+          <div class="card-header"><h6 class="mb-0">Discount</h6></div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label required">Discount Type</label>
+              <div class="d-flex gap-3 flex-wrap">
+                <label class="form-check form-check-inline">
+                  <input [(ngModel)]="form.discount_type" type="radio" name="discount_type" class="form-check-input" value="percentage">
+                  <span class="form-check-label">Percentage (%)</span>
+                </label>
+                <label class="form-check form-check-inline">
+                  <input [(ngModel)]="form.discount_type" type="radio" name="discount_type" class="form-check-input" value="fixed_amount">
+                  <span class="form-check-label">Fixed Amount (AED)</span>
+                </label>
+                <label class="form-check form-check-inline">
+                  <input [(ngModel)]="form.discount_type" type="radio" name="discount_type" class="form-check-input" value="free_shipping">
+                  <span class="form-check-label">Free Shipping</span>
+                </label>
+              </div>
+            </div>
+
+            <div *ngIf="form.discount_type !== 'free_shipping'" class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label required">{{ form.discount_type === 'percentage' ? 'Percentage' : 'Amount (AED)' }}</label>
+                <div class="input-group">
+                  <input [(ngModel)]="form.discount_value" name="discount_value" type="number" class="form-control"
+                         [min]="0" [max]="form.discount_type === 'percentage' ? 100 : 999999" [step]="form.discount_type === 'percentage' ? 1 : 0.5">
+                  <span class="input-group-text">{{ form.discount_type === 'percentage' ? '%' : 'AED' }}</span>
+                </div>
+              </div>
+              <div *ngIf="form.discount_type === 'percentage'" class="col-md-6 mb-3">
+                <label class="form-label">Max Discount Cap (AED)</label>
+                <div class="input-group">
+                  <span class="input-group-text">AED</span>
+                  <input [(ngModel)]="form.max_discount_amount" name="max_discount_amount" type="number" class="form-control" [min]="0" placeholder="No cap">
+                </div>
+                <small class="form-hint">Leave empty for no cap.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Usage restrictions -->
+        <div class="card mb-3">
+          <div class="card-header"><h6 class="mb-0">Usage Restrictions</h6></div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Total Uses</label>
+                <input [(ngModel)]="form.max_uses" name="max_uses" type="number" class="form-control" [min]="0" placeholder="Unlimited">
+                <small class="form-hint">0 or empty = unlimited.</small>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Uses Per Customer</label>
+                <input [(ngModel)]="form.max_uses_per_customer" name="max_uses_per_customer" type="number" class="form-control" [min]="0" placeholder="1">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Min Order (AED)</label>
+                <div class="input-group">
+                  <span class="input-group-text">AED</span>
+                  <input [(ngModel)]="form.min_order_amount" name="min_order_amount" type="number" class="form-control" [min]="0" [step]="0.5">
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-check">
+                <input [(ngModel)]="form.first_order_only" name="first_order_only" type="checkbox" class="form-check-input">
+                <span class="form-check-label">First order only</span>
+              </label>
+              <small class="form-hint d-block">Only customers who haven't placed an order before can use this coupon.</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Validity dates -->
+        <div class="card mb-3">
+          <div class="card-header"><h6 class="mb-0">Validity Period</h6></div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Start Date</label>
+                <input [(ngModel)]="form.starts_at" name="starts_at" type="datetime-local" class="form-control">
+                <small class="form-hint">Leave empty = active immediately.</small>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Expiry Date</label>
+                <input [(ngModel)]="form.expires_at" name="expires_at" type="datetime-local" class="form-control">
+                <small class="form-hint">Leave empty = never expires.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── RIGHT: Sidebar ──────────────────────────────────── -->
+      <div class="col-lg-4">
+        <!-- Create button -->
+        <div class="d-grid mb-3">
+          <button (click)="startCreate()" class="btn abayti_secondary_background text-white" type="button" [disabled]="ui.loading">
+            <tui-loader *ngIf="ui.loading" [showLoader]="true" size="xs" />
+            <span *ngIf="!ui.loading"><span class="material-symbols-outlined me-1 fs-6">add_circle</span> Create Coupon</span>
+          </button>
+        </div>
+
+        <!-- Scope -->
+        <div class="card mb-3">
+          <div class="card-header"><h6 class="mb-0">Applies To</h6></div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-check mb-2">
+                <input [(ngModel)]="form.scope" type="radio" name="scope" class="form-check-input" value="all_products">
+                <span class="form-check-label">All products</span>
+              </label>
+              <label class="form-check mb-2">
+                <input [(ngModel)]="form.scope" type="radio" name="scope" class="form-check-input" value="specific_products">
+                <span class="form-check-label">Specific products</span>
+              </label>
+              <label class="form-check mb-2">
+                <input [(ngModel)]="form.scope" type="radio" name="scope" class="form-check-input" value="specific_categories">
+                <span class="form-check-label">Specific categories</span>
+              </label>
+            </div>
+
+            <!-- Product picker -->
+            <div *ngIf="form.scope === 'specific_products' && products.length > 0" class="mb-3">
+              <label class="form-label small">Select Products</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'Choose products'"
+                [settings]="productDropdownSettings"
+                [data]="products"
+                [(ngModel)]="selectedProducts"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="selectedProducts">
+              </ng-multiselect-dropdown>
+            </div>
+
+            <!-- Category picker -->
+            <div *ngIf="form.scope === 'specific_categories' && categories.length > 0" class="mb-3">
+              <label class="form-label small">Select Categories</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'Choose categories'"
+                [settings]="categoryDropdownSettings"
+                [data]="categories"
+                [(ngModel)]="selectedCategories"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="selectedCategories">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin: Coupon Mode (admin only) -->
+        <div *ngIf="user_session.is_admin" class="card mb-3">
+          <div class="card-header"><h6 class="mb-0">Coupon Mode</h6></div>
+          <div class="card-body">
+            <label class="form-check mb-2">
+              <input [(ngModel)]="coupon_mode" type="radio" name="coupon_mode" class="form-check-input" value="platform">
+              <span class="form-check-label">
+                <span class="fw-semibold">Platform-wide</span>
+                <small class="text-muted d-block">Coupon applies across all stores, or specific stores you select below.</small>
+              </span>
+            </label>
+            <label class="form-check mb-2">
+              <input [(ngModel)]="coupon_mode" type="radio" name="coupon_mode" class="form-check-input" value="as_vendor">
+              <span class="form-check-label">
+                <span class="fw-semibold">On behalf of a store</span>
+                <small class="text-muted d-block">Coupon is owned by a specific store, as if the vendor created it themselves.</small>
+              </span>
+            </label>
+
+            <!-- "As vendor" → single store select -->
+            <div *ngIf="coupon_mode === 'as_vendor'" class="mt-3">
+              <label class="form-label small required">Assign to store</label>
+              <select class="form-select form-select-sm" [(ngModel)]="assign_to_store" name="assign_to_store">
+                <option [ngValue]="null" disabled>Select a store</option>
+                <option *ngFor="let s of stores" [ngValue]="s.id">{{ s.store_name }}</option>
+              </select>
+              <small class="form-hint">This coupon will behave as if the selected vendor created it. It will only apply to that store's products.</small>
+            </div>
+
+            <!-- "Platform" → multi-store targeting -->
+            <div *ngIf="coupon_mode === 'platform'" class="mt-3">
+              <label class="form-label small">Limit to specific stores (optional)</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'All stores (no restriction)'"
+                [settings]="storeDropdownSettings"
+                [data]="stores"
+                [(ngModel)]="selectedStores"
+                (onSelect)="onItemSelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+                name="selectedStores">
+              </ng-multiselect-dropdown>
+              <small class="form-hint">Leave empty to allow all stores.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <tui-loader *ngIf="ui.page_loading" />
+
+  </div>
+</main>

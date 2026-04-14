@@ -1,0 +1,55 @@
+<div *ngIf="loaded" class="coupon-widget card shadow-sm">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start mb-3">
+      <div>
+        <h6 class="fw-bold mb-0">Coupons</h6>
+        <small class="text-muted">Quick overview</small>
+      </div>
+      <button class="btn btn-sm btn-link p-0 text-muted" (click)="goToAnalytics()" title="View full analytics">
+        <span class="material-symbols-outlined fs-5">open_in_new</span>
+      </button>
+    </div>
+
+    <!-- Mini stats row -->
+    <div class="row g-2 mb-3">
+      <div class="col-6">
+        <div class="widget-stat">
+          <div class="widget-stat-value">{{ stats.active_coupons }}</div>
+          <div class="widget-stat-label">Active</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="widget-stat">
+          <div class="widget-stat-value">{{ stats.total_redemptions }}</div>
+          <div class="widget-stat-label">Redeemed</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="widget-stat">
+          <div class="widget-stat-value">AED {{ stats.total_discount_given | number:'1.0-0' }}</div>
+          <div class="widget-stat-label">Discounts</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="widget-stat">
+          <div class="widget-stat-value">AED {{ stats.total_revenue_with_coupons | number:'1.0-0' }}</div>
+          <div class="widget-stat-label">Revenue</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top 3 coupons -->
+    <div *ngIf="top_coupons.length > 0">
+      <small class="fw-semibold text-muted d-block mb-2">Top Coupons</small>
+      <div *ngFor="let tc of top_coupons" class="d-flex justify-content-between align-items-center py-1 border-bottom">
+        <span class="small fw-bold" style="font-family: Consolas, monospace;">{{ tc.code }}</span>
+        <span class="small text-muted">{{ tc.total_uses }} uses</span>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <button class="btn btn-sm abayti_secondary_background text-white w-100 mt-3" (click)="goToCoupons()">
+      Manage Coupons
+    </button>
+  </div>
+</div>
