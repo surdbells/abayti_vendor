@@ -1,75 +1,99 @@
-import {Component, OnInit} from '@angular/core';
-import {LanguageSwitcherComponent} from "../../language-switcher.component";
-import {CommonModule, NgForOf, NgIf} from "@angular/common";
-import {Router, RouterLink} from "@angular/router";
-import {TuiLoader} from "@taiga-ui/core";
-import {Notifications} from '../../class/notifications';
-import {CrudService} from '../../services/crud.service';
-import {HotToastService} from '@ngneat/hot-toast';
-import {GlobalComponent} from '../../global-component';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { LanguageSwitcherComponent } from '../../language-switcher.component';
+import { CommonModule } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { Notifications } from '../../class/notifications';
+import { CrudService } from '../../services/crud.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { GlobalComponent } from '../../global-component';
 
 @Component({
   selector: 'app-admin-top',
   standalone: true,
-    imports: [
-        LanguageSwitcherComponent,
-        NgForOf,
-        NgIf,
-        RouterLink,
-        CommonModule,
-        TuiLoader
-    ],
+  imports: [LanguageSwitcherComponent, RouterLink, CommonModule],
   templateUrl: './admin-top.component.html',
   styleUrl: './admin-top.component.css'
 })
 export class AdminTopComponent implements OnInit {
   notifications?: Notifications[];
 
+  /** Emitted when the user taps the mobile menu button. Parent wires it to the sidebar. */
+  @Output() menuToggle = new EventEmitter<void>();
+
   constructor(
     private router: Router,
     private crudService: CrudService,
     private toast: HotToastService,
   ) {}
+
   ui_controls = {
     is_loading: false,
-    count: 0
+    count: 0,
+    notif_open: false,
+    profile_open: false
   };
-  session_data: any = ""
+
+  session_data: any = '';
   user_session = {
     id: 0,
-    token: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    avatar: "",
-    phone: "",
+    token: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    avatar: '',
+    phone: '',
     is_2fa: false,
     is_active: false,
     is_admin: false,
     is_vendor: false,
     is_customer: false
   };
+
+  notification = { id: 0, token: '' };
+
   ngOnInit(): void {
-    this.session_data = sessionStorage.getItem("SESSION");
+    this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
-    this.notification.id =  this.user_session.id;
-    this.notification.token =  this.user_session.token;
+    this.notification.id = this.user_session.id;
+    this.notification.token = this.user_session.token;
     this.get_notifications();
   }
-  error_notification(message: string) {
-    this.toast.error(message);
+
+  error_notification(message: string) { this.toast.error(message); }
+  success_notification(message: string) { this.toast.success(message); }
+
+  toggle_notif(): void {
+    this.ui_controls.notif_open = !this.ui_controls.notif_open;
+    this.ui_controls.profile_open = false;
+    if (this.ui_controls.notif_open) {
+      this.get_notifications();
+    }
   }
-  success_notification(message: string) {
-    this.toast.success(message);
+
+  toggle_profile(): void {
+    this.ui_controls.profile_open = !this.ui_controls.profile_open;
+    this.ui_controls.notif_open = false;
   }
-  notification = {
-    id: 0,
-    token: ""
+
+  close_all(): void {
+    this.ui_controls.notif_open = false;
+    this.ui_controls.profile_open = false;
   }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.close_all();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.close_all();
+  }
+
   get_notifications() {
     this.ui_controls.is_loading = true;
     this.crudService.post_request(this.notification, GlobalComponent.getNotifications)
-      .subscribe(({
+      .subscribe({
         next: (response: any) => {
           if (response.response_code === 200 && response.status === 'success') {
             this.ui_controls.is_loading = false;
@@ -78,23 +102,19 @@ export class AdminTopComponent implements OnInit {
           } else {
             this.ui_controls.is_loading = false;
           }
-
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification("Unable to complete your request at this time.");
+          this.error_notification('Unable to complete your request at this time.');
           this.ui_controls.is_loading = false;
-        },
-        complete: () => {
-          // optional
         }
-      }));
+      });
   }
 
   mark_notifications() {
     this.ui_controls.is_loading = true;
     this.crudService.post_request(this.notification, GlobalComponent.markNotifications)
-      .subscribe(({
+      .subscribe({
         next: (response: any) => {
           if (response.response_code === 200 && response.status === 'success') {
             this.ui_controls.is_loading = false;
@@ -104,22 +124,19 @@ export class AdminTopComponent implements OnInit {
             this.error_notification(response.message);
             this.ui_controls.is_loading = false;
           }
-
         },
         error: (e: any) => {
           console.error(e);
-          this.error_notification("Unable to complete your request at this time.");
+          this.error_notification('Unable to complete your request at this time.');
           this.ui_controls.is_loading = false;
-        },
-        complete: () => {
-          // optional
         }
-      }));
+      });
   }
+
   sign_out(): void {
     localStorage.clear();
     sessionStorage.clear();
-    this.success_notification("User logged out successfully.");
+    this.success_notification('User logged out successfully.');
     this.router.navigate(['/']).then(r => console.log(r));
   }
 }
