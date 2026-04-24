@@ -29,6 +29,8 @@
 @import './styles/components/_sidenav.css';
 @import './styles/components/_layout.css';
 @import './styles/components/_extras.css';
+@import './styles/components/_controls.css';
+@import './styles/components/_overlays.css';
 
 /* CKEditor is still loaded — removed in Phase 12 */
 @import '../node_modules/ckeditor5/dist/ckeditor5-editor.css';

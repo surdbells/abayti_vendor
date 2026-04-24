@@ -57,6 +57,12 @@ import {CouponAnalyticsComponent} from './coupon/coupon-analytics/coupon-analyti
 
 export const routes: Routes = [
   {
+    // TEMPORARY — Phase 2 review. Removed in Phase 11.
+    path: 'design-system',
+    loadComponent: () => import('./design-system/design-system.component').then(m => m.DesignSystemComponent),
+    title: 'Design system preview'
+  },
+  {
     path: '',
     component: HomeComponent,
   },
