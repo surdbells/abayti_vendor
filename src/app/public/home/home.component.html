@@ -1,223 +1,127 @@
 <app-home-top></app-home-top>
+
 <!-- HERO -->
-<header id="home" class="py-5 hero abayti_primary_background">
-  <div class="container">
-    <div class="row align-items-center gy-4">
-      <div class="col-lg-6 animate__animated animate__fadeInUp">
-        <span class="badge  abayti_secondary_background rounded-pill px-3 py-2 mb-3">{{ 'welcome' | translate }}</span>
-        <h1 class="display-5 fw-bold mb-3 abayti_secondary_color">
-          {{ 'welcome_statement' | translate }}
-        </h1>
-        <p class="lead mb-4">{{ 'welcome_sub_statement' | translate }}</p>
-        <div class="d-flex flex-wrap gap-2 mt-3">
-          <a class="btn abayti_secondary_background text-white btn-outline-secondary" routerLink="/register">{{ 'start_selling' | translate }}</a>
-          <a class="btn abayti_primary_background text-black btn-outline-secondary" routerLink="/login">{{ 'sign_in' | translate }}</a>
+<header id="home" class="ax-home-hero">
+  <div class="ax-home-hero-inner">
+    <div>
+      <span class="ax-home-hero-badge">
+        <span class="material-symbols-outlined" aria-hidden="true">waving_hand</span>
+        {{ 'welcome' | translate }}
+      </span>
+      <h1 class="ax-home-hero-title">{{ 'welcome_statement' | translate }}</h1>
+      <p class="ax-home-hero-lead">{{ 'welcome_sub_statement' | translate }}</p>
+
+      <div class="ax-home-hero-actions">
+        <a routerLink="/register" class="ax-btn ax-btn-primary ax-btn-lg">
+          {{ 'start_selling' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+        <a routerLink="/login" class="ax-btn ax-btn-outline ax-btn-lg">
+          {{ 'sign_in' | translate }}
+        </a>
+      </div>
+
+      <div class="ax-home-hero-trust">
+        <span class="ax-home-hero-trust-item">
+          <span class="material-symbols-outlined">verified_user</span>
+          {{ 'no_setup' | translate }}
+        </span>
+        <span class="ax-home-hero-trust-item">
+          <span class="material-symbols-outlined">credit_card</span>
+          {{ 'secure_pay' | translate }}
+        </span>
+        <span class="ax-home-hero-trust-item">
+          <span class="material-symbols-outlined">rocket_launch</span>
+          {{ 'go_live' | translate }}
+        </span>
+      </div>
+
+      <div class="ax-home-hero-stats">
+        <div>
+          <span class="ax-home-hero-stat-value">5k+</span>
+          <span class="ax-home-hero-stat-label">{{ 'monthly_shoppers' | translate }}</span>
         </div>
-        <div class="d-flex align-items-center gap-3 mt-4 abayti_secondary_color">
-          <div class="d-flex align-items-center gap-2"><i class="bi bi-shield-check"></i><small>{{ 'no_setup' | translate }}</small></div>
-          <div class="d-flex align-items-center gap-2"><i class="bi bi-credit-card"></i><small>{{ 'secure_pay' | translate }}</small></div>
-          <div class="d-flex align-items-center gap-2"><i class="bi bi-rocket"></i><small>{{ 'go_live' | translate }}</small></div>
+        <div>
+          <span class="ax-home-hero-stat-value">3 min</span>
+          <span class="ax-home-hero-stat-label">{{ 'average_signup_time' | translate }}</span>
         </div>
-        <div class="d-flex align-items-center gap-4 mt-4">
-          <div><h4 class="mb-0">5k+</h4><small class="text-muted">{{ 'monthly_shoppers' | translate }}</small></div>
-          <div><h4 class="mb-0">3 min</h4><small class="text-muted">{{ 'average_signup_time' | translate }}</small></div>
-          <div><h4 class="mb-0">99.9%</h4><small class="text-muted">{{ 'uptime' | translate }}</small></div>
+        <div>
+          <span class="ax-home-hero-stat-value">99.9%</span>
+          <span class="ax-home-hero-stat-label">{{ 'uptime' | translate }}</span>
         </div>
       </div>
-      <div class="col-lg-6 animate__animated animate__fadeIn hero-visual">
-        <div class="glass rounded-4 p-3 p-md-4 shadow-soft">
-          <!-- Dashboard mockup -->
-          <div class="bg-white rounded-4 p-3 shadow-soft">
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge text-bg-light border">{{ 'vendor' | translate }}</span>
-                <span class="abayti_secondary_color fw-semibold">{{ 'dashboard' | translate }}</span>
-              </div>
-              <i class="bi bi-three-dots-vertical text-muted"></i>
+    </div>
+
+    <!-- Hero visual: simplified dashboard mockup -->
+    <div class="ax-home-hero-visual">
+      <div class="ax-home-hero-visual-card">
+        <div class="ax-flex ax-items-center ax-justify-between ax-mb-4">
+          <div class="ax-flex ax-items-center ax-gap-2">
+            <span class="ax-badge ax-badge-neutral">{{ 'vendor' | translate }}</span>
+            <span class="ax-text-brand ax-font-semibold">{{ 'dashboard' | translate }}</span>
+          </div>
+          <span class="material-symbols-outlined ax-text-tertiary" aria-hidden="true">more_vert</span>
+        </div>
+
+        <div class="ax-grid ax-grid-cols-4 ax-gap-2 ax-mb-4">
+          <div class="ax-card ax-p-3 ax-text-center">
+            <div class="ax-text-2xs ax-text-tertiary">{{ 'products' | translate }}</div>
+            <div class="ax-text-xl ax-font-semibold ax-text-brand">35</div>
+          </div>
+          <div class="ax-card ax-p-3 ax-text-center">
+            <div class="ax-text-2xs ax-text-tertiary">{{ 'orders' | translate }}</div>
+            <div class="ax-text-xl ax-font-semibold">463</div>
+          </div>
+          <div class="ax-card ax-p-3 ax-text-center">
+            <div class="ax-text-2xs ax-text-tertiary">{{ 'pending' | translate }}</div>
+            <div class="ax-text-xl ax-font-semibold">32</div>
+          </div>
+          <div class="ax-card ax-p-3 ax-text-center">
+            <div class="ax-text-2xs ax-text-tertiary">{{ 'returns' | translate }}</div>
+            <div class="ax-text-xl ax-font-semibold">3</div>
+          </div>
+        </div>
+
+        <div class="ax-grid ax-grid-cols-2 ax-gap-3">
+          <!-- Sales performance sparkline -->
+          <div class="ax-card ax-p-3">
+            <div class="ax-flex ax-items-center ax-justify-between ax-mb-2">
+              <small class="ax-text-2xs ax-font-semibold ax-text-secondary">{{ 'sales_performance' | translate }}</small>
+              <span class="material-symbols-outlined ax-text-tertiary" style="font-size: 1rem;">bar_chart</span>
             </div>
+            <svg viewBox="0 0 240 80" preserveAspectRatio="none" style="width: 100%; height: 4rem;" aria-labelledby="sales-title">
+              <title id="sales-title">{{ 'sales_performance_monthly_title' | translate }}</title>
+              <defs>
+                <linearGradient id="sales-fill" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#906952" stop-opacity="0.35"/>
+                  <stop offset="100%" stop-color="#906952" stop-opacity="0.02"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,65 L20,70 L40,55 L60,60 L80,45 L100,50 L120,55 L140,15 L160,45 L180,35 L200,28 L220,18 L240,18 L240,80 L0,80 Z" fill="url(#sales-fill)"/>
+              <path d="M0,65 L20,70 L40,55 L60,60 L80,45 L100,50 L120,55 L140,15 L160,45 L180,35 L200,28 L220,18 L240,18" fill="none" stroke="#906952" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
 
-            <!-- Stats row -->
-            <div class="row g-3 mb-3">
-              <div class="col-6 col-md-3">
-                <div class="border rounded-3 p-3 text-center h-100">
-                  <small class="text-muted d-block">{{ 'products' | translate }}</small>
-                  <h4 class="fw-bold mb-0 abayti_secondary_color">{{ '35' | translate }}</h4>
-                </div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="border rounded-3 p-3 text-center h-100">
-                  <small class="text-muted d-block">{{ 'orders' | translate }}</small>
-                  <h4 class="fw-bold mb-0">463</h4>
-                </div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="border rounded-3 p-3 text-center h-100">
-                  <small class="text-muted d-block">{{ 'pending' | translate }}</small>
-                  <h4 class="fw-bold mb-0">32</h4>
-                </div>
-              </div>
-              <div class="col-6 col-md-3">
-                <div class="border rounded-3 p-3 text-center h-100">
-                  <small class="text-muted d-block">{{ 'returns' | translate }}</small>
-                  <h4 class="fw-bold mb-0">3</h4>
-                </div>
-              </div>
+          <!-- Top products mini -->
+          <div class="ax-card ax-p-3">
+            <div class="ax-flex ax-items-center ax-justify-between ax-mb-2">
+              <small class="ax-text-2xs ax-font-semibold ax-text-secondary">{{ 'top_selling_product' | translate }}</small>
+              <span class="material-symbols-outlined ax-text-tertiary" style="font-size: 1rem;">trending_up</span>
             </div>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <!-- Sales Performance (SVG) -->
-                <div class="border rounded-3 p-3 h-100" data-animate="animate__fadeInUp">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted fw-semibold">{{ 'sales_performance' | translate }}</small>
-                    <i class="bi bi-bar-chart-line text-muted"></i>
-                  </div>
-
-                  <!-- Values (orders): Jan..Dec = [2,1,3,2,4,3,2,9,4,5,6,7] -->
-                  <svg class="chart-svg" viewBox="0 0 360 180" aria-labelledby="salesTitle salesDesc" role="img">
-                    <title id="salesTitle">{{ 'sales_performance_monthly_title' | translate }}</title>
-                    <desc id="salesDesc">
-                      {{ 'sales_performance_monthly_desc' | translate }}
-                    </desc>
-
-                    <style>
-                      .bar { fill: #906952; opacity: .95; transition: opacity .2s, transform .2s; }
-                      .bar:hover { opacity: 1; transform: translateY(-1px); }
-                      .grid { stroke: #e9ecef; stroke-width: 1; }
-                      .axis { stroke: #adb5bd; stroke-width: 1; }
-                      .label { fill: #6c757d; font-size: 9px; }
-                    </style>
-
-                    <!-- gridlines -->
-                    <g class="grid">
-                      <line x1="32" y1="150" x2="350" y2="150" />
-                      <line x1="32" y1="122" x2="350" y2="122" />
-                      <line x1="32" y1="94"  x2="350" y2="94"  />
-                      <line x1="32" y1="66"  x2="350" y2="66"  />
-                      <line x1="32" y1="38"  x2="350" y2="38"  />
-                      <line x1="32" y1="10"  x2="350" y2="10"  />
-                    </g>
-
-                    <!-- axes -->
-                    <g class="axis">
-                      <line x1="32" y1="150" x2="350" y2="150" />
-                      <line x1="32" y1="150" x2="32"  y2="10"  />
-                    </g>
-
-                    <!-- bars (chartBottom=150, chartHeight=120, max=10) -->
-                    <g class="bars">
-                      <!-- rx for rounded tops -->
-                      <rect class="bar" x="39.2"  y="126" width="12" height="24" rx="3"><title>Jan: 2</title></rect>
-                      <rect class="bar" x="65.8"  y="138" width="12" height="12" rx="3"><title>Feb: 1</title></rect>
-                      <rect class="bar" x="92.2"  y="114" width="12" height="36" rx="3"><title>Mar: 3</title></rect>
-                      <rect class="bar" x="118.8" y="126" width="12" height="24" rx="3"><title>Apr: 2</title></rect>
-                      <rect class="bar" x="145.2" y="102" width="12" height="48" rx="3"><title>May: 4</title></rect>
-                      <rect class="bar" x="171.8" y="114" width="12" height="36" rx="3"><title>Jun: 3</title></rect>
-                      <rect class="bar" x="198.2" y="126" width="12" height="24" rx="3"><title>Jul: 2</title></rect>
-                      <rect class="bar" x="224.8" y="42"  width="12" height="108" rx="3"><title>Aug: 9</title></rect>
-                      <rect class="bar" x="251.2" y="102" width="12" height="48" rx="3"><title>Sep: 4</title></rect>
-                      <rect class="bar" x="277.8" y="90"  width="12" height="60" rx="3"><title>Oct: 5</title></rect>
-                      <rect class="bar" x="304.2" y="78"  width="12" height="72" rx="3"><title>Nov: 6</title></rect>
-                      <rect class="bar" x="330.8" y="66"  width="12" height="84" rx="3"><title>Dec: 7</title></rect>
-                    </g>
-
-                    <!-- x labels -->
-                    <g class="label" text-anchor="middle">
-                      <text x="45.2"  y="170">{{ 'month_jan' | translate }}</text>
-                      <text x="71.8"  y="170">{{ 'month_feb' | translate }}</text>
-                      <text x="98.2"  y="170">{{ 'month_mar' | translate }}</text>
-                      <text x="124.8" y="170">{{ 'month_apr' | translate }}</text>
-                      <text x="151.2" y="170">{{ 'month_may' | translate }}</text>
-                      <text x="177.8" y="170">{{ 'month_jun' | translate }}</text>
-                      <text x="204.2" y="170">{{ 'month_jul' | translate }}</text>
-                      <text x="230.8" y="170">{{ 'month_aug' | translate }}</text>
-                      <text x="257.2" y="170">{{ 'month_sep' | translate }}</text>
-                      <text x="283.8" y="170">{{ 'month_oct' | translate }}</text>
-                      <text x="310.2" y="170">{{ 'month_nov' | translate }}</text>
-                      <text x="336.8" y="170">{{ 'month_dec' | translate }}</text>
-                    </g>
-
-                    <!-- y labels -->
-                    <g class="label" text-anchor="end">
-                      <text x="28" y="152">0</text>
-                      <text x="28" y="124">2</text>
-                      <text x="28" y="96">4</text>
-                      <text x="28" y="68">6</text>
-                      <text x="28" y="40">8</text>
-                      <text x="28" y="12">10</text>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <!-- Top Selling Product (SVG Pie) -->
-                <div class="border rounded-3 p-3 h-100" data-animate="animate__fadeInUp">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <small class="text-muted fw-semibold">{{ 'top_selling_product' | translate }}</small>
-                    <i class="bi bi-trophy text-warning"></i>
-                  </div>
-
-                  <div class="row g-2 align-items-center">
-                    <div class="col-6">
-                      <!-- 45% / 35% / 20% -->
-                      <svg class="chart-svg" viewBox="0 0 160 160" aria-labelledby="pieTitle pieDesc" role="img">
-                        <title id="pieTitle">{{ 'top_selling_product' | translate }}</title>
-                        <desc id="pieDesc">{{ 'sales_share' | translate }}: {{ 'vintage_abaya' | translate }} 45%, {{ 'zebra_stripe_mukhawar' | translate }} 35%, {{ 'checked_leather_bag' | translate }} 20%.</desc>
-
-                        <!-- background circle (ring) -->
-                        <circle cx="80" cy="80" r="70" fill="#f8f9fa"></circle>
-
-                        <!-- segment 1: Vintage Abaya (45%) -->
-                        <path d="M 80,80 L 150.000,80.000 A 70,70 0 0 1 13.426,101.631 Z" fill="#906952">
-                          <title>{{ 'vintage_abaya' | translate }} — 45%</title>
-                        </path>
-                        <!-- segment 2: Zebra Stripe Mukhawar (35%) -->
-                        <path d="M 80,80 L 13.426,101.631 A 70,70 0 0 1 101.631,13.426 Z" fill="#c9ac98">
-                          <title>{{ 'zebra_stripe_mukhawar' | translate }} — 35%</title>
-                        </path>
-                        <!-- segment 3: Checked Leather Bag (20%) -->
-                        <path d="M 80,80 L 101.631,13.426 A 70,70 0 0 1 150.000,80.000 Z" fill="#e8dccb">
-                          <title>{{ 'checked_leather_bag' | translate }} — 20%</title>
-                        </path>
-
-                        <!-- inner hole for a donut look (optional) -->
-                        <circle cx="80" cy="80" r="40" fill="#ffffff"></circle>
-
-                        <!-- center label -->
-                        <text x="80" y="84" text-anchor="middle" font-size="12" fill="#6c757d">{{ 'sales_share' | translate }}</text>
-                      </svg>
-                    </div>
-
-                    <div class="col-6">
-                      <!-- Legend -->
-                      <ul class="list-unstyled small mb-0">
-                        <li class="d-flex align-items-center mb-2">
-                          <span class="legend-swatch me-2" style="background:#906952"></span> {{ 'vintage_abaya' | translate }} <span class="ms-auto fw-semibold">45%</span>
-                        </li>
-                        <li class="d-flex align-items-center mb-2">
-                          <span class="legend-swatch me-2" style="background:#c9ac98"></span> {{ 'zebra_stripe_mukhawar' | translate }} <span class="ms-auto fw-semibold">35%</span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                          <span class="legend-swatch me-2" style="background:#e8dccb"></span> {{ 'checked_leather_bag' | translate }} <span class="ms-auto fw-semibold">20%</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Top Products badges -->
-            <div class="border rounded-3 p-3 mt-3">
-              <small class="text-muted d-block mb-2">{{ 'recently_added_products' | translate }}</small>
-              <div class="d-flex gap-2 flex-wrap">
-                <span class="badge rounded-pill text-bg-light border">{{ 'vintage_abaya' | translate }}</span>
-                <span class="badge rounded-pill text-bg-light border">{{ 'zebra_stripe_mukhawar' | translate }}</span>
-                <span class="badge rounded-pill text-bg-light border">{{ 'checked_leather_bag' | translate }}</span>
+            <div class="ax-flex ax-items-center ax-gap-2 ax-mb-2">
+              <svg viewBox="0 0 40 40" style="width: 3rem; height: 3rem; flex-shrink: 0;" aria-labelledby="pie-title">
+                <title id="pie-title">{{ 'sales_share' | translate }}</title>
+                <circle cx="20" cy="20" r="15" fill="#f1ede7"/>
+                <path d="M20,5 A15,15 0 0,1 34.27,15.15 L20,20 Z" fill="#906952"/>
+                <path d="M34.27,15.15 A15,15 0 0,1 28.5,31.5 L20,20 Z" fill="#c9a227"/>
+                <circle cx="20" cy="20" r="8" fill="white"/>
+              </svg>
+              <div class="ax-flex-1" style="min-width: 0;">
+                <div class="ax-text-xs ax-font-medium">{{ 'vintage_abaya' | translate }}</div>
+                <div class="ax-text-2xs ax-text-tertiary">{{ 'sales_share' | translate }}: 45%</div>
               </div>
             </div>
           </div>
-          <small class="d-block abayti_secondary_color text-center mt-2">{{ 'preview_vendor_dashboard' | translate }}</small>
         </div>
       </div>
     </div>
@@ -225,411 +129,286 @@
 </header>
 
 <!-- FEATURES -->
-<section id="features" class="py-5 mt-5">
-  <div class="container">
-    <div class="text-center mb-5 animate__animated animate__fadeInUp">
-      <span class="badge rounded-pill soft-secondary mb-2">{{ 'why_vendors_choose_abayti' | translate }}</span>
-      <h2 class="fw-bold">{{ 'everything_you_need_to_grow' | translate }}</h2>
-      <p class="text-muted">{{ 'onboarding_to_payout_streamlined' | translate }}</p>
-    </div>
+<section id="features" class="ax-home-section">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">{{ 'why_vendors_choose_abayti' | translate }}</div>
+    <h2 class="ax-home-section-title">{{ 'everything_you_need_to_grow' | translate }}</h2>
+    <p class="ax-home-section-subtitle">{{ 'onboarding_to_payout_streamlined' | translate }}</p>
+  </div>
 
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color">
-            <i class="bi bi-shop fs-3"></i>
-          </div>
-          <h5 class="fw-semibold">{{ 'beautiful_storefront' | translate }}</h5>
-          <p class="text-muted">{{ 'beautiful_storefront_desc' | translate }}</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color"><i class="bi bi-credit-card-2-front  fs-3"></i></div>
-          <h5 class="fw-semibold">{{ 'payments_and_payouts' | translate }}</h5>
-          <p class="text-muted">{{ 'payments_and_payouts_desc' | translate }}</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color"><i class="bi bi-truck fs-3"></i></div>
-          <h5 class="fw-semibold">{{ 'integrated_logistics' | translate }}</h5>
-          <p class="text-muted">{{ 'integrated_logistics_desc' | translate }}</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color"><i class="bi bi-bar-chart-line fs-3"></i></div>
-          <h5 class="fw-semibold">{{ 'sales_analytics' | translate }}</h5>
-          <p class="text-muted">{{ 'sales_analytics_desc' | translate }}</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color"><i class="bi bi-megaphone fs-3"></i></div>
-          <h5 class="fw-semibold">{{ 'marketing_tools' | translate }}</h5>
-          <p class="text-muted">{{ 'marketing_tools_desc' | translate }}</p>
-        </div>
-      </div>
-      <div class="col-md-6 col-lg-4 animate__animated animate__fadeInUp">
-        <div class="p-4 bg-white rounded-4 shadow-soft h-100">
-          <div class="feature-icon mb-3 abayti_secondary_color"><i class="bi bi-shield-check fs-3"></i></div>
-          <h5 class="fw-semibold">{{ 'trust_and_support' | translate }}</h5>
-          <p class="text-muted">{{ 'trust_and_support_desc' | translate }}</p>
-        </div>
-      </div>
+  <div class="ax-home-features">
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">storefront</span></span>
+      <h3 class="ax-home-feature-title">{{ 'beautiful_storefront' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'beautiful_storefront_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">credit_card</span></span>
+      <h3 class="ax-home-feature-title">{{ 'payments_and_payouts' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'payments_and_payouts_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">local_shipping</span></span>
+      <h3 class="ax-home-feature-title">{{ 'integrated_logistics' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'integrated_logistics_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">insights</span></span>
+      <h3 class="ax-home-feature-title">{{ 'sales_analytics' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'sales_analytics_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">campaign</span></span>
+      <h3 class="ax-home-feature-title">{{ 'marketing_tools' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'marketing_tools_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-feature">
+      <span class="ax-home-feature-icon"><span class="material-symbols-outlined">shield</span></span>
+      <h3 class="ax-home-feature-title">{{ 'trust_and_support' | translate }}</h3>
+      <p class="ax-home-feature-desc">{{ 'trust_and_support_desc' | translate }}</p>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section id="how" class="py-5 mt-5 animate__animated animate__fadeInUp">
-  <div class="container">
-    <div class="row align-items-center g-4">
-      <div class="col-lg-6">
-        <h2 class="fw-bold">{{ 'start_selling_in_3_steps' | translate }}</h2>
-        <div class="mt-4 step">
-          <div class="d-flex gap-3">
-            <div class="text-brand"><i class="bi bi-person-plus fs-3 link-brand"></i></div>
-            <div>
-              <h6 class="mb-1">{{ 'step_1_title' | translate }}</h6>
-              <p class="text-muted mb-0">{{ 'step_1_desc' | translate }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 step">
-          <div class="d-flex gap-3">
-            <div class="text-brand"><i class="bi bi-card-checklist fs-3 link-brand"></i></div>
-            <div>
-              <h6 class="mb-1">{{ 'step_2_title' | translate }}</h6>
-              <p class="text-muted mb-0">{{ 'step_2_desc' | translate }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4 step">
-          <div class="d-flex gap-3">
-            <div class="text-brand"><i class="bi bi-rocket-takeoff fs-3 link-brand"></i></div>
-            <div>
-              <h6 class="mb-1">{{ 'step_3_title' | translate }}</h6>
-              <p class="text-muted mb-0">{{ 'step_3_desc' | translate }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4">
-          <a routerLink="/register" class="btn abayti_secondary_background text-white btn-outline-secondary btn-lg">{{ 'register_now' | translate }}</a>
-          <a routerLink="/login" class="btn abayti_primary_background text-black btn-outline-secondary btn-lg ms-2">{{ 'log_in' | translate }}</a>
-        </div>
-      </div>
-      <div class="col-lg-6" id="demo">
-        <div class="glass rounded-4 p-3 p-md-4 shadow-soft">
-          <!-- Dashboard mockup -->
-          <div class="bg-white rounded-4 p-3">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <span class="badge text-bg-light border">{{ 'vendor' | translate }}</span>
-                <span class="abayti_secondary_color">{{ 'dashboard' | translate }}</span>
-              </div>
-              <i class="bi bi-three-dots-vertical text-muted"></i>
-            </div>
-            <div class="row g-3">
-              <div class="col-6">
-                <div class="border rounded-3 p-3 h-100">
-                  <small class="text-muted">{{ 'todays_sales' | translate }}</small>
-                  <h3 class="mb-0">0</h3>
-                  <small class="text-success"><i class="bi bi-graph-up"></i> +0%</small>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="border rounded-3 p-3 h-100">
-                  <small class="text-muted">{{ 'orders_short' | translate }}</small>
-                  <h3 class="mb-0">0</h3>
-                  <small class="text-success"><i class="bi bi-graph-up"></i> +0%</small>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="border rounded-3 p-3">
-                  <small class="text-muted d-block mb-2">{{ 'top_products' | translate }}</small>
-                  <div class="d-flex gap-3 flex-wrap">
-                    <span class="badge rounded-pill text-bg-light border">{{ 'white_stripe_mukhawar' | translate }}</span>
-                    <span class="badge rounded-pill text-bg-light border">{{ 'black_vintage_abaya' | translate }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <small class="d-block text-center text-white-50 mt-2">{{ 'preview_of_vendor_dashboard' | translate }}</small>
-        </div>
-      </div>
+<section id="how" class="ax-home-section ax-home-section-alt">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">Onboarding</div>
+    <h2 class="ax-home-section-title">{{ 'start_selling_in_3_steps' | translate }}</h2>
+  </div>
+
+  <div class="ax-home-steps">
+    <div class="ax-home-step">
+      <h3 class="ax-home-step-title">{{ 'step_1_title' | translate }}</h3>
+      <p class="ax-home-step-desc">{{ 'step_1_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-step">
+      <h3 class="ax-home-step-title">{{ 'step_2_title' | translate }}</h3>
+      <p class="ax-home-step-desc">{{ 'step_2_desc' | translate }}</p>
+    </div>
+    <div class="ax-home-step">
+      <h3 class="ax-home-step-title">{{ 'step_3_title' | translate }}</h3>
+      <p class="ax-home-step-desc">{{ 'step_3_desc' | translate }}</p>
+    </div>
+  </div>
+
+  <div class="ax-text-center ax-mt-6">
+    <a routerLink="/register" class="ax-btn ax-btn-primary ax-btn-lg">
+      {{ 'register_now' | translate }}
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="ax-home-section">
+  <div class="ax-grid ax-grid-cols-2 ax-md-grid-cols-4 ax-gap-4 ax-text-center">
+    <div>
+      <div class="ax-home-hero-stat-value">1,200</div>
+      <div class="ax-home-hero-stat-label">{{ 'active_vendors' | translate }}</div>
+    </div>
+    <div>
+      <div class="ax-home-hero-stat-value">48,000</div>
+      <div class="ax-home-hero-stat-label">{{ 'products_listed' | translate }}</div>
+    </div>
+    <div>
+      <div class="ax-home-hero-stat-value">98</div>
+      <div class="ax-home-hero-stat-label">{{ 'cities_delivered' | translate }}</div>
+    </div>
+    <div>
+      <div class="ax-home-hero-stat-value">4.8</div>
+      <div class="ax-home-hero-stat-label">{{ 'avg_rating' | translate }}</div>
     </div>
   </div>
 </section>
 
-
-<!-- STATS -->
-<section class="py-5 mt-5 bg-white reveal" data-anim="animate__fadeInUp">
-  <div class="container">
-    <div class="row text-center g-4">
-      <div class="col-6 col-md-3">
-        <h3 class="fw-bold" data-counter="1200">0</h3>
-        <p class="text-muted mb-0">{{ 'active_vendors' | translate }}</p>
-      </div>
-      <div class="col-6 col-md-3">
-        <h3 class="fw-bold" data-counter="48000">0</h3>
-        <p class="text-muted mb-0">{{ 'products_listed' | translate }}</p>
-      </div>
-      <div class="col-6 col-md-3">
-        <h3 class="fw-bold" data-counter="98">0</h3>
-        <p class="text-muted mb-0">{{ 'cities_delivered' | translate }}</p>
-      </div>
-      <div class="col-6 col-md-3">
-        <h3 class="fw-bold" data-counter="4.8">0</h3>
-        <p class="text-muted mb-0">{{ 'avg_rating' | translate }}</p>
-      </div>
-    </div>
+<!-- PRICING -->
+<section id="pricing" class="ax-home-section ax-home-section-alt">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">Pricing</div>
+    <h2 class="ax-home-section-title">{{ 'simple_vendor_pricing' | translate }}</h2>
+    <p class="ax-home-section-subtitle">{{ 'no_hidden_fees' | translate }}</p>
   </div>
-</section>
 
-<!-- PRICING / COMMISSION -->
-<section id="pricing" class="py-5  animate__animated animate__fadeInUp bg-light">
-  <div class="container my-5">
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">{{ 'simple_vendor_pricing' | translate }}</h2>
-      <p class="text-muted">{{ 'no_hidden_fees' | translate }}</p>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
-        <div class="card p-5 border-0 shadow-soft">
-          <div class="card-body p-4 p-md-5">
-            <div class="d-flex align-items-baseline gap-2">
-              <span class="display-5 fw-bold">{{ 'commission_rate' | translate }}</span>
-              <span class="text-muted">{{ 'per_order' | translate }}</span>
-            </div>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'zero_monthly_subscription' | translate }}</li>
-              <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'automated_payouts_weekly' | translate }}</li>
-              <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'unlimited_products' | translate }}</li>
-              <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i>{{ 'support_via_chat_email' | translate }}</li>
-            </ul>
-            <a routerLink="/register" class="btn abayti_secondary_background btn-outline-secondary text-white btn-lg w-100">{{ 'become_a_vendor' | translate }}</a>
-            <small class="d-block text-center text-muted mt-3">{{ 'custom_rates_for_high_volume' | translate }}</small>
-          </div>
-        </div>
+  <div class="ax-home-pricing" style="max-width: 32rem;">
+    <div class="ax-home-plan ax-home-plan-featured">
+      <h3 class="ax-home-plan-name">{{ 'become_a_vendor' | translate }}</h3>
+      <div class="ax-home-plan-price">
+        {{ 'commission_rate' | translate }}
+        <small>{{ 'per_order' | translate }}</small>
       </div>
+      <ul class="ax-home-plan-features">
+        <li>
+          <span class="material-symbols-outlined">check_circle</span>
+          {{ 'zero_monthly_subscription' | translate }}
+        </li>
+        <li>
+          <span class="material-symbols-outlined">check_circle</span>
+          {{ 'automated_payouts_weekly' | translate }}
+        </li>
+        <li>
+          <span class="material-symbols-outlined">check_circle</span>
+          {{ 'unlimited_products' | translate }}
+        </li>
+        <li>
+          <span class="material-symbols-outlined">check_circle</span>
+          {{ 'support_via_chat_email' | translate }}
+        </li>
+      </ul>
+      <a routerLink="/register" class="ax-btn ax-btn-primary ax-btn-lg" style="width: 100%;">
+        {{ 'become_a_vendor' | translate }}
+      </a>
+      <small class="ax-text-center ax-text-xs ax-text-tertiary ax-mt-3 ax-block">
+        {{ 'custom_rates_for_high_volume' | translate }}
+      </small>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="py-5 abayti_primary_background reveal" data-anim="animate__fadeInUp">
-  <div class="container my-5">
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">{{ 'what_vendors_are_saying' | translate }}</h2>
-      <p class="text-muted">{{ 'real_results_from_real_sellers' | translate }}</p>
-    </div>
-    <div id="testimonials" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="row justify-content-center">
-            <div class="col-lg-8">
-              <div class="card border-0 shadow-soft">
-                <div class="card-body p-4 p-md-5">
-                  <p class="quote mb-3">{{ 'testimonial_1_quote' | translate }}</p>
-                  <div class="d-flex align-items-center gap-3">
-                    <img class="rounded-circle" src="https://dummyimage.com/64x64/ced4da/6c757d.jpg" alt="{{ 'vendor_avatar' | translate }}" width="48" height="48" />
-                    <div>
-                      <strong>{{ 'testimonial_1_name' | translate }}</strong>
-                      <div class="text-muted small">{{ 'testimonial_1_title' | translate }}</div>
-                    </div>
-                    <span class="ms-auto text-warning"><i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-half"></i></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<section class="ax-home-testimonial-strip ax-home-section">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">Testimonials</div>
+    <h2 class="ax-home-section-title">{{ 'what_vendors_are_saying' | translate }}</h2>
+    <p class="ax-home-section-subtitle">{{ 'real_results_from_real_sellers' | translate }}</p>
+  </div>
+
+  <div class="ax-home-testimonials" style="grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));">
+    <div class="ax-home-testimonial">
+      <p class="ax-home-testimonial-quote">{{ 'testimonial_1_quote' | translate }}</p>
+      <div class="ax-home-testimonial-author">
+        <span class="ax-home-testimonial-avatar">{{ ('testimonial_1_name' | translate).charAt(0) }}</span>
+        <div>
+          <span class="ax-home-testimonial-author-name">{{ 'testimonial_1_name' | translate }}</span>
+          <span class="ax-home-testimonial-author-role">{{ 'testimonial_1_title' | translate }}</span>
         </div>
-        <div class="carousel-item">
-          <div class="row justify-content-center">
-            <div class="col-lg-8">
-              <div class="card border-0 shadow-soft">
-                <div class="card-body p-4 p-md-5">
-                  <p class="quote mb-3">{{ 'testimonial_2_quote' | translate }}</p>
-                  <div class="d-flex align-items-center gap-3">
-                    <img class="rounded-circle" src="https://dummyimage.com/64x64/ced4da/6c757d.jpg" alt="{{ 'vendor_avatar' | translate }}" width="48" height="48" />
-                    <div>
-                      <strong>{{ 'testimonial_2_name' | translate }}</strong>
-                      <div class="text-muted small">{{ 'testimonial_2_title' | translate }}</div>
-                    </div>
-                    <span class="ms-auto text-warning"><i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <span class="ax-ml-auto" style="color: var(--ax-palette-gold-500);">
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem;">star_half</span>
+        </span>
       </div>
-      <button class="carousel-control-prev abayti_secondary_color" type="button" data-bs-target="#testimonials" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">{{ 'previous' | translate }}</span>
-      </button>
-      <button class="carousel-control-next abayti_secondary_color" type="button" data-bs-target="#testimonials" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">{{ 'next' | translate }}</span>
-      </button>
     </div>
 
+    <div class="ax-home-testimonial">
+      <p class="ax-home-testimonial-quote">{{ 'testimonial_2_quote' | translate }}</p>
+      <div class="ax-home-testimonial-author">
+        <span class="ax-home-testimonial-avatar">{{ ('testimonial_2_name' | translate).charAt(0) }}</span>
+        <div>
+          <span class="ax-home-testimonial-author-name">{{ 'testimonial_2_name' | translate }}</span>
+          <span class="ax-home-testimonial-author-role">{{ 'testimonial_2_title' | translate }}</span>
+        </div>
+        <span class="ax-ml-auto" style="color: var(--ax-palette-gold-500);">
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined" style="font-size: 1rem; font-variation-settings: 'FILL' 1;">star</span>
+        </span>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section id="faq" data-anim="animate__fadeInUp" class="py-5 bg-light">
-  <div class="container">
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">{{ 'frequently_asked_questions' | translate }}</h2>
-      <p class="text-muted">{{ 'faq_sub' | translate }}</p>
-    </div>
-    <div class="row g-4">
-      <div class="col-lg-8 mx-auto">
-        <div class="accordion" id="faqAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="q1">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="true" aria-controls="a1">
-                {{ 'faq_q1' | translate }}
-              </button>
-            </h2>
-            <div id="a1" class="accordion-collapse collapse show" aria-labelledby="q1" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">{{ 'faq_a1' | translate }}</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="q2">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">
-                {{ 'faq_q2' | translate }}
-              </button>
-            </h2>
-            <div id="a2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">{{ 'faq_a2' | translate }}</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="q3">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">
-                {{ 'faq_q3' | translate }}
-              </button>
-            </h2>
-            <div id="a3" class="accordion-collapse collapse" aria-labelledby="q3" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">{{ 'faq_a3' | translate }}</div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="q4">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a4" aria-expanded="false" aria-controls="a4">
-                {{ 'faq_q4' | translate }}
-              </button>
-            </h2>
-            <div id="a4" class="accordion-collapse collapse" aria-labelledby="q4" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">{{ 'faq_a4' | translate }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<section id="faq" class="ax-home-section ax-home-section-alt">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">FAQ</div>
+    <h2 class="ax-home-section-title">{{ 'frequently_asked_questions' | translate }}</h2>
+    <p class="ax-home-section-subtitle">{{ 'faq_sub' | translate }}</p>
+  </div>
+
+  <div class="ax-home-faq">
+    <app-ax-accordion [defaultOpenIndex]="0">
+      <app-ax-accordion-item [title]="'faq_q1' | translate">
+        <p class="ax-m-0">{{ 'faq_a1' | translate }}</p>
+      </app-ax-accordion-item>
+      <app-ax-accordion-item [title]="'faq_q2' | translate">
+        <p class="ax-m-0">{{ 'faq_a2' | translate }}</p>
+      </app-ax-accordion-item>
+      <app-ax-accordion-item [title]="'faq_q3' | translate">
+        <p class="ax-m-0">{{ 'faq_a3' | translate }}</p>
+      </app-ax-accordion-item>
+      <app-ax-accordion-item [title]="'faq_q4' | translate">
+        <p class="ax-m-0">{{ 'faq_a4' | translate }}</p>
+      </app-ax-accordion-item>
+    </app-ax-accordion>
   </div>
 </section>
-<section id="legal" data-anim="animate__fadeInUp" class="py-5 bg-light">
-  <div class="container my-5">
-    <ul class="nav nav-tabs justify-content-start" id="policyTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab">
-          📞 {{ 'contact' | translate }}
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="privacy-tab" data-bs-toggle="tab" data-bs-target="#privacy" type="button" role="tab">
-          🔒 {{ 'privacy_policy' | translate }}
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="refund-tab" data-bs-toggle="tab" data-bs-target="#refund" type="button" role="tab">
-          💳 {{ 'refund_policy' | translate }}
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab">
-          🚚 {{ 'shipping_policy' | translate }}
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="terms-tab" data-bs-toggle="tab" data-bs-target="#terms" type="button" role="tab">
-          📜 {{ 'terms_and_conditions' | translate }}
-        </button>
-      </li>
-    </ul>
 
-    <div class="tab-content p-4" id="policyTabsContent">
-      <div class="tab-pane fade show active" id="contact" role="tabpanel">
-        <h5>📞 {{ 'contact' | translate }}</h5>
-        <p>{{ 'contact_support_text' | translate }}</p>
-        <h6>{{ 'location' | translate }}</h6>
-      </div>
-      <div class="tab-pane fade" id="privacy" role="tabpanel">
-        <h5>🔒 {{ 'privacy_policy' | translate }}</h5>
-        <p>{{ 'privacy_policy_text' | translate }}</p>
-      </div>
-      <div class="tab-pane fade" id="refund" role="tabpanel">
-        <h5>💳 {{ 'refund_policy' | translate }}</h5>
-        <p>{{ 'refund_policy_text' | translate }}</p>
-      </div>
-      <div class="tab-pane fade" id="shipping" role="tabpanel">
-        <h5>🚚 {{ 'shipping_policy' | translate }}</h5>
-        <p>{{ 'shipping_policy_text' | translate }}</p>
-      </div>
-      <div class="tab-pane fade" id="terms" role="tabpanel">
-        <h5>📜 {{ 'terms_and_conditions' | translate }}</h5>
-        <p>{{ 'terms_and_conditions_text' | translate }}</p>
-      </div>
-    </div>
+<!-- LEGAL / POLICIES -->
+<section id="legal" class="ax-home-section">
+  <div class="ax-home-section-header">
+    <div class="ax-home-section-eyebrow">Information</div>
+    <h2 class="ax-home-section-title">Policies &amp; contact</h2>
+  </div>
+
+  <div style="max-width: 56rem; margin: 0 auto;">
+    <app-ax-tabs ariaLabel="Legal policies">
+      <app-ax-tab [label]="'contact' | translate" icon="call">
+        <div class="ax-p-4">
+          <h3 class="ax-h4 ax-mb-3">{{ 'contact' | translate }}</h3>
+          <p class="ax-m-0 ax-text-secondary">{{ 'contact_support_text' | translate }}</p>
+          <h4 class="ax-h5 ax-mt-4 ax-mb-2">{{ 'location' | translate }}</h4>
+        </div>
+      </app-ax-tab>
+      <app-ax-tab [label]="'privacy_policy' | translate" icon="lock">
+        <div class="ax-p-4">
+          <h3 class="ax-h4 ax-mb-3">{{ 'privacy_policy' | translate }}</h3>
+          <p class="ax-m-0 ax-text-secondary">{{ 'privacy_policy_text' | translate }}</p>
+        </div>
+      </app-ax-tab>
+      <app-ax-tab [label]="'refund_policy' | translate" icon="credit_card">
+        <div class="ax-p-4">
+          <h3 class="ax-h4 ax-mb-3">{{ 'refund_policy' | translate }}</h3>
+          <p class="ax-m-0 ax-text-secondary">{{ 'refund_policy_text' | translate }}</p>
+        </div>
+      </app-ax-tab>
+      <app-ax-tab [label]="'shipping_policy' | translate" icon="local_shipping">
+        <div class="ax-p-4">
+          <h3 class="ax-h4 ax-mb-3">{{ 'shipping_policy' | translate }}</h3>
+          <p class="ax-m-0 ax-text-secondary">{{ 'shipping_policy_text' | translate }}</p>
+        </div>
+      </app-ax-tab>
+      <app-ax-tab [label]="'terms_and_conditions' | translate" icon="description">
+        <div class="ax-p-4">
+          <h3 class="ax-h4 ax-mb-3">{{ 'terms_and_conditions' | translate }}</h3>
+          <p class="ax-m-0 ax-text-secondary">{{ 'terms_and_conditions_text' | translate }}</p>
+        </div>
+      </app-ax-tab>
+    </app-ax-tabs>
   </div>
 </section>
 
 <!-- FINAL CTA -->
-<section class="py-5 abayti_primary_background animate__animated animate__backInUp">
-  <div class="container">
-    <div class="row align-items-center gy-3">
-      <div class="col-lg-8" data-animate="animate__fadeInLeft">
-        <h2 class="fw-bold abayti_secondary_color mb-1">{{ 'ready_to_reach_more_customers' | translate }}</h2>
-        <p class="mb-0">{{ 'create_free_vendor_account' | translate }}</p>
-      </div>
-      <div class="col-lg-4 text-lg-end" data-animate="animate__fadeInRight">
-        <a [routerLink]="'/register'" class="btn abayti_secondary_background btn-outline-secondary text-white rounded-pill me-2">{{ 'register_button' | translate }}</a>
-        <a [routerLink]="'/login'" class="btn abayti_primary_background btn-outline-secondary text-black rounded-pill">{{ 'login_button' | translate }}</a>
-      </div>
+<section class="ax-home-cta-strip">
+  <div class="ax-home-cta-strip-inner">
+    <h2 class="ax-home-cta-strip-title">{{ 'ready_to_reach_more_customers' | translate }}</h2>
+    <p class="ax-home-cta-strip-desc">{{ 'create_free_vendor_account' | translate }}</p>
+    <div class="ax-flex ax-gap-2 ax-justify-center ax-flex-wrap">
+      <a routerLink="/register" class="ax-btn ax-btn-primary ax-btn-lg">
+        {{ 'register_button' | translate }}
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+      </a>
+      <a routerLink="/login" class="ax-btn ax-btn-outline ax-btn-lg" style="border-color: rgba(245, 241, 235, 0.3); color: var(--ax-color-text-inverse);">
+        {{ 'login_button' | translate }}
+      </a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="py-4 text-white abayti_secondary_background">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <div class="d-flex align-items-center gap-2">
-          <span>{{ 'footer_copyright' | translate }}</span>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <ul class="nav justify-content-md-end mt-3 mt-md-0">
-          <li class="nav-item"><a class="nav-link text-white px-2" href="#features">{{ 'footer_features' | translate }}</a></li>
-          <li class="nav-item"><a class="nav-link text-white px-2" href="#pricing">{{ 'footer_pricing' | translate }}</a></li>
-          <li class="nav-item"><a class="nav-link text-white px-2" href="#faq">{{ 'footer_faq' | translate }}</a></li>
-          <li class="nav-item"><a class="nav-link text-white px-2" routerLink="/login">{{ 'footer_login' | translate }}</a></li>
-          <li class="nav-item"><a class="nav-link text-white px-2" routerLink="/register">{{ 'footer_register' | translate }}</a></li>
-        </ul>
-      </div>
-    </div>
+<footer style="background-color: var(--ax-palette-beige-200); padding: var(--ax-space-5);">
+  <div style="max-width: var(--ax-page-max-width); margin: 0 auto;" class="ax-flex ax-items-center ax-justify-between ax-flex-wrap ax-gap-3">
+    <span class="ax-text-sm ax-text-secondary">{{ 'footer_copyright' | translate }}</span>
+    <nav class="ax-flex ax-gap-4 ax-flex-wrap">
+      <a href="#features" class="ax-text-sm ax-text-primary" style="text-decoration: none;">{{ 'footer_features' | translate }}</a>
+      <a href="#pricing" class="ax-text-sm ax-text-primary" style="text-decoration: none;">{{ 'footer_pricing' | translate }}</a>
+      <a href="#faq" class="ax-text-sm ax-text-primary" style="text-decoration: none;">{{ 'footer_faq' | translate }}</a>
+      <a routerLink="/login" class="ax-text-sm ax-text-primary" style="text-decoration: none;">{{ 'footer_login' | translate }}</a>
+      <a routerLink="/register" class="ax-text-sm ax-text-primary" style="text-decoration: none;">{{ 'footer_register' | translate }}</a>
+    </nav>
   </div>
 </footer>

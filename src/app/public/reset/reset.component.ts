@@ -5,7 +5,6 @@ import {CookieService} from 'ngx-cookie-service';
 import {HotToastService} from '@ngneat/hot-toast';
 import {GlobalComponent} from '../../global-component';
 import {FormsModule} from '@angular/forms';
-import {TuiLoader} from '@taiga-ui/core';
 import {CommonModule} from '@angular/common';
 import {TranslatePipe} from '../../translate.pipe';
 import {LanguageSwitcherComponent} from '../../language-switcher.component';
@@ -14,7 +13,6 @@ import {LanguageSwitcherComponent} from '../../language-switcher.component';
   selector: 'app-reset',
   imports: [
     FormsModule,
-    TuiLoader,
     CommonModule,
     RouterLink,
     TranslatePipe,

@@ -1,120 +1,215 @@
-<style>
-  /* keep the image filling its card without distortion */
-  .object-fit-cover { object-fit: cover; }
-</style>
+<div class="ax-auth-shell">
+  <div class="ax-auth-shell-inner">
 
-<div style="max-width: 55rem; padding-top: 3%" class="container animate__animated animate__fadeIn">
-    <span class="badge abayti_secondary_background rounded-pill mb-3">
-    <a routerLink="/" class="btn px-1 py-0 btn-sm text-white">{{ 'back_to_website' | translate }}</a>
-  </span>
-  <div  class="row justify-content-center align-items-stretch g-4">
-    <div class="col-12 col-lg-6 d-none d-md-flex">
-      <div class="card shadow-lg w-100 h-100 overflow-hidden">
-        <img src="assets/img/e572a033-31e5-4b38-991f-44578a2125a8.jpeg" alt="home" class="w-100 h-100 object-fit-cover animate__animated animate__fadeIn"
-        />
-      </div>
-    </div>
-    <div class="col-12 col-lg-6 d-flex">
-      <div class="card">
-        <div class="card-header text-center">
-          <div class="row align-items-center">
-            <div class="col-6 text-start">
-              <img class="img-fluid" style="max-width: 140px" src="assets/img/abayti.png" alt="abayti" />
-            </div>
-            <div class="col-6 text-end">
-              <app-language-switcher></app-language-switcher>
-            </div>
-          </div>
+    <!-- Image panel -->
+    <a routerLink="/" class="ax-auth-image" [attr.aria-label]="'back_to_website' | translate">
+      <img src="assets/img/e572a033-31e5-4b38-991f-44578a2125a8.jpeg" alt="Abayti storefront preview" />
+    </a>
+
+    <!-- Form panel -->
+    <div>
+      <a routerLink="/" class="ax-auth-back">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        {{ 'back_to_website' | translate }}
+      </a>
+
+      <div class="ax-auth-panel">
+        <div class="ax-auth-header">
+          <img class="ax-auth-logo" src="assets/img/abayti.png" alt="Abayti" />
+          <app-language-switcher></app-language-switcher>
         </div>
-        <div *ngIf="!ui_controls.registered" class="card-body">
-          <h1 class="fs-2">{{ 'register' | translate }}</h1>
-          <p class="lead text-body-secondary">{{'create_account' | translate}}</p>
-          <form (ngSubmit)="user_register()"  method="post"  class="mb-5">
-            <div class="row">
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-2">
-                  <label for="first_name" class="required">{{ 'first_name' | translate }}</label>
-                  <input [(ngModel)]="register.first_name" name="first_name" class="form-control form-control-sm" id="first_name" type="text" />
-                </div>
+
+        <!-- Registration form -->
+        <div *ngIf="!ui_controls.registered" class="ax-auth-body">
+          <div>
+            <h1 class="ax-auth-title">{{ 'register' | translate }}</h1>
+            <p class="ax-auth-subtitle">{{ 'create_account' | translate }}</p>
+          </div>
+
+          <form (ngSubmit)="user_register()" method="post" class="ax-flex ax-flex-col ax-gap-3">
+
+            <div class="ax-grid ax-grid-cols-2 ax-gap-3">
+              <div class="ax-form-field">
+                <label for="first_name" class="ax-label ax-label-required">{{ 'first_name' | translate }}</label>
+                <input
+                  id="first_name"
+                  name="first_name"
+                  type="text"
+                  class="ax-input"
+                  [(ngModel)]="register.first_name"
+                  autocomplete="given-name"
+                  required />
               </div>
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-2">
-                  <label for="last_name" class="required">{{ 'last_name' | translate }}</label>
-                  <input [(ngModel)]="register.last_name" name="last_name" class="form-control form-control-sm" id="last_name" type="text" />
-                </div>
-              </div>
-            </div>
-            <div class="mb-2">
-              <label for="email" class="required">{{ 'email' | translate }}</label>
-              <input [(ngModel)]="register.email" name="email" class="form-control form-control-sm" id="email" type="email" />
-            </div>
-            <div class="row">
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-2">
-                  <label>{{ 'business_name' | translate }}</label>
-                  <input class="form-control form-control-sm" name="business_name" id="business_name" [(ngModel)]="register.business_name"  type="text" value=""/>
-                </div>
-              </div>
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-2">
-                  <label>{{ 'license_number' | translate }}</label>
-                  <input class="form-control form-control-sm" name="license_number" id="license_number" [(ngModel)]="register.license_number"  type="text" value=""/>
-                </div>
-              </div>
-              <div class="col-12">
-                <small class="form-text">{{'add_business_lic_instruction' | translate}}</small>
+              <div class="ax-form-field">
+                <label for="last_name" class="ax-label ax-label-required">{{ 'last_name' | translate }}</label>
+                <input
+                  id="last_name"
+                  name="last_name"
+                  type="text"
+                  class="ax-input"
+                  [(ngModel)]="register.last_name"
+                  autocomplete="family-name"
+                  required />
               </div>
             </div>
-            <div class="mb-2">
-              <label class="required">{{ 'phone_number' | translate }}</label>
-              <div class="input-group">
-                <div class="btn-group" data-bs-auto-close="outside">
-                  <button class="btn abayti_secondary_background text-white btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="me-1">{{ selectedDial?.flag }}</span>{{ register.countryCode }}
+
+            <div class="ax-form-field">
+              <label for="email" class="ax-label ax-label-required">{{ 'email' | translate }}</label>
+              <div class="ax-input-group">
+                <span class="ax-input-group-prefix material-symbols-outlined" aria-hidden="true">mail</span>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  class="ax-input"
+                  [(ngModel)]="register.email"
+                  autocomplete="email"
+                  required />
+              </div>
+            </div>
+
+            <div class="ax-grid ax-grid-cols-2 ax-gap-3">
+              <div class="ax-form-field">
+                <label for="business_name" class="ax-label">{{ 'business_name' | translate }}</label>
+                <input
+                  id="business_name"
+                  name="business_name"
+                  type="text"
+                  class="ax-input"
+                  [(ngModel)]="register.business_name" />
+              </div>
+              <div class="ax-form-field">
+                <label for="license_number" class="ax-label">{{ 'license_number' | translate }}</label>
+                <input
+                  id="license_number"
+                  name="license_number"
+                  type="text"
+                  class="ax-input"
+                  [(ngModel)]="register.license_number" />
+              </div>
+            </div>
+            <span class="ax-hint">{{ 'add_business_lic_instruction' | translate }}</span>
+
+            <div class="ax-form-field">
+              <label class="ax-label ax-label-required">{{ 'phone_number' | translate }}</label>
+              <div class="ax-input-group ax-flex">
+                <!-- Country code picker -->
+                <button
+                  type="button"
+                  class="ax-btn ax-btn-outline"
+                  style="border-top-right-radius: 0; border-bottom-right-radius: 0; border-right: 0; min-width: 6rem;"
+                  [axDropdown]="dialMenu"
+                  axDropdownAlign="start">
+                  <span *ngIf="selectedDial?.flag">{{ selectedDial?.flag }}</span>
+                  <span>{{ register.countryCode }}</span>
+                  <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+                </button>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  inputmode="numeric"
+                  pattern="\d*"
+                  class="ax-input"
+                  style="border-top-left-radius: 0; border-bottom-left-radius: 0;"
+                  [(ngModel)]="register.phone"
+                  placeholder="5XXXXXXXX"
+                  required />
+              </div>
+            </div>
+
+            <!-- Dial code dropdown content -->
+            <ng-template #dialMenu>
+              <div class="ax-p-2" style="width: 18rem; max-height: 16rem; overflow-y: auto;">
+                <input
+                  type="search"
+                  name="search"
+                  class="ax-input ax-input-sm ax-mb-2"
+                  [(ngModel)]="codeSearch"
+                  placeholder="Search by country or code"
+                  (click)="$event.stopPropagation()" />
+                <div class="ax-flex ax-flex-col" style="gap: 2px;">
+                  <button
+                    type="button"
+                    *ngFor="let c of filteredDialCodes()"
+                    class="ax-dropdown-item"
+                    axDropdownItem
+                    (click)="selectCode(c)">
+                    <span>{{ c.flag }}</span>
+                    <span class="ax-flex-1">{{ c.name }}</span>
+                    <span class="ax-text-tertiary ax-text-xs">{{ c.code }}</span>
                   </button>
-                  <div class="dropdown-menu p-2" style="min-width: 18rem;">
-                    <input type="search" name="search"  class="form-control form-control-sm mb-2" placeholder="Search by country or code" [(ngModel)]="codeSearch" (click)="$event.stopPropagation()" />
-                    <div class="list-group list-group-flush code-list">
-                      <button type="button" class="list-group-item list-group-item-action py-1" *ngFor="let c of filteredDialCodes()" (click)="selectCode(c)">
-                        <span class="me-1">{{ c.flag }}</span>{{ c.name }}
-                        <span class="text-muted small">({{ c.code }})</span>
-                      </button>
-                    </div>
-                  </div>
                 </div>
-                <input [(ngModel)]="register.phone" name="phone" class="form-control form-control-sm" type="tel" inputmode="numeric" pattern="\\d*" placeholder="5XXXXXXXX" />
+              </div>
+            </ng-template>
+
+            <div class="ax-grid ax-grid-cols-2 ax-gap-3">
+              <div class="ax-form-field">
+                <label for="password" class="ax-label ax-label-required">{{ 'password' | translate }}</label>
+                <div class="ax-input-group">
+                  <input
+                    [type]="fieldTextType ? 'text' : 'password'"
+                    id="password"
+                    name="password"
+                    class="ax-input"
+                    [(ngModel)]="register.password"
+                    autocomplete="new-password"
+                    required />
+                </div>
+              </div>
+              <div class="ax-form-field">
+                <label for="confirm_password" class="ax-label ax-label-required">{{ 'confirm_password' | translate }}</label>
+                <div class="ax-input-group">
+                  <input
+                    [type]="fieldTextType ? 'text' : 'password'"
+                    id="confirm_password"
+                    name="confirm_password"
+                    class="ax-input"
+                    [(ngModel)]="register.confirm_password"
+                    autocomplete="new-password"
+                    required />
+                </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-4">
-                  <label for="password" class="required">{{ 'password' | translate }}</label>
-                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control form-control-sm" name="password" id="password" [(ngModel)]="register.password"  type="password" value=""/>
-                </div>
-              </div>
-              <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-12">
-                <div class="mb-4">
-                  <label for="password" class="required">{{ 'confirm_password' | translate }}</label>
-                  <input [type]="fieldTextType ? 'text' : 'password'" class="form-control form-control-sm" name="confirm_password" id="confirm_password" [(ngModel)]="register.confirm_password"  type="password" value=""/>
-                </div>
-              </div>
-            </div>
-            <tui-loader *ngIf="ui_controls.loading" />
-            <button *ngIf="!ui_controls.loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">
-              {{'register' | translate}}
+
+            <label class="ax-check ax-mt-1">
+              <input type="checkbox" (change)="fieldTextType = !fieldTextType" />
+              <span class="ax-check-box"></span>
+              <span class="ax-check-label">Show passwords</span>
+            </label>
+
+            <button
+              type="submit"
+              class="ax-btn ax-btn-primary ax-btn-lg ax-mt-2"
+              [disabled]="ui_controls.loading">
+              <span *ngIf="ui_controls.loading" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span>{{ 'register' | translate }}</span>
             </button>
           </form>
-          <p class="text-center text-body-secondary mb-0">{{ 'have_account' | translate }}
-            <a class="text-black" routerLink="/login">{{'sign_in' | translate }}</a>
+
+          <p class="ax-auth-meta">
+            {{ 'have_account' | translate }}
+            <a routerLink="/login">{{ 'sign_in' | translate }}</a>
           </p>
         </div>
-        <div class="card-footer">
-          <p class="text-center text-body-secondary mb-0">{{ 'forgot_password_message' | translate }}
-            <a class="text-black" routerLink="/reset"> {{ 'reset_password' | translate }} </a>
+
+        <!-- Registered success state -->
+        <div *ngIf="ui_controls.registered" class="ax-auth-body">
+          <app-ax-empty-state
+            icon="mark_email_read"
+            title="Check your email"
+            description="We've sent a verification link to complete your registration. You'll be redirected to sign in shortly.">
+            <a routerLink="/login" class="ax-btn ax-btn-primary">{{ 'sign_in' | translate }}</a>
+          </app-ax-empty-state>
+        </div>
+
+        <div class="ax-auth-footer">
+          <p>
+            {{ 'forgot_password_message' | translate }}
+            <a routerLink="/reset">{{ 'reset_password' | translate }}</a>
           </p>
         </div>
       </div>
     </div>
   </div>
 </div>
-

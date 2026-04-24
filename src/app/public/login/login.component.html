@@ -1,78 +1,92 @@
-<style>
-  /* keep the image filling its card without distortion */
-  .object-fit-cover { object-fit: cover; }
-</style>
+<div class="ax-auth-shell">
+  <div class="ax-auth-shell-inner">
 
-<div style="max-width: 50rem; padding-top: 5%" class="container animate__animated animate__fadeIn">
-  <span class="badge abayti_secondary_background rounded-pill mb-3">
-    <a routerLink="/" class="btn px-1 py-0 btn-sm text-white">{{ 'back_to_website' | translate }}</a>
-  </span>
-  <div  class="row justify-content-center align-items-stretch g-4">
-    <div class="col-12">
+    <!-- Image panel (hidden below lg) -->
+    <a routerLink="/" class="ax-auth-image" [attr.aria-label]="'back_to_website' | translate">
+      <img src="assets/img/regbg.png" alt="Abayti vendors preview" />
+    </a>
 
-    </div>
-    <div class="col-12 col-lg-6 d-none d-md-flex">
-      <div class="card shadow-lg w-100 h-100 overflow-hidden">
-        <img src="assets/img/regbg.png" alt="home" class="w-100 h-100 object-fit-cover animate__animated animate__fadeIn"
-        />
-      </div>
-    </div>
-    <div class="col-12 col-lg-6 d-flex">
-      <div class="card shadow-lg w-100 h-100">
-        <div class="card-header text-center">
-          <div class="row align-items-center">
-            <div class="col-6 text-start">
-              <img class="img-fluid" style="max-width: 140px" src="assets/img/abayti.png" alt="abayti" />
-            </div>
-            <div class="col-6 text-end">
-              <app-language-switcher></app-language-switcher>
-            </div>
-          </div>
+    <!-- Form panel -->
+    <div>
+      <a routerLink="/" class="ax-auth-back">
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        {{ 'back_to_website' | translate }}
+      </a>
+
+      <div class="ax-auth-panel">
+        <div class="ax-auth-header">
+          <img class="ax-auth-logo" src="assets/img/abayti.png" alt="Abayti" />
+          <app-language-switcher></app-language-switcher>
         </div>
-        <div class="card-body d-flex flex-column justify-content-center">
-          <h1 class="fs-2">{{ 'sign_in' | translate }}</h1>
-          <p class="lead text-body-secondary">{{ 'sign_in_message' | translate }}</p>
-          <form (ngSubmit)="user_login()" method="post" class="mb-2">
-            <div class="mb-2">
-              <label for="email">{{ 'email' | translate }}</label>
-              <input
-                [(ngModel)]="login.email"
-                name="email"
-                id="email"
-                type="email"
-                class="form-control"
-                placeholder="{{ 'email' | translate }}" />
+
+        <div class="ax-auth-body">
+          <div>
+            <h1 class="ax-auth-title">{{ 'sign_in' | translate }}</h1>
+            <p class="ax-auth-subtitle">{{ 'sign_in_message' | translate }}</p>
+          </div>
+
+          <form (ngSubmit)="user_login()" method="post" class="ax-flex ax-flex-col ax-gap-3">
+            <div class="ax-form-field">
+              <label for="email" class="ax-label ax-label-required">{{ 'email' | translate }}</label>
+              <div class="ax-input-group">
+                <span class="ax-input-group-prefix material-symbols-outlined" aria-hidden="true">mail</span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="ax-input"
+                  [(ngModel)]="login.email"
+                  [placeholder]="'email' | translate"
+                  autocomplete="email"
+                  required />
+              </div>
             </div>
-            <div class="mb-2">
-              <label for="password">{{ 'password' | translate }}</label>
-              <div class="input-group">
+
+            <div class="ax-form-field">
+              <label for="password" class="ax-label ax-label-required">{{ 'password' | translate }}</label>
+              <div class="ax-input-group">
+                <span class="ax-input-group-prefix material-symbols-outlined" aria-hidden="true">lock</span>
                 <input
                   [type]="fieldTextType ? 'text' : 'password'"
-                  class="form-control"
-                  name="password"
                   id="password"
+                  name="password"
+                  class="ax-input"
                   [(ngModel)]="login.password"
-                  placeholder="{{ 'password' | translate }}" />
-                <button (click)="toggleFieldTextType()" class="btn btn-outline-secondary" type="button">
-                  <span *ngIf="fieldTextType" class="material-symbols-outlined">visibility</span>
-                  <span *ngIf="!fieldTextType" class="material-symbols-outlined">visibility</span>
+                  [placeholder]="'password' | translate"
+                  autocomplete="current-password"
+                  required />
+                <button
+                  type="button"
+                  class="ax-input-group-suffix ax-input-group-action"
+                  (click)="toggleFieldTextType()"
+                  [attr.aria-label]="fieldTextType ? 'Hide password' : 'Show password'"
+                  tabindex="-1">
+                  <span class="material-symbols-outlined" aria-hidden="true">
+                    {{ fieldTextType ? 'visibility_off' : 'visibility' }}
+                  </span>
                 </button>
               </div>
             </div>
-            <tui-loader *ngIf="loading"></tui-loader>
-            <button *ngIf="!loading" class="btn text-white fw-bold abayti_secondary_background btn-secondary w-100" type="submit">
-              {{ 'sign_in' | translate }}
+
+            <button
+              type="submit"
+              class="ax-btn ax-btn-primary ax-btn-lg ax-mt-2"
+              [disabled]="loading">
+              <span *ngIf="loading" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span>{{ 'sign_in' | translate }}</span>
             </button>
           </form>
-          <p class="text-center text-body-secondary mb-0 mt-auto">
+
+          <p class="ax-auth-meta">
             {{ 'not_registered_message' | translate }}
-            <a class="text-black" routerLink="/register">{{ 'register' | translate }}</a>
+            <a routerLink="/register">{{ 'register' | translate }}</a>
           </p>
         </div>
-        <div class="card-footer">
-          <p class="text-center text-body-secondary mb-0">
+
+        <div class="ax-auth-footer">
+          <p>
             {{ 'forgot_password_message' | translate }}
-            <a class="text-black" routerLink="/reset">{{ 'reset_password' | translate }}</a>
+            <a routerLink="/reset">{{ 'reset_password' | translate }}</a>
           </p>
         </div>
       </div>
