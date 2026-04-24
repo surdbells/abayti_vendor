@@ -2,22 +2,32 @@ import { Component, inject, OnInit } from '@angular/core';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { TopComponent } from '../../partials/top/top.component';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { GlobalComponent } from '../../global-component';
 import { Category } from '../../class/category';
 import { Labels } from '../../class/labels';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
-import { NgxDropzoneChangeEvent, NgxDropzoneModule } from 'ngx-dropzone';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import imageCompression from 'browser-image-compression';
+
+// Ax design-system components (Phase 2, 3, 5)
+import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
+import {
+  AxFileUploadComponent,
+  AxUploadFile,
+} from '../../shared/rich/ax-file-upload.component';
+import {
+  AxMultiselectComponent,
+  AxMultiselectOption,
+} from '../../shared/forms/ax-multiselect.component';
+import {
+  AxAccordionComponent,
+  AxAccordionItemComponent,
+} from '../../shared/overlays';
 
 // ── Shared types ─────────────────────────────────────────────────
 interface ColorOption {
@@ -79,38 +89,58 @@ const COLOR_OPTIONS: ColorOption[] = [
   { id: 'bronze', text: 'Bronze', hex: '#CD7F32' },
   { id: 'champagne', text: 'Champagne', hex: '#F7E7CE' },
   { id: 'ivory', text: 'Ivory', hex: '#FFFFF0' },
-  { id: 'multicolor', text: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)' },
 ];
 
-// ── Size categories that show sizing options ─────────────────────
+// Sized categories — only show sizing controls for these
 const SIZED_CATEGORIES = [1, 2, 3, 6, 7];
 
 @Component({
   selector: 'app-create-product',
   standalone: true,
   imports: [
-    SideComponent, AsideComponent, TopComponent,
-    TuiIcon, TuiLoader,
-    CKEditorModule, CommonModule, FormsModule,
-    AngularEditorModule, NgxDropzoneModule, NgMultiSelectDropDownModule,
+    CommonModule,
+    FormsModule,
+    SideComponent,
+    AsideComponent,
+    TopComponent,
+    AxRichEditorComponent,
+    AxFileUploadComponent,
+    AxMultiselectComponent,
+    AxAccordionComponent,
+    AxAccordionItemComponent,
   ],
   templateUrl: './create-product.component.html',
   styleUrl: './create-product.component.css',
 })
 export class CreateProductComponent implements OnInit {
-
   // ── Lookup data ────────────────────────────────────────────────
   category?: Category[];
   labels?: Labels[];
   colorOptions: ColorOption[] = COLOR_OPTIONS;
+
+  /** Server list of collections ({ id, collection }). */
   dropdownList: { id: number; collection: string }[] = [];
-  selectedItems: { id: number; collection: string }[] = [];
-  dropdownSettings: any = {};
+  /** Ids selected by the AxMultiselect. */
+  selectedCollectionIds: (string | number)[] = [];
+
+  /** Options shape consumed by AxMultiselect (derived from dropdownList). */
+  get collectionOptions(): AxMultiselectOption[] {
+    return this.dropdownList.map(c => ({ id: c.id, label: c.collection }));
+  }
+
+  /** Mapped back to {id, collection} for the create payload. */
+  get selectedItemsForPayload(): { id: number; collection: string }[] {
+    const ids = new Set(this.selectedCollectionIds.map(String));
+    return this.dropdownList.filter(c => ids.has(String(c.id)));
+  }
 
   // ── Image handling ─────────────────────────────────────────────
-  files: File[] = [];
-  encoded: EncodedFile[] = [];
-  base64String: any;
+  /** AxFileUpload featured-image value (single). */
+  featuredFiles: AxUploadFile[] = [];
+  /** AxFileUpload gallery value (up to 5). */
+  galleryFiles: AxUploadFile[] = [];
+  /** Encoded gallery (base64 dataUrls) sent to backend. */
+  private galleryEncoded: EncodedFile[] = [];
 
   // ── Color selection ────────────────────────────────────────────
   selected = new Set<string>();
@@ -185,16 +215,6 @@ export class CreateProductComponent implements OnInit {
     this.vendor_labels.token = this.user_session.token;
     this.vendor_label_create.id = this.user_session.id;
     this.vendor_label_create.token = this.user_session.token;
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'collection',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true,
-    };
 
     this.fetchCategory();
     this.fetchCollections();
@@ -299,21 +319,29 @@ export class CreateProductComponent implements OnInit {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  IMAGE HANDLING — Featured image
+  //  IMAGE HANDLING — Featured image (single via AxFileUpload)
   // ═══════════════════════════════════════════════════════════════
-  async selectFeaturedImage(event: any): Promise<void> {
-    const file: File = event.target.files[0];
-    if (!file) return;
+  /**
+   * Fired whenever the featured-image AxFileUpload emits a change.
+   * Compresses the file, reads it as a base64 dataUrl, and stores
+   * it on create.image_1 for the submit payload.
+   */
+  async onFeaturedChange(files: AxUploadFile[]): Promise<void> {
+    this.featuredFiles = files;
+    const first = files[0];
+    if (!first) {
+      this.create.image_1 = 'assets/img/placeholder-1.png';
+      return;
+    }
     try {
-      const compressed = await imageCompression(file, {
+      const compressed = await imageCompression(first.file, {
         maxSizeMB: 3,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       });
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.base64String = reader.result as string;
-        this.create.image_1 = this.base64String;
+        this.create.image_1 = reader.result as string;
       };
       reader.readAsDataURL(compressed);
     } catch (error) {
@@ -322,45 +350,67 @@ export class CreateProductComponent implements OnInit {
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  IMAGE HANDLING — Gallery (dropzone)
+  //  IMAGE HANDLING — Gallery (multi via AxFileUpload)
   // ═══════════════════════════════════════════════════════════════
-  trackByName = (_: number, f: File) => f.name;
+  /**
+   * Fired whenever the gallery AxFileUpload emits a change.
+   * Compresses each newly added file, caches the base64 dataUrl,
+   * and syncs the combined array into create.images for submission.
+   *
+   * This function is resilient to reorders and removals: we key the
+   * encoded-file cache by AxUploadFile.id so we only compress files
+   * we haven't seen yet.
+   */
+  async onGalleryChange(files: AxUploadFile[]): Promise<void> {
+    if (files.length > 5) {
+      this.toast.error('You can only add up to 5 gallery images');
+      // Truncate to the max — AxFileUpload already enforces its own
+      // maxFiles, but belt-and-braces.
+      files = files.slice(0, 5);
+    }
+    this.galleryFiles = files;
 
-  async onSelect(event: NgxDropzoneChangeEvent): Promise<void> {
-    if (this.files.length + event.addedFiles.length > 5) {
-      this.toast.error('You can only add up to 5 images');
+    // Remove cache entries for files no longer present.
+    this.galleryEncoded = this.galleryEncoded.filter(e =>
+      files.some(f => f.name === e.name && f.size === e.size)
+    );
+    const existingKeys = new Set(this.galleryEncoded.map(e => e.name + ':' + e.size));
+
+    // Compress + encode new files only.
+    const newlyAdded = files.filter(f => !existingKeys.has(f.name + ':' + f.size));
+    if (newlyAdded.length === 0) {
+      this.syncGalleryImages();
       return;
     }
-    const added = event.addedFiles ?? [];
-    this.files.push(...added);
 
-    const results = await Promise.all(
-      added.map(async (f) => {
-        const compressed = await imageCompression(f, {
-          maxSizeMB: 3,
-          maxWidthOrHeight: 1920,
-          useWebWorker: true,
-        });
-        const dataUrl = await this.fileToDataURL(compressed);
-        return {
-          file: compressed,
-          name: compressed.name,
-          type: compressed.type,
-          size: compressed.size,
-          dataUrl,
-          base64: dataUrl.split(',')[1] ?? '',
-        } as EncodedFile;
-      }),
-    );
-
-    this.encoded.push(...results);
-    this.create.images = this.getDataUrlArray().slice(0, 5);
+    try {
+      const results = await Promise.all(
+        newlyAdded.map(async (uf) => {
+          const compressed = await imageCompression(uf.file, {
+            maxSizeMB: 3,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+          });
+          const dataUrl = await this.fileToDataURL(compressed);
+          return {
+            file: compressed,
+            name: compressed.name,
+            type: compressed.type,
+            size: compressed.size,
+            dataUrl,
+            base64: dataUrl.split(',')[1] ?? '',
+          } as EncodedFile;
+        }),
+      );
+      this.galleryEncoded.push(...results);
+      this.syncGalleryImages();
+    } catch (error) {
+      this.toast.error('Image compression failed: ' + error);
+    }
   }
 
-  onRemove(file: File): void {
-    this.files = this.files.filter(f => f !== file);
-    this.encoded = this.encoded.filter(e => e.file !== file);
-    this.create.images = this.getDataUrlArray().slice(0, 5);
+  private syncGalleryImages(): void {
+    this.create.images = this.galleryEncoded.map(e => e.dataUrl).slice(0, 5);
   }
 
   private fileToDataURL(file: File): Promise<string> {
@@ -372,10 +422,6 @@ export class CreateProductComponent implements OnInit {
     });
   }
 
-  getDataUrlArray(): string[] {
-    return this.encoded.map(e => e.dataUrl).filter(Boolean);
-  }
-
   // ═══════════════════════════════════════════════════════════════
   //  PUBLISH / SAVE FLOWS
   // ═══════════════════════════════════════════════════════════════
@@ -383,7 +429,10 @@ export class CreateProductComponent implements OnInit {
     if (this.create.category === 0) { this.toast.error('Product category is required'); return false; }
     if (!this.create.name.length) { this.toast.error('Name is required'); return false; }
     if (!this.create.description.length) { this.toast.error('Briefly describe your product'); return false; }
-    if (!this.create.image_1.length) { this.toast.error('Featured image is required'); return false; }
+    if (!this.create.image_1.length || this.create.image_1.includes('placeholder')) {
+      this.toast.error('Featured image is required');
+      return false;
+    }
     if (!this.create.delivery_time.length) { this.toast.error('Delivery time is required'); return false; }
     return true;
   }
@@ -416,9 +465,9 @@ export class CreateProductComponent implements OnInit {
 
   private submitProduct(status: string): void {
     this.create.colors = this.getSelectedIdsCsv();
-    this.create.collection = this.selectedItems;
+    this.create.collection = this.selectedItemsForPayload;
     this.create.status = status;
-    this.create.images = this.getDataUrlArray().slice(0, 5);
+    this.create.images = this.galleryEncoded.map(e => e.dataUrl).slice(0, 5);
 
     this.ui.loading = true;
 
@@ -438,44 +487,6 @@ export class CreateProductComponent implements OnInit {
       },
     });
   }
-
-  // ═══════════════════════════════════════════════════════════════
-  //  EDITOR CONFIG
-  // ═══════════════════════════════════════════════════════════════
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: '250px',
-    minHeight: '250px',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
-    translate: 'yes',
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: 'Detailed description: fabric type, care instructions, style details, delivery time, etc.',
-    defaultParagraphSeparator: '',
-    defaultFontName: '',
-    defaultFontSize: '',
-    fonts: [
-      { class: 'arial', name: 'Arial' },
-      { class: 'times-new-roman', name: 'Times New Roman' },
-      { class: 'calibri', name: 'Calibri' },
-    ],
-    sanitize: true,
-    toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['bold', 'italic'],
-      ['fontSize'],
-      ['insertImage', 'insertVideo'],
-    ],
-  };
-
-  // ═══════════════════════════════════════════════════════════════
-  //  MULTI-SELECT HANDLERS
-  // ═══════════════════════════════════════════════════════════════
-  onItemSelect(_item: any): void {}
-  onSelectAll(_items: any): void {}
 
   // ═══════════════════════════════════════════════════════════════
   //  NAVIGATION
