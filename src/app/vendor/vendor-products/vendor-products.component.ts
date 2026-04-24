@@ -3,18 +3,21 @@ import { Router, RouterLink } from '@angular/router';
 import { TopComponent } from '../../partials/top/top.component';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
-import { TuiButton, TuiIcon, TuiLoader, TuiPopup, TuiTitle } from '@taiga-ui/core';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, formatCurrency } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { Products } from '../../class/products';
-import { TUI_CONFIRM, TuiDrawer } from '@taiga-ui/kit';
-import { TuiHeader } from '@taiga-ui/layout';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import {
+  AxDropdownDirective,
+  AxDropdownItemDirective,
+} from '../../shared/overlays';
+import { AxPaginationComponent } from '../../shared/data';
 
 // ── Color map for preview drawer ─────────────────────────────────
 const COLOR_HEX_MAP: Record<string, string> = {
@@ -66,22 +69,17 @@ interface ProductListItem {
     TopComponent,
     SideComponent,
     AsideComponent,
-    TuiIcon,
     CommonModule,
     FormsModule,
     RouterLink,
-    TuiLoader,
-    TuiDrawer,
-    TuiHeader,
-    TuiTitle,
-    TuiPopup,
-    TuiButton,
+    AxDropdownDirective,
+    AxDropdownItemDirective,
+    AxPaginationComponent,
   ],
   templateUrl: './vendor-products.component.html',
   styleUrl: './vendor-products.component.css',
 })
 export class VendorProductsComponent implements OnInit, OnDestroy {
-
   // ── Product data ───────────────────────────────────────────────
   products: ProductListItem[] = [];
   pagination: Pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
@@ -136,7 +134,7 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     price_min: null as number | null,
     price_max: null as number | null,
   };
-  price_preset = ''; // for predefined price ranges
+  price_preset = '';
   categories: { id: number; name: string }[] = [];
 
   // ── Per-page options ───────────────────────────────────────────
@@ -155,9 +153,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     private toast: HotToastService,
   ) {}
 
-  // ═══════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ═══════════════════════════════════════════════════════════════
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
@@ -165,7 +160,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     this.delete_payload.token = this.user_session.token;
     this.delete_payload.id = this.user_session.id;
 
-    // Debounce search input
     this.searchSubject.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -184,9 +178,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  DATA FETCHING
-  // ═══════════════════════════════════════════════════════════════
   fetchProducts(): void {
     this.ui.loading = true;
 
@@ -198,7 +189,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
       per_page: this.pagination.per_page,
     };
 
-    // Attach active filters
     if (this.filters.search.trim())        payload.search = this.filters.search.trim();
     if (this.filters.status)               payload.status = this.filters.status;
     if (this.filters.stock_status)         payload.stock_status = this.filters.stock_status;
@@ -238,9 +228,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  SEARCH & FILTER HANDLERS
-  // ═══════════════════════════════════════════════════════════════
   onSearchInput(): void {
     this.searchSubject.next(this.filters.search);
   }
@@ -262,34 +249,14 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
 
   onPricePresetChange(): void {
     switch (this.price_preset) {
-      case 'under_100':
-        this.filters.price_min = null;
-        this.filters.price_max = 100;
-        break;
-      case '100_300':
-        this.filters.price_min = 100;
-        this.filters.price_max = 300;
-        break;
-      case '300_500':
-        this.filters.price_min = 300;
-        this.filters.price_max = 500;
-        break;
-      case '500_plus':
-        this.filters.price_min = 500;
-        this.filters.price_max = null;
-        break;
-      case 'custom':
-        // Let user type custom values
-        this.filters.price_min = null;
-        this.filters.price_max = null;
-        break;
-      default:
-        this.filters.price_min = null;
-        this.filters.price_max = null;
+      case 'under_100': this.filters.price_min = null; this.filters.price_max = 100; break;
+      case '100_300':   this.filters.price_min = 100;  this.filters.price_max = 300; break;
+      case '300_500':   this.filters.price_min = 300;  this.filters.price_max = 500; break;
+      case '500_plus':  this.filters.price_min = 500;  this.filters.price_max = null; break;
+      case 'custom':    this.filters.price_min = null; this.filters.price_max = null; break;
+      default:          this.filters.price_min = null; this.filters.price_max = null;
     }
-    if (this.price_preset !== 'custom') {
-      this.applyFilters();
-    }
+    if (this.price_preset !== 'custom') this.applyFilters();
   }
 
   get hasActiveFilters(): boolean {
@@ -308,42 +275,18 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     return count;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  PAGINATION HANDLERS
-  // ═══════════════════════════════════════════════════════════════
   goToPage(page: number): void {
     if (page < 1 || page > this.pagination.total_pages) return;
     this.pagination.page = page;
     this.fetchProducts();
   }
 
-  onPerPageChange(): void {
+  onPageSizeChange(size: number): void {
+    this.pagination.per_page = size;
     this.pagination.page = 1;
     this.fetchProducts();
   }
 
-  get pageNumbers(): number[] {
-    const total = this.pagination.total_pages;
-    const current = this.pagination.page;
-    const pages: number[] = [];
-
-    if (total <= 7) {
-      for (let i = 1; i <= total; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (current > 3) pages.push(-1); // ellipsis
-      const start = Math.max(2, current - 1);
-      const end = Math.min(total - 1, current + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
-      if (current < total - 2) pages.push(-1); // ellipsis
-      pages.push(total);
-    }
-    return pages;
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  //  VIEW TOGGLE
-  // ═══════════════════════════════════════════════════════════════
   switchGrid(): void {
     this.ui.list_view = false;
     this.ui.grid_view = true;
@@ -358,9 +301,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     this.ui.filters_open = !this.ui.filters_open;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  PRODUCT ACTIONS
-  // ═══════════════════════════════════════════════════════════════
   editProduct(id: number): void {
     this.router.navigate(['/', 'edit'], { queryParams: { id } });
   }
@@ -371,7 +311,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/product_sales']);
   }
 
-  // ── Preview ────────────────────────────────────────────────────
   preview(id: number): void {
     this.open.set(true);
     this.ui.loaded_preview = false;
@@ -393,7 +332,10 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Preview image navigation
+  closePreview(): void {
+    this.open.set(false);
+  }
+
   get previewImages(): string[] {
     const imgs: string[] = [];
     if (this.single_product.image_1) imgs.push(this.single_product.image_1);
@@ -422,14 +364,12 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     this.previewImageIndex = index;
   }
 
-  // Preview helper: get colors as array of {id, hex}
   get previewColors(): { id: string; hex: string }[] {
     if (!this.single_product.colors) return [];
     return this.single_product.colors.split(',').map((c: string) => c.trim()).filter(Boolean)
       .map((id: string) => ({ id, hex: COLOR_HEX_MAP[id] || '#CCCCCC' }));
   }
 
-  // Preview helper: get active sizes
   get previewSizes(): string[] {
     const sizes: string[] = [];
     const sizeMap: Record<string, string> = {
@@ -445,7 +385,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     return sizes;
   }
 
-  // Preview helper: delivery time text
   get previewDeliveryTime(): string {
     const dt = this.single_product.delivery_time;
     const cdt = this.single_product.custom_delivery_time;
@@ -454,7 +393,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  // ── Delete ─────────────────────────────────────────────────────
   startDelete(id: number, name: string): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -492,9 +430,6 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  NAVIGATION
-  // ═══════════════════════════════════════════════════════════════
   goBack(): void {
     if (this.user_session.is_vendor) {
       this.router.navigate(['/account']);
@@ -504,33 +439,32 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  UTILITIES
-  // ═══════════════════════════════════════════════════════════════
   protected readonly formatCurrency = formatCurrency;
 
   trackById = (_: number, item: ProductListItem) => item.id;
 
   getStockBadgeClass(status: string): string {
     switch (status) {
-      case 'in_stock': return 'badge-stock-in';
-      case 'out_of_stock': return 'badge-stock-out';
-      case 'on_backorder': return 'badge-stock-backorder';
-      default: return '';
+      case 'in_stock':     return 'ax-badge ax-badge-success';
+      case 'out_of_stock': return 'ax-badge ax-badge-danger';
+      case 'on_backorder': return 'ax-badge ax-badge-warning';
+      default:             return 'ax-badge ax-badge-neutral';
     }
   }
 
   getStockLabel(status: string): string {
     switch (status) {
-      case 'in_stock': return 'In Stock';
+      case 'in_stock':     return 'In Stock';
       case 'out_of_stock': return 'Out of Stock';
       case 'on_backorder': return 'On Backorder';
-      default: return status;
+      default:             return status;
     }
   }
 
   getStatusBadgeClass(status: string): string {
-    return status === 'published' ? 'badge-status-published' : 'badge-status-draft';
+    return status === 'published'
+      ? 'ax-badge ax-badge-info'
+      : 'ax-badge ax-badge-neutral';
   }
 
   needsBorder(hex: string): boolean {
