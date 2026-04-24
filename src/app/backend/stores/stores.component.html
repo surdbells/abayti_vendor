@@ -1,87 +1,172 @@
-<app-admin-top></app-admin-top>
-<main class="main">
-  <div class="container-fluid">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
-      </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Stores</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
+<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
 
-        <div class="avatar text-info me-2">
-          <span role="button" (click)="get_store()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+<div class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+
+  <main class="ax-main">
+    <div class="ax-container">
+      <!-- Page header -->
+      <header class="ax-page-header">
+        <div class="ax-page-header-content">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+            style="align-self: flex-start;">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to dashboard
+          </button>
+          <span class="ax-page-header-eyebrow">Marketplace</span>
+          <h1 class="ax-page-title">Stores</h1>
+          <p *ngIf="stores && stores.length > 0" class="ax-page-subtitle">
+            {{ stores.length }} vendor store{{ stores.length !== 1 ? 's' : '' }} on the platform.
+          </p>
         </div>
+
+        <div class="ax-flex ax-gap-2 ax-items-center">
+          <button
+            type="button"
+            class="ax-btn ax-btn-outline ax-btn-sm"
+            (click)="get_store()"
+            [disabled]="ui_controls.is_loading">
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            Refresh
+          </button>
+        </div>
+      </header>
+
+      <!-- Loading -->
+      <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+        <span class="ax-spinner ax-spinner-lg" aria-label="Loading stores"></span>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="card mt-2 mt-2">
-          <div style="min-height: 600px" *ngIf="!ui_controls.is_loading" class="table-responsive">
-            <table datatable [dtOptions]="dtOptions" class="table table-bordered table-hover table-select table-round align-middle mb-0">
-              <thead>
-              <tr class="border-2">
-                <th>NAME</th>
-                <th>EMAIL</th>
-                <th>PHONE</th>
-                <th>LOCATION</th>
-                <th>LAST&nbsp;LOGIN</th>
-                <th>STORE&nbsp;STATUS</th>
-                <th>APPROVAL</th>
-                <th></th>
+
+      <!-- Table -->
+      <section
+        *ngIf="!ui_controls.is_loading && !ui_controls.no_data"
+        class="ax-card ax-p-0">
+        <div class="ax-table-wrapper">
+          <table class="ax-table ax-table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Location</th>
+                <th>Last login</th>
+                <th>Selling</th>
+                <th>Approval</th>
+                <th style="text-align: right; width: 7rem;"></th>
               </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody>
               <tr *ngFor="let a_store of stores; let i = index">
                 <td>
-                  <div class="d-flex align-items-center">
-                    <div class="ms-4">
-                      <div>{{a_store.store_name}}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>{{a_store.store_email}}</td>
-                <td>{{a_store.store_phone}}</td>
-                <td>{{a_store.store_address}}</td>
-                <td>{{a_store.last_login}}</td>
-                <td>
-                  <span *ngIf="a_store.status" class="badge bg-success-subtle text-success">Selling</span>
-                  <span *ngIf="!a_store.status" class="badge bg-danger-subtle text-danger">Not selling</span>
+                  <span class="ax-font-medium ax-text-primary">{{ a_store.store_name }}</span>
                 </td>
                 <td>
-                  <span *ngIf="a_store.approved" class="badge bg-success-subtle text-success">Approved</span>
-                  <span *ngIf="!a_store.approved" class="badge bg-danger-subtle text-danger">Pending</span>
+                  <span class="ax-text-sm ax-text-secondary">{{ a_store.store_email }}</span>
                 </td>
-                <td class="text-end">
-                  <div class="dropdown">
-                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="actionMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                      Actions
+                <td>
+                  <span class="ax-text-sm ax-text-secondary">{{ a_store.store_phone }}</span>
+                </td>
+                <td>
+                  <span class="ax-text-sm ax-text-secondary">{{ a_store.store_address }}</span>
+                </td>
+                <td>
+                  <span class="ax-text-2xs ax-text-tertiary">{{ a_store.last_login }}</span>
+                </td>
+                <td>
+                  <span *ngIf="a_store.status" class="ax-badge ax-badge-success">Selling</span>
+                  <span *ngIf="!a_store.status" class="ax-badge ax-badge-neutral">Not selling</span>
+                </td>
+                <td>
+                  <span *ngIf="a_store.approved" class="ax-badge ax-badge-success">Approved</span>
+                  <span *ngIf="!a_store.approved" class="ax-badge ax-badge-warning">Pending</span>
+                </td>
+                <td style="text-align: right;">
+                  <button
+                    type="button"
+                    class="ax-btn ax-btn-outline ax-btn-sm"
+                    [axDropdown]="actionMenu">
+                    Actions
+                    <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+                  </button>
+                  <ng-template #actionMenu>
+                    <button
+                      type="button"
+                      axDropdownItem
+                      (click)="manage_store(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                      Manage
                     </button>
-                    <ul class="dropdown-menu shadow" aria-labelledby="actionMenuButton">
-                      <li><a role="button" (click)="manage_store(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.view" /> MANAGE </a></li>
-                      <li><a role="button" (click)="store_orders(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.folder-kanban" /> ORDERS </a></li>
-                      <li><a role="button" (click)="store_products(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.package-search" /> PRODUCTS </a></li>
-                      <li><a role="button" (click)="store_sales(a_store.id, a_store.store_name)" class="dropdown-item"> <tui-icon icon="@tui.chart-bar-increasing" /> SALES </a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a role="button" (click)="start_activate(a_store.id, a_store.store_name)" *ngIf="!a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.check-check" /> Activate</a></li>
-                      <li><a role="button" (click)="start_deactivate(a_store.id, a_store.store_name)" *ngIf="a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.circle-x" /> Deactivate</a></li>
-                      <li><a role="button" (click)="start_delete(a_store.id, a_store.store_name)" *ngIf="!a_store.approved" class="dropdown-item"> <tui-icon icon="@tui.circle-x" /> Delete </a></li>
-                    </ul>
-                  </div>
+                    <button
+                      type="button"
+                      axDropdownItem
+                      (click)="store_orders(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+                      Orders
+                    </button>
+                    <button
+                      type="button"
+                      axDropdownItem
+                      (click)="store_products(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+                      Products
+                    </button>
+                    <button
+                      type="button"
+                      axDropdownItem
+                      (click)="store_sales(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                      Sales
+                    </button>
+                    <div class="ax-dropdown-divider"></div>
+                    <button
+                      *ngIf="!a_store.approved"
+                      type="button"
+                      axDropdownItem
+                      (click)="start_activate(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+                      Activate
+                    </button>
+                    <button
+                      *ngIf="a_store.approved"
+                      type="button"
+                      axDropdownItem
+                      (click)="start_deactivate(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">cancel</span>
+                      Deactivate
+                    </button>
+                    <button
+                      *ngIf="!a_store.approved"
+                      type="button"
+                      axDropdownItem
+                      class="ax-dropdown-item-danger"
+                      (click)="start_delete(a_store.id, a_store.store_name)">
+                      <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                      Delete
+                    </button>
+                  </ng-template>
                 </td>
               </tr>
-              </tbody>
-            </table>
-          </div>
-          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+            </tbody>
+          </table>
         </div>
-      </div>
+      </section>
+
+      <!-- Empty state -->
+      <section *ngIf="!ui_controls.is_loading && ui_controls.no_data" class="ax-page-section">
+        <div class="ax-card ax-p-8 ax-text-center">
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 3rem; color: var(--ax-color-text-tertiary);"
+            aria-hidden="true">storefront</span>
+          <h3 class="ax-h4 ax-m-0 ax-mt-3">No stores yet</h3>
+          <p class="ax-text-secondary ax-mt-2" style="max-width: 32rem; margin-left: auto; margin-right: auto;">
+            Vendor stores will appear here as merchants register and set up their shops.
+          </p>
+        </div>
+      </section>
     </div>
-  </div>
-</main>
+  </main>
+</div>

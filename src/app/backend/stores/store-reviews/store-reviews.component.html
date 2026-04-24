@@ -1,31 +1,38 @@
-<app-admin-top></app-admin-top>
-<main class="main">
-  <div class="container-fluid">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
-      </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">{{ store_name }} [ REVIEWS ]</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <a routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
-          <span class="material-symbols-outlined text-white me-1"> add </span> New
-        </a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-        <div *ngIf="!ui_controls.is_loading" class="card card mt-2 mt-2">
+<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
 
+<div class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+
+  <main class="ax-main">
+    <div class="ax-container">
+      <header class="ax-page-header">
+        <div class="ax-page-header-content">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+            style="align-self: flex-start;">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to stores
+          </button>
+          <span class="ax-page-header-eyebrow">{{ store_name }}</span>
+          <h1 class="ax-page-title">Store reviews</h1>
+          <p class="ax-page-subtitle">Customer ratings from verified purchases at this store.</p>
         </div>
-      </div>
+      </header>
+
+      <section class="ax-page-section">
+        <div class="ax-card ax-p-8 ax-text-center">
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 3rem; color: var(--ax-color-text-tertiary);"
+            aria-hidden="true">reviews</span>
+          <h3 class="ax-h4 ax-m-0 ax-mt-3">No reviews yet</h3>
+          <p class="ax-text-secondary ax-mt-2" style="max-width: 32rem; margin-left: auto; margin-right: auto;">
+            Reviews will appear here after customers rate their purchases.
+          </p>
+        </div>
+      </section>
     </div>
-  </div>
-</main>
+  </main>
+</div>

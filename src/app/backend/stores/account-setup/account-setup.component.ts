@@ -1,19 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {TuiIcon} from '@taiga-ui/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-account-setup',
   templateUrl: './account-setup.component.html',
   standalone: true,
-  imports: [CommonModule, TuiIcon],
-  styleUrls: ['./account-setup.component.css']
+  imports: [CommonModule],
+  styleUrls: ['./account-setup.component.css'],
 })
 export class AccountSetupComponent implements OnInit {
-  // provide the object via Input or set it directly
+  // Provide via @Input() or set directly
   @Input() profile: any = null;
 
-  // optional: explicitly list fields you consider required. If left empty, we'll use all keys except id & token.
+  // Optional: list required fields explicitly. Empty = use all keys except id & token.
   @Input() requiredFields: string[] = [];
 
   fields: { key: string; label: string; value: any; filled: boolean }[] = [];
@@ -22,7 +21,6 @@ export class AccountSetupComponent implements OnInit {
   percent = 0;
 
   ngOnInit(): void {
-    // fallback sample if none provided (you can remove this to force Input usage)
     this.initFields();
     this.calculateProgress();
   }
@@ -32,9 +30,9 @@ export class AccountSetupComponent implements OnInit {
     if (this.requiredFields && this.requiredFields.length > 0) {
       keys = this.requiredFields;
     } else {
-      keys = Object.keys(this.profile).filter(k => k !== 'id' && k !== 'token');
+      keys = Object.keys(this.profile || {}).filter(k => k !== 'id' && k !== 'token');
     }
-    // friendly labels mapping (fallback to key when absent)
+
     const labels: Record<string, string> = {
       first_name: 'First Name',
       last_name: 'Last Name',
@@ -56,33 +54,27 @@ export class AccountSetupComponent implements OnInit {
       store_bank_name: 'Bank Name',
       store_account_name: 'Account Name',
       store_account_number: 'Account Number',
-      last_login: 'Last Login'
+      last_login: 'Last Login',
     };
 
     this.fields = keys.map(k => {
-      const v = this.profile[k];
+      const v = this.profile ? this.profile[k] : undefined;
       const filled = this.isFilled(v);
       return { key: k, label: labels[k] || this.humanize(k), value: v, filled };
     });
   }
 
   private isFilled(value: any): boolean {
-    // treat non-empty strings, non-null, non-undefined, and arrays/objects with content as filled
     if (value === null || value === undefined) return false;
-    if (typeof value === 'string') {
-      return value.trim() !== '';
-    }
+    if (typeof value === 'string') return value.trim() !== '';
     if (Array.isArray(value)) return value.length > 0;
     if (typeof value === 'object') return Object.keys(value).length > 0;
-    // numbers and booleans count as filled
     return true;
   }
 
   private calculateProgress() {
     this.total = this.fields.length;
     this.filledCount = this.fields.filter(f => f.filled).length;
-
-    // compute percentage safely (digit-by-digit in code arithmetic)
     if (this.total === 0) {
       this.percent = 0;
     } else {
@@ -90,19 +82,25 @@ export class AccountSetupComponent implements OnInit {
     }
   }
 
-  // convenience to show a readable fallback value
   displayValue(field: any) {
     if (!field.filled) return '— not provided —';
     if (typeof field.value === 'string' && (field.key.includes('avatar') || field.key.includes('id_') || field.key.includes('license_doc'))) {
       return field.value;
     }
-    if (typeof field.value === 'string' && (field.key.includes('store_description'))) {
-      return "description provided";
+    if (typeof field.value === 'string' && field.key.includes('store_description')) {
+      return 'description provided';
     }
     return field.value;
   }
 
   private humanize(key: string) {
     return key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  /** Progress bar colour class based on percent. */
+  progressTone(): string {
+    if (this.percent >= 70) return 'ax-progress-bar-success';
+    if (this.percent >= 40) return 'ax-progress-bar-warning';
+    return 'ax-progress-bar-danger';
   }
 }

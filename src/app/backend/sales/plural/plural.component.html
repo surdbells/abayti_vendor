@@ -1,123 +1,121 @@
-<main class="main">
-  <div style="width: 90%; margin: 0 auto" class="container-fluid">
-    @if(!ui_controls.is_loading){
-      <div class="card shadow-sm border-0">
-        <div class="row g-0">
-          <div class="col-md-4 bg-light d-flex flex-column justify-content-center align-items-center p-4 rounded-start">
-            <div class="text-center">
-              <h5 class="fw-bold mb-1">{{ vendor.name || '—' }}</h5>
-              <div class="text-muted small mb-3">{{ vendor.phone }}</div>
-              <a *ngIf="vendor.email" [href]="'mailto:' + vendor.email" class="text-decoration-none small text-secondary">
-                <i class="bi bi-envelope me-1"></i>{{ vendor.email }}
-              </a>
-            </div>
+<main class="ax-main" style="padding: var(--ax-space-5);">
+  <div style="max-width: 64rem; margin: 0 auto;">
+
+    <!-- Loading -->
+    <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+      <span class="ax-spinner ax-spinner-lg" aria-label="Loading vendor"></span>
+    </div>
+
+    <!-- Content -->
+    <ng-container *ngIf="!ui_controls.is_loading">
+      <!-- Vendor + store header -->
+      <article class="ax-card ax-p-0" style="overflow: hidden;">
+        <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-3 ax-gap-0">
+          <!-- Vendor column -->
+          <div class="ax-p-5 ax-text-center" style="background: var(--ax-color-bg-canvas); border-right: 1px solid var(--ax-color-border-subtle);">
+            <h3 class="ax-h5 ax-m-0">{{ vendor.name || '—' }}</h3>
+            <div class="ax-text-sm ax-text-secondary ax-mt-1">{{ vendor.phone }}</div>
+            <a
+              *ngIf="vendor.email"
+              [href]="'mailto:' + vendor.email"
+              class="ax-text-sm ax-text-secondary ax-mt-2 ax-flex ax-items-center ax-gap-1 ax-justify-center"
+              style="text-decoration: none;">
+              <span class="material-symbols-outlined" style="font-size: 1rem;" aria-hidden="true">mail</span>
+              {{ vendor.email }}
+            </a>
           </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="fw-semibold mb-3"><i class="bi bi-shop me-2 text-primary"></i>Store Information</h5>
-              <table class="table table-sm align-middle mb-4">
-                <tbody>
-                <tr>
-                  <th class="text-muted" style="width: 35%;">Store Name</th>
-                  <td class="fw-medium">{{ vendor.store_name }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Store Email</th>
-                  <td>{{ vendor.store_email }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Store Phone</th>
-                  <td>{{ vendor.store_phone }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Address</th>
-                  <td>{{ vendor.store_address }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Trade License</th>
-                  <td>{{ vendor.trade_license_number }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Licensing Authority</th>
-                  <td class="text-capitalize">{{ vendor.licensing_authority }}</td>
-                </tr>
-                </tbody>
-              </table>
 
-              <h6 class="fw-semibold mt-4 mb-3"><i class="bi bi-bank me-2 text-success"></i>Bank Account</h6>
-              <table class="table table-sm align-middle">
-                <tbody>
-                <tr>
-                  <th class="text-muted" style="width: 35%;">Bank Name</th>
-                  <td>{{ vendor.store_bank_name }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Account Name</th>
-                  <td>{{ vendor.store_account_name }}</td>
-                </tr>
-                <tr>
-                  <th class="text-muted">Account Number</th>
-                  <td class="text-monospace">{{ vendor.store_account_number }}</td>
-                </tr>
-                </tbody>
-              </table>
-
-              <div class="d-flex justify-content-between mt-4">
-                <div class="text-muted small">
-                  <i class="bi bi-clock me-1"></i>Last Login: {{ vendor.last_login }}
-                </div>
+          <!-- Store + banking info columns -->
+          <div class="ax-p-5" style="grid-column: span 2;">
+            <h4 class="ax-h6 ax-m-0 ax-mb-3 ax-flex ax-items-center ax-gap-2">
+              <span class="material-symbols-outlined" style="font-size: 1.25rem;" aria-hidden="true">storefront</span>
+              Store information
+            </h4>
+            <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-3 ax-mb-4">
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Store name</div>
+                <div class="ax-font-medium ax-text-primary">{{ vendor.store_name }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Email</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.store_email }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Phone</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.store_phone }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Address</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.store_address }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Trade license</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.trade_license_number }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Licensing authority</div>
+                <div class="ax-text-sm ax-text-secondary" style="text-transform: capitalize;">{{ vendor.licensing_authority }}</div>
               </div>
             </div>
+
+            <h4 class="ax-h6 ax-m-0 ax-mb-3 ax-flex ax-items-center ax-gap-2">
+              <span class="material-symbols-outlined" style="font-size: 1.25rem;" aria-hidden="true">account_balance</span>
+              Bank account
+            </h4>
+            <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-3">
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Bank name</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.store_bank_name }}</div>
+              </div>
+              <div>
+                <div class="ax-text-2xs ax-text-tertiary">Account name</div>
+                <div class="ax-text-sm ax-text-secondary">{{ vendor.store_account_name }}</div>
+              </div>
+              <div style="grid-column: span 2;">
+                <div class="ax-text-2xs ax-text-tertiary">Account number</div>
+                <div class="ax-font-medium ax-numeric">{{ vendor.store_account_number }}</div>
+              </div>
+            </div>
+
+            <div class="ax-text-2xs ax-text-tertiary ax-mt-4" *ngIf="vendor.last_login">
+              Last login: {{ vendor.last_login }}
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="row align-items-center mb-5">
-            <div class="col">
+      </article>
 
-            </div>
-          </div>
-          <div class="card p-0 mb-7 mb-xxl-0">
-            <div class="card-header">
-              <h6 class="mb-0">VENDOR ORDER ITEMS</h6>
-            </div>
-            <div class="table-responsive table-sm">
-              <table class="table table-sm table-hover mb-0">
-                <thead>
+      <!-- Order items -->
+      <section class="ax-card ax-p-0 ax-mt-4">
+        <div class="ax-p-4" style="border-bottom: 1px solid var(--ax-color-border-subtle);">
+          <h3 class="ax-h6 ax-m-0">Vendor order items</h3>
+        </div>
+        <div class="ax-table-wrapper">
+          <table class="ax-table ax-table-hover">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Customer</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Vendor pay</th>
+                <th style="text-align: right;">Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a_item of items; track $index) {
                 <tr>
-                  <th class="fs-sm">NAME</th>
-                  <th class="fs-sm">CUSTOMER</th>
-                  <th class="fs-sm">QUANTITY</th>
-                  <th class="fs-sm">VENDOR PAY</th>
-                  <th class="fs-sm">TOTAL&nbsp;PRICE</th>
-                  <th class="fs-sm">Status</th>
+                  <td><span class="ax-font-medium ax-text-primary">{{ a_item.product_name }}</span></td>
+                  <td><span class="ax-text-sm ax-text-secondary">{{ a_item.customer }}</span></td>
+                  <td style="text-align: center;"><span class="ax-numeric">{{ a_item.quantity }}</span></td>
+                  <td style="text-align: right;"><span class="ax-numeric">{{ a_item.price }}</span></td>
+                  <td style="text-align: right;"><span class="ax-font-semibold ax-numeric">{{ a_item.total_price }}</span></td>
+                  <td><span [ngClass]="itemStatusClass(a_item.status)">{{ a_item.status }}</span></td>
                 </tr>
-                </thead>
-                <tbody>
-                  @for(a_item of items; track $index){
-                    <tr class="border-2">
-                      <td>{{ a_item.product_name }}</td>
-                      <td>{{ a_item.customer }}</td>
-                      <td>{{ a_item.quantity }}</td>
-                      <td>{{ a_item.price }}</td>
-                      <td>{{ a_item.total_price }}</td>
-                      <td>
-                        <span *ngIf="a_item.status == 'Accepted'" class="badge bg-danger-subtle text-danger">{{ a_item.status }}</span>
-                        <span *ngIf="a_item.status == 'Ready for Delivery'" class="badge bg-warning-subtle text-warning">{{ a_item.status }}</span>
-                        <span *ngIf="a_item.status == 'Delivered'" class="badge bg-success-subtle text-success">{{ a_item.status }}</span>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </div>
+              }
+            </tbody>
+          </table>
         </div>
-      </div>
-    }
-
-    @if (ui_controls.is_loading){
-      <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-    }
-
+      </section>
+    </ng-container>
   </div>
 </main>
