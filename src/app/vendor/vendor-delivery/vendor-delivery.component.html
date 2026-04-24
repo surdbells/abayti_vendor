@@ -1,113 +1,97 @@
 <app-side></app-side>
 <app-top></app-top>
-<main class="main ml-desktop-22rem px-lg-6">
-  <div class="container-lg">
+
+<main class="ax-main" style="margin-left: 0;">
+  <div class="ax-container">
     <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
+    <header class="ax-page-header">
+      <div class="ax-page-header-content">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+          style="align-self: flex-start;">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back
+        </button>
+        <span class="ax-page-header-eyebrow">Fulfilment</span>
+        <h1 class="ax-page-title">Delivery list</h1>
+        <p *ngIf="orders && orders.length > 0" class="ax-page-subtitle">
+          {{ orders.length }} order{{ orders.length !== 1 ? 's' : '' }} ready for dispatch.
+        </p>
       </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Delivery list</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-      </div>
+    </header>
+
+    <!-- Loading -->
+    <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+      <span class="ax-spinner ax-spinner-lg" aria-label="Loading delivery list"></span>
     </div>
 
-    <!-- Page content -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card mt-2">
-          <div *ngIf="!ui_controls.no_orders && !ui_controls.is_loading" class="card-body p-0">
-            <div style="min-height: 350px" class="table-responsive">
-              <table datatable [dtOptions]="dtOptions" class="table table-sm table-hover table-borderless table-round mb-0">
-                <thead>
-                <tr class="border-2 rounded-2">
-                  <th>DATE</th>
-                  <th>PRODUCT</th>
-                  <th>QUANTITY</th>
-                  <th>CUSTOMER</th>
-                  <th>PRICE</th>
-                  <th>STATUS</th>
-                  <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let a_orders of orders; let i = index" class="border-2 rounded-2">
-                  <td>{{a_orders.created}}</td>
-                  <td>{{a_orders.product}}</td>
-                  <td>{{a_orders.quantity}}</td>
-                  <td>{{a_orders.name}}</td>
-                  <td>{{a_orders.total_price}}</td>
-                  <td> {{a_orders.status}} </td>
-                  <td>
-                    <span role="button" (click)="open_order(a_orders.id, a_orders.product)" class="badge d-flex align-items-center py-1 px-2 text-secondary-emphasis bg-secondary-subtle border border-secondary-subtle rounded-pill">
-                      <span class="float-end">&nbsp;View</span>
-                    </span>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-        </div>
-        <div *ngIf="ui_controls.no_orders && !ui_controls.is_loading" class="card shadow-sm border rounded-3 text-center p-4">
-          <div class="card-body">
-            <h5 class="card-title mb-1">No orders ready for delivery</h5>
-          </div>
-        </div>
+    <!-- Table -->
+    <section
+      *ngIf="!ui_controls.no_orders && !ui_controls.is_loading"
+      class="ax-card ax-p-0">
+      <div class="ax-table-wrapper">
+        <table class="ax-table ax-table-hover">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Product</th>
+              <th style="text-align: center;">Qty</th>
+              <th>Customer</th>
+              <th style="text-align: right;">Price</th>
+              <th>Status</th>
+              <th style="width: 5rem;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let a_orders of orders; let i = index">
+              <td>
+                <span class="ax-text-2xs ax-text-tertiary">{{ a_orders.created }}</span>
+              </td>
+              <td>
+                <span class="ax-font-medium ax-text-primary">{{ a_orders.product }}</span>
+              </td>
+              <td style="text-align: center;">
+                <span class="ax-numeric">{{ a_orders.quantity }}</span>
+              </td>
+              <td>
+                <span class="ax-text-sm ax-text-secondary">{{ a_orders.name }}</span>
+              </td>
+              <td style="text-align: right;">
+                <span class="ax-font-semibold ax-numeric">{{ a_orders.total_price }}</span>
+              </td>
+              <td>
+                <span [ngClass]="statusBadgeClass(a_orders.status)">{{ a_orders.status }}</span>
+              </td>
+              <td>
+                <button
+                  type="button"
+                  class="ax-btn ax-btn-ghost ax-btn-sm"
+                  (click)="open_order(a_orders.id, a_orders.product)"
+                  aria-label="View order">
+                  <span class="material-symbols-outlined" aria-hidden="true">visibility</span>
+                  View
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-    <tui-drawer class="drawer" [overlay]="true" *tuiPopup="open()">
-      <header>
-        <h2 tuiHeader>
-          <div tuiTitle>ORDER ITEMS</div>
-          <div tuiAccessories>
-            <button tuiButton (click)="open.set(false)">Close</button>
-          </div>
-        </h2>
-        <div class="row g-4">
-          <div *ngIf="!ui_controls.loading_items" class="table-responsive table-responsive-sm">
-            <table class="table mb-0 table-hover align-middle">
-              <thead class="table-light">
-              <tr>
-                <th style="width:50px;">#</th>
-                <th>Product</th>
-                <th class="text-end" style="width:120px;">Quantity</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let p of cartItems; index as i">
-                <td>{{ i + 1 }}</td>
-                <td>
-                  <div class="d-flex align-items-center gap-3">
-                    <img
-                      [src]="p.image || p.image || 'https://img.freepik.com/premium-vector/image-available-icon-set-default-missing-photo-stock-vector-symbol-black-filled-outlined-style-no-image-found-sign_268104-6708.jpg'"
-                      [alt]="p.name || p.name || 'Product image'"  width="50" height="50" class="rounded border" style="object-fit: cover; object-position: top center"/>
-                    <div class="fw-medium text-truncate">
-                      {{ p.name || p.name || 'Unnamed Product' }}
-                    </div>
-                  </div>
-                </td>
-                <td class="text-end">
-                    <span class="badge abayti_primary_background text-primary-emphasis">
-                      SIZE: {{ p.size || 0 }} | QTY{{ p.quantity || 0 }}
-                    </span>
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-          <tui-loader class="p-5" *ngIf="ui_controls.loading_items" />
-        </div>
-      </header>
-      <div *ngIf="!ui_controls.is_loading">
+    </section>
+
+    <!-- Empty state -->
+    <section *ngIf="ui_controls.no_orders && !ui_controls.is_loading" class="ax-page-section">
+      <div class="ax-card ax-p-8 ax-text-center">
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 3rem; color: var(--ax-color-text-tertiary);"
+          aria-hidden="true">local_shipping</span>
+        <h3 class="ax-h4 ax-m-0 ax-mt-3">No orders ready for delivery</h3>
+        <p class="ax-text-secondary ax-mt-2" style="max-width: 32rem; margin-left: auto; margin-right: auto;">
+          Orders will appear here once they've been packed and are ready to hand off to the courier.
+        </p>
       </div>
-    </tui-drawer>
+    </section>
   </div>
 </main>

@@ -1,36 +1,37 @@
 <app-side></app-side>
 <app-top></app-top>
-<main class="main ml-desktop-22rem px-lg-6">
-  <div class="container-lg">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
-      </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Messages</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <!--<a (click)="createCoupon()" class="btn btn-secondary d-block">
-          <span class="material-symbols-outlined me-1"> add </span> New
-        </a>-->
-      </div>
-    </div>
 
-    <!-- Page content -->
-    <div class="row">
-      <div class="col-12">
-        <!-- Filters -->
-        <div class="card card-line bg-body-tertiary border-transparent mb-7">
-          <div class="card-body p-4">
-            <h3 class="text-center">No records found</h3>
-          </div>
-        </div>
+<main class="ax-main" style="margin-left: 0;">
+  <div class="ax-container">
+    <!-- Page header -->
+    <header class="ax-page-header">
+      <div class="ax-page-header-content">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+          style="align-self: flex-start;">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back
+        </button>
+        <span class="ax-page-header-eyebrow">Communications</span>
+        <h1 class="ax-page-title">Messages</h1>
+        <p class="ax-page-subtitle">Direct conversations with your customers will appear here.</p>
       </div>
-    </div>
+    </header>
+
+    <!-- Empty state -->
+    <section class="ax-page-section">
+      <div class="ax-card ax-p-8 ax-text-center">
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 3rem; color: var(--ax-color-text-tertiary);"
+          aria-hidden="true">forum</span>
+        <h3 class="ax-h4 ax-m-0 ax-mt-3">No messages yet</h3>
+        <p class="ax-text-secondary ax-mt-2" style="max-width: 32rem; margin-left: auto; margin-right: auto;">
+          Customer messages, order questions, and custom-order requests will appear here when they reach out.
+        </p>
+      </div>
+    </section>
   </div>
 </main>

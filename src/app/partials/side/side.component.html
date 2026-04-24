@@ -1,160 +1,232 @@
-<aside class="aside aside-base sidenav-base">
-  <nav class="navbar navbar-expand-xl navbar-vertical">
-    <div class="container-lg">
-      <div class="card mb-5 hide-on-mobile">
-        <div class="card-header text-center">
-          <img class="img img-fluid w-50" src="assets/img/abayti.png" alt="{{ 'brand_alt' | translate }}" />
-        </div>
-        <div class="card-footer">
-          <div class="row g-2">
-            <div class="col-12">
-              <a routerLink="/create-product"  class="btn btn-sm text-white abayti_secondary_background btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-1">
-                <svg class="icon svg-icon-ti-ti-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 5l0 14"></path>
-                  <path d="M5 12l14 0"></path>
-                </svg>
-                <span class="d-none d-sm-inline">{{ 'add_product' | translate }}</span>
-                <span class="d-inline d-sm-none">{{ 'add_product_short' | translate }}</span>
-              </a>
-            </div>
-          </div>
-        </div>
+<aside class="ax-sidenav" [class.ax-sidenav-open]="isOpen" aria-label="Vendor navigation">
+  <!-- Brand -->
+  <a routerLink="/account" class="ax-sidenav-brand" aria-label="Abayti vendor home">
+    <span class="ax-sidenav-brand-mark" aria-hidden="true">Ab</span>
+    <span class="ax-sidenav-brand-text">
+      <span class="ax-sidenav-brand-name">Abayti</span>
+      <span class="ax-sidenav-brand-role">{{ 'vendor_portal' | translate }}</span>
+    </span>
+  </a>
+
+  <!-- Quick-action: add product -->
+  <div class="ax-sidenav-section">
+    <a
+      routerLink="/create-product"
+      class="ax-btn ax-btn-primary ax-btn-sm"
+      style="width: 100%;"
+      (click)="close()">
+      <span class="material-symbols-outlined" aria-hidden="true">add</span>
+      <span>{{ 'add_product' | translate }}</span>
+    </a>
+  </div>
+
+  <!-- Scrollable nav -->
+  <nav class="ax-sidenav-body" aria-label="Primary navigation">
+
+    <div class="ax-sidenav-section">
+      <p class="ax-sidenav-section-title">{{ 'main_menu' | translate }}</p>
+      <ul class="ax-sidenav-nav">
+        <li>
+          <a
+            routerLink="/account"
+            routerLinkActive="ax-sidenav-link-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+            <span class="ax-sidenav-link-label">{{ 'dashboard' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/products"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>
+            <span class="ax-sidenav-link-label">{{ 'manage_products' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/orders"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">receipt_long</span>
+            <span class="ax-sidenav-link-label">{{ 'manage_orders' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/delivery"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+            <span class="ax-sidenav-link-label">{{ 'delivery_list' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/returns"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">assignment_return</span>
+            <span class="ax-sidenav-link-label">{{ 'process_returns' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/reviews"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">reviews</span>
+            <span class="ax-sidenav-link-label">{{ 'product_reviews' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/messages"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">chat</span>
+            <span class="ax-sidenav-link-label">Messages</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/coupons"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">sell</span>
+            <span class="ax-sidenav-link-label">Coupons &amp; discounts</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Store settings group -->
+    <div class="ax-sidenav-section">
+      <p class="ax-sidenav-section-title">{{ 'store_settings' | translate }}</p>
+      <ul class="ax-sidenav-nav">
+        <li>
+          <a
+            routerLink="/store"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">store</span>
+            <span class="ax-sidenav-link-label">{{ 'manage_store' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/payment_info"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">credit_card</span>
+            <span class="ax-sidenav-link-label">{{ 'payment_information' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/tax_information"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">receipt</span>
+            <span class="ax-sidenav-link-label">{{ 'tax_information' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/labels"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">label</span>
+            <span class="ax-sidenav-link-label">{{ 'product_labels' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/measurements"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">straighten</span>
+            <span class="ax-sidenav-link-label">{{ 'measurements' | translate }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Account group -->
+    <div class="ax-sidenav-section">
+      <p class="ax-sidenav-section-title">Account</p>
+      <ul class="ax-sidenav-nav">
+        <li>
+          <a
+            routerLink="/profile"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">person</span>
+            <span class="ax-sidenav-link-label">{{ 'user_profile' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/security"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+            <span class="ax-sidenav-link-label">{{ 'security' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/notifications"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+            <span class="ax-sidenav-link-label">{{ 'notifications' | translate }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/compliance"
+            routerLinkActive="ax-sidenav-link-active"
+            class="ax-sidenav-link"
+            (click)="close()">
+            <span class="material-symbols-outlined" aria-hidden="true">policy</span>
+            <span class="ax-sidenav-link-label">{{ 'compliance' | translate }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Bottom: language + sign out -->
+    <div class="ax-sidenav-section" style="margin-top: auto; padding-top: var(--ax-space-4); border-top: 1px solid var(--ax-color-border-subtle);">
+      <div style="padding: 0 var(--ax-space-3) var(--ax-space-3);">
+        <app-language-switcher></app-language-switcher>
       </div>
       <button
-        class="navbar-toggler ms-3"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#sidenavBaseCollapse"
-        aria-controls="sidenavBaseCollapse"
-        aria-expanded="false">
-        <span class="navbar-toggler-icon"></span>
+        class="ax-sidenav-link ax-sidenav-link-danger"
+        (click)="sign_out()"
+        style="width: 100%; background: transparent; border: 0; cursor: pointer; text-align: left; font: inherit;">
+        <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+        <span class="ax-sidenav-link-label">{{ 'sign_out' | translate }}</span>
       </button>
-
-      <!-- Collapse -->
-      <div class="collapse navbar-collapse" id="sidenavBaseCollapse">
-        <!-- Search -->
-        <div class="input-group d-xl-none my-4 my-xl-0">
-          <input class="form-control" type="search" placeholder="{{ 'search' | translate }}" aria-describedby="sidenavBaseSearchMobile" />
-          <span class="input-group-text" id="sidenavBaseSearchMobile">
-                <span class="material-symbols-outlined">search</span>
-              </span>
-        </div>
-        <!-- Heading -->
-        <h3 class="fs-base px-3 mx-4">{{ 'main_menu' | translate }}</h3>
-        <!-- Nav -->
-        <nav class="navbar-nav nav-pills mb-7">
-          <div class="nav-item">
-            <a routerLink="/account" class="nav-link">
-              <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">analytics</span>
-              </span><span class="abayti_secondary_color">{{ 'dashboard' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/products" class="nav-link">
-          <span class="mx-3">
-            <span class="material-symbols-outlined abayti_secondary_color fs-4">apparel</span>
-          </span> <span class="abayti_secondary_color">{{ 'manage_products' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/coupons" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">percent</span>
-            </span> <span class="abayti_secondary_color">{{ 'Coupons & Discounts' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/orders" class="nav-link">
-        <span class="mx-3">
-          <span class="material-symbols-outlined abayti_secondary_color fs-4">orders</span>
-        </span> <span class="abayti_secondary_color">{{ 'manage_orders' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/reviews" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">share_reviews</span>
-            </span> <span class="abayti_secondary_color">{{ 'product_reviews' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/returns" class="nav-link">
-          <span class="mx-3">
-            <span class="material-symbols-outlined abayti_secondary_color fs-4">keyboard_return</span>
-          </span> <span class="abayti_secondary_color">{{ 'process_returns' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#settings" role="button" aria-expanded="false" aria-controls="dashboards">
-              <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">store</span>
-              </span> <span class="abayti_secondary_color">{{ 'store_settings' | translate }}</span>
-            </a>
-            <div class="collapse" id="settings">
-              <nav class="nav nav-pills">
-                <a class="nav-link pt-0" routerLink="/store">{{ 'manage_store' | translate }}</a>
-                <a class="nav-link pt-0" routerLink="/payment_info">{{ 'payment_information' | translate }}</a>
-                <a class="nav-link pt-0" routerLink="/tax_information">{{ 'tax_information' | translate }}</a>
-                <a class="nav-link pt-0" routerLink="/labels">{{ 'product_labels' | translate }}</a>
-              </nav>
-            </div>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/delivery" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">delivery_truck_speed</span>
-            </span> <span class="abayti_secondary_color">{{ 'delivery_list' | translate }}</span>
-            </a>
-          </div>
-          <hr/>
-          <div class="nav-item">
-            <a routerLink="/profile" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">account_box</span>
-            </span> <span class="abayti_secondary_color">{{ 'user_profile' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/security" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">security</span>
-            </span> <span class="abayti_secondary_color">{{ 'security' | translate }}</span>
-            </a>
-          </div>
-
-          <div class="nav-item">
-            <a routerLink="/notifications" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">notifications_unread</span>
-            </span> <span class="abayti_secondary_color">{{ 'notifications' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/compliance" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">policy</span>
-            </span> <span class="abayti_secondary_color">{{ 'compliance' | translate }}</span>
-            </a>
-          </div>
-          <div class="nav-item">
-            <a routerLink="/measurements" class="nav-link">
-            <span class="mx-3">
-              <span class="material-symbols-outlined abayti_secondary_color fs-4">measuring_tape</span>
-            </span> <span class="abayti_secondary_color">{{ 'measurements' | translate }}</span>
-            </a>
-          </div>
-
-          <hr>
-          <div class="nav-item text-danger">
-            <a (click)="sign_out()" role="link" class="nav-link">
-            <span class="mx-3 text-danger">
-              <span class="material-symbols-outlined fs-3"> logout </span>
-            </span><span class="text-danger">{{ 'sign_out' | translate }}</span>
-            </a>
-          </div>
-        </nav>
-      </div>
     </div>
   </nav>
 </aside>
