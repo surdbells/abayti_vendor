@@ -1,11 +1,9 @@
 # Hashed bundles — safe to cache forever (filename changes on every build)
 /*.js
   Cache-Control: public, max-age=31536000, immutable
-  Content-Type: application/javascript; charset=utf-8
 
 /*.css
   Cache-Control: public, max-age=31536000, immutable
-  Content-Type: text/css; charset=utf-8
 
 # Never cache the shell — new deploys must be seen instantly
 /index.html
