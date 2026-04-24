@@ -1,158 +1,167 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {AngularEditorConfig, AngularEditorModule} from "@kolkov/angular-editor";
-import {FormsModule} from "@angular/forms";
-import {CommonModule, NgForOf, NgIf} from "@angular/common";
-import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
-import {SideComponent} from "../../partials/side/side.component";
-import {TuiIcon, TuiLoader} from "@taiga-ui/core";
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { SideComponent } from '../../partials/side/side.component';
+import { TopComponent } from '../../partials/top/top.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CrudService} from '../../services/crud.service';
-import {HotToastService} from '@ngneat/hot-toast';
-import {GlobalComponent} from '../../global-component';
-import {TUI_CONFIRM} from '@taiga-ui/kit';
+import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CrudService } from '../../services/crud.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { GlobalComponent } from '../../global-component';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
+import {
+  AxActivityFeedComponent,
+  AxActivityItem,
+} from '../../shared/rich/ax-activity-feed.component';
+import { AxCopyToClipboardDirective } from '../../shared/rich/ax-copy-to-clipboard.directive';
 
 @Component({
   selector: 'app-view-order',
   standalone: true,
-    imports: [
-        AngularEditorModule,
-        FormsModule,
-        NgForOf,
-        NgIf,
-        NgMultiSelectDropDownModule,
-        SideComponent,
-        CommonModule,
-        TuiIcon,
-        TuiLoader
-    ],
+  imports: [
+    FormsModule,
+    CommonModule,
+    SideComponent,
+    TopComponent,
+    AxActivityFeedComponent,
+    AxCopyToClipboardDirective,
+  ],
   templateUrl: './view-order.component.html',
-  styleUrl: './view-order.component.css'
+  styleUrl: './view-order.component.css',
 })
-export class ViewOrderComponent  implements OnInit{
+export class ViewOrderComponent implements OnInit {
   private readonly dialogs = inject(TuiResponsiveDialogService);
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private crudService: CrudService,
     private toast: HotToastService,
   ) {}
+
   ui_controls = {
     is_loading: false,
-    updating_order: false
+    updating_order: false,
   };
-  session_data: any = ""
-  image_url: any = "https://api.3bayti.ae/vendors/products/"
+
+  session_data: any = '';
+  image_url: any = 'https://api.3bayti.ae/vendors/products/';
+
   user_session = {
     id: 0,
-    token: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
+    token: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
     is_2fa: false,
     is_active: false,
     is_admin: false,
     is_vendor: false,
-    is_customer: false
+    is_customer: false,
   };
+
   data = {
     id: 0,
-    token: "",
+    token: '',
     order: 0,
-    order_ref: "",
+    order_ref: '',
     product: 0,
-    name: "",
-    image: "",
-    price: "",
+    name: '',
+    image: '',
+    price: '',
     quantity: 0,
-    total: "",
-    charges: "",
-    vendor_pay: "",
-    size: "",
-    color: "",
+    total: '',
+    charges: '',
+    vendor_pay: '',
+    size: '',
+    color: '',
     measurement: {
-      bust: "",
-      neck: "",
-      waist: "",
-      length: "",
-      hip: "",
-      arm: ""
+      bust: '',
+      neck: '',
+      waist: '',
+      length: '',
+      hip: '',
+      arm: '',
     },
-    extra_measurement: "",
-    note: "",
-    customer_email: "",
-    customer_name: "",
-    merchantReference: "",
-    delivery_name: "",
-    delivery_phone: "",
-    delivery_email: "",
-    delivery_city: "",
-    delivery_area: "",
-    delivery_street_address: "",
-    villa_number: "",
-    payment_status: "",
-    cart_code: "",
-    status: ""
+    extra_measurement: '',
+    note: '',
+    customer_email: '',
+    customer_name: '',
+    merchantReference: '',
+    delivery_name: '',
+    delivery_phone: '',
+    delivery_email: '',
+    delivery_city: '',
+    delivery_area: '',
+    delivery_street_address: '',
+    villa_number: '',
+    payment_status: '',
+    cart_code: '',
+    status: '',
   };
+
   update_order = {
     id: 0,
     order: 0,
-    token: "",
-    status: "",
-    email: ""
+    token: '',
+    status: '',
+    email: '',
   };
 
   single = {
     id: 0,
-    token: "",
+    token: '',
     order: 0,
-    product: "",
+    product: '',
   };
+
   ngOnInit(): void {
-    this.session_data = sessionStorage.getItem("SESSION");
+    this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.single.id = this.user_session.id;
     this.single.token = this.user_session.token;
-
     this.update_order.id = this.user_session.id;
     this.update_order.token = this.user_session.token;
-    this.single.order =  Number(this.route.snapshot.queryParamMap.get('id'));
-    this.single.product =  String(this.route.snapshot.queryParamMap.get('name'));
+    this.single.order = Number(this.route.snapshot.queryParamMap.get('id'));
+    this.single.product = String(this.route.snapshot.queryParamMap.get('name'));
     this.get_order_by_id();
   }
+
   goBack() {
     this.router.navigate(['/orders']).then(r => console.log(r));
   }
+
   error_notification(message: string) {
     this.toast.error(message);
   }
+
   success_notification(message: string) {
     this.toast.success(message);
   }
+
   get_order_by_id() {
     this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.single, GlobalComponent.getOrderById)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.data =  response.data;
-            this.ui_controls.is_loading = false;
-          }
+    this.crudService.post_request(this.single, GlobalComponent.getOrderById).subscribe({
+      next: (response) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.data = response.data;
+          this.ui_controls.is_loading = false;
         }
-      }))
+      },
+    });
   }
+
   printInvoice() {
     window.print();
   }
-  // Download PDF using html2canvas + jsPDF
+
   async downloadPdf() {
     const element = document.getElementById('invoiceToPrint');
-    if (!element) { return; }
+    if (!element) return;
 
-    // improve scale for higher resolution
     const scale = 2;
     const width = element.offsetWidth;
     const height = element.offsetHeight;
@@ -163,14 +172,14 @@ export class ViewOrderComponent  implements OnInit{
         useCORS: true,
         logging: false,
         windowWidth: document.documentElement.offsetWidth,
-        windowHeight: document.documentElement.offsetHeight
+        windowHeight: document.documentElement.offsetHeight,
       });
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: width > height ? 'landscape' : 'portrait',
         unit: 'px',
-        format: [width, height]
+        format: [width, height],
       });
 
       pdf.addImage(imgData, 'PNG', 0, 0, width, height);
@@ -181,6 +190,7 @@ export class ViewOrderComponent  implements OnInit{
       alert('Could not generate PDF. Please try again or check console for details.');
     }
   }
+
   startStatusChange(order: number, status: string, email: string) {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -191,26 +201,98 @@ export class ViewOrderComponent  implements OnInit{
           no: 'Cancel',
         },
       })
-      .subscribe((response) => {
-        if (response){
+      .subscribe(response => {
+        if (response) {
           this.updateOrderStatus(order, status, email);
         }
       });
   }
-  updateOrderStatus(order: number, status: string, email: string){
+
+  updateOrderStatus(order: number, status: string, email: string) {
     this.ui_controls.updating_order = true;
     this.update_order.order = order;
     this.update_order.status = status;
     this.update_order.email = email;
-    this.crudService.post_request(this.update_order, GlobalComponent.updateOrderStatus)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.ui_controls.updating_order = false;
-            this.success_notification(response.message);
-            this.get_order_by_id();
-          }
+    this.crudService.post_request(this.update_order, GlobalComponent.updateOrderStatus).subscribe({
+      next: (response) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.ui_controls.updating_order = false;
+          this.success_notification(response.message);
+          this.get_order_by_id();
         }
-      }))
+      },
+    });
+  }
+
+  /** Builds the status timeline. Each status in the set is either
+   *  reached (active), upcoming, or skipped (for returns/cancellations). */
+  get timeline(): AxActivityItem[] {
+    const s = this.data.status || '';
+    const reached = (check: string) => {
+      const order = ['pending', 'Accepted', 'Ready for Delivery', 'Delivered'];
+      const current = order.indexOf(s);
+      const target = order.indexOf(check);
+      return current >= target && current >= 0 && target >= 0;
+    };
+
+    const items: AxActivityItem[] = [
+      {
+        icon: 'shopping_bag',
+        title: 'Order placed',
+        variant: reached('pending') || s !== '' ? 'brand' : undefined,
+      },
+      {
+        icon: 'check',
+        title: 'Accepted by vendor',
+        variant: reached('Accepted') ? 'success' : undefined,
+      },
+      {
+        icon: 'inventory',
+        title: 'Ready for delivery',
+        variant: reached('Ready for Delivery') ? 'success' : undefined,
+      },
+      {
+        icon: 'local_shipping',
+        title: 'Delivered',
+        variant: reached('Delivered') ? 'success' : undefined,
+      },
+    ];
+
+    // Override with terminal states
+    if (['Return Requested', 'Returned'].includes(s)) {
+      items.push({
+        icon: 'keyboard_return',
+        title: s === 'Return Requested' ? 'Return requested' : 'Returned',
+        variant: 'warning',
+      });
+    }
+    if (['Cancelled', 'Refunded'].includes(s)) {
+      items.push({
+        icon: 'cancel',
+        title: s,
+        variant: 'danger',
+      });
+    }
+
+    return items;
+  }
+
+  statusBadgeClass(): string {
+    const s = this.data.status;
+    switch (s) {
+      case 'Accepted':
+      case 'Ready for Delivery':
+      case 'Delivered':
+        return 'ax-badge-success';
+      case 'Return Requested':
+        return 'ax-badge-warning';
+      case 'pending':
+        return 'ax-badge-danger';
+      case 'Returned':
+      case 'Cancelled':
+      case 'Refunded':
+      default:
+        return 'ax-badge-neutral';
+    }
   }
 }
