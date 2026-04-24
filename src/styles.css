@@ -31,6 +31,7 @@
 @import './styles/components/_extras.css';
 @import './styles/components/_controls.css';
 @import './styles/components/_overlays.css';
+@import './styles/components/_shells.css';
 
 /* CKEditor is still loaded — removed in Phase 12 */
 @import '../node_modules/ckeditor5/dist/ckeditor5-editor.css';

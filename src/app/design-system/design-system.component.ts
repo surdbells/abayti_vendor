@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import {
   AxMultiselectComponent,
   AxMultiselectOption,
@@ -9,11 +11,26 @@ import {
   AxDatePickerComponent,
   AxDateRange,
 } from '../shared/forms';
+import {
+  AxModalService,
+  AxDrawerService,
+  AxTooltipDirective,
+  AxPopoverDirective,
+  AxDropdownDirective,
+  AxDropdownItemDirective,
+  AxCollapseDirective,
+  AxTabsComponent,
+  AxTabComponent,
+  AxAccordionComponent,
+  AxAccordionItemComponent,
+} from '../shared/overlays';
+import { SampleModalComponent } from './sample-modal.component';
+import { SampleDrawerComponent } from './sample-drawer.component';
 
 /**
- * Design-system demo — exercises every Phase 2 form control.
- * Temporary route, removed in Phase 11.
- * Visit /design-system (no auth) while reviewing Phase 2.
+ * Design-system demo — exercises every Phase 2 form control AND every
+ * Phase 3 overlay / feedback component. Temporary route; removed in
+ * Phase 11.
  */
 @Component({
   selector: 'app-design-system',
@@ -21,28 +38,44 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     AxMultiselectComponent,
     AxComboboxComponent,
     AxDatePickerComponent,
+    AxTooltipDirective,
+    AxPopoverDirective,
+    AxDropdownDirective,
+    AxDropdownItemDirective,
+    AxCollapseDirective,
+    AxTabsComponent,
+    AxTabComponent,
+    AxAccordionComponent,
+    AxAccordionItemComponent,
   ],
   templateUrl: './design-system.component.html',
 })
 export class DesignSystemComponent {
-  // Form state
+  private readonly modal = inject(AxModalService);
+  private readonly drawer = inject(AxDrawerService);
+  private readonly toast = inject(HotToastService);
+
+  // Phase 2 state
   categoryIds: (string | number)[] = ['electronics'];
   countryId: string | number | null = 'ae';
   singleDate: Date | null = null;
   dateRange: AxDateRange | null = null;
-
-  // Control states
   notifications = true;
   marketing = false;
   shipping = 'standard';
-  agreeToTerms = false;
-  indeterminateDemo = false;
   quantity = 50;
 
-  // Dropdown data
+  // Phase 3 state
+  tabIndex = 0;
+  collapseOpen = false;
+  lastModalResult: unknown = null;
+  lastDrawerResult: unknown = null;
+
+  // Dropdown data (Phase 2)
   categoryOptions: AxMultiselectOption[] = [
     { id: 'electronics', label: 'Electronics' },
     { id: 'fashion',     label: 'Fashion & apparel' },
@@ -65,17 +98,65 @@ export class DesignSystemComponent {
     { id: 'kw', label: 'Kuwait' },
     { id: 'jo', label: 'Jordan' },
     { id: 'eg', label: 'Egypt' },
-    { id: 'ma', label: 'Morocco' },
-    { id: 'tn', label: 'Tunisia' },
     { id: 'ng', label: 'Nigeria' },
     { id: 'gh', label: 'Ghana' },
     { id: 'ke', label: 'Kenya' },
-    { id: 'za', label: 'South Africa' },
     { id: 'gb', label: 'United Kingdom' },
     { id: 'us', label: 'United States' },
   ];
 
+  // ---- Phase 3 actions ----
+  openModal(): void {
+    const ref = this.modal.open(SampleModalComponent, {
+      size: 'md',
+      data: { title: 'Edit profile' },
+      ariaLabel: 'Edit profile',
+    });
+    ref.afterClosed().subscribe(result => {
+      this.lastModalResult = result ?? 'dismissed';
+      if (result) this.toast.success('Profile saved');
+    });
+  }
+
+  openLargeModal(): void {
+    this.modal.open(SampleModalComponent, {
+      size: 'lg',
+      data: { title: 'Large modal example' },
+    });
+  }
+
+  openRightDrawer(): void {
+    const ref = this.drawer.open(SampleDrawerComponent, {
+      size: 'md',
+      position: 'right',
+      data: { orderRef: 'ABY-240098' },
+      ariaLabel: 'Order details',
+    });
+    ref.afterClosed().subscribe(result => {
+      this.lastDrawerResult = result ?? 'dismissed';
+    });
+  }
+
+  openLeftDrawer(): void {
+    this.drawer.open(SampleDrawerComponent, {
+      size: 'sm',
+      position: 'left',
+      data: { orderRef: 'ABY-240099' },
+    });
+  }
+
+  showToast(kind: 'success' | 'error' | 'info' = 'success'): void {
+    if (kind === 'success') this.toast.success('Changes saved successfully');
+    else if (kind === 'error') this.toast.error('Something went wrong');
+    else this.toast.info('Heads up — this is an info toast');
+  }
+
   onIndeterminateClick(input: HTMLInputElement) {
     input.indeterminate = true;
+  }
+
+  // For dropdown demo menu actions
+  menuAction(action: string): void {
+    this.toast.success(`Selected: ${action}`);
   }
 }

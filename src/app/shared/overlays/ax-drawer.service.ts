@@ -1,0 +1,133 @@
+import { ComponentRef, InjectionToken, Injectable, Injector, Type, inject } from '@angular/core';
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Subject, Observable } from 'rxjs';
+
+export type AxDrawerSize = 'sm' | 'md' | 'lg' | 'xl';
+export type AxDrawerPosition = 'left' | 'right';
+
+export interface AxDrawerConfig<D = unknown> {
+  /** Drawer width preset. Default 'md'. */
+  size?: AxDrawerSize;
+  /** Side of the screen to slide in from. Default 'right'. */
+  position?: AxDrawerPosition;
+  /** Arbitrary data passed to the opened component. */
+  data?: D;
+  /** Disable ESC close. */
+  disableClose?: boolean;
+  /** Disable backdrop click close. */
+  disableBackdropClose?: boolean;
+  /** Additional panel class(es). */
+  panelClass?: string | string[];
+  /** ARIA label. */
+  ariaLabel?: string;
+}
+
+export const AX_DRAWER_DATA = new InjectionToken<unknown>('AX_DRAWER_DATA');
+
+export class AxDrawerRef<TComponent = unknown, TResult = unknown> {
+  private readonly _afterClosed$ = new Subject<TResult | undefined>();
+
+  constructor(
+    private readonly overlayRef: OverlayRef,
+    public readonly componentRef: ComponentRef<TComponent>,
+  ) {}
+
+  afterClosed(): Observable<TResult | undefined> {
+    return this._afterClosed$.asObservable();
+  }
+
+  close(result?: TResult): void {
+    if (!this.overlayRef.hasAttached()) return;
+    this.overlayRef.detach();
+    this.overlayRef.dispose();
+    this._afterClosed$.next(result);
+    this._afterClosed$.complete();
+  }
+}
+
+/**
+ * Opens a standalone component as a side drawer (off-canvas panel).
+ * Replacement for Bootstrap's off-canvas. Useful for:
+ * - "View order" details pane
+ * - Inline forms (new customer, new product variant)
+ * - Filters drawer on data tables
+ *
+ * Usage:
+ *   const ref = this.drawer.open(ViewOrderComponent, {
+ *     size: 'lg',
+ *     position: 'right',
+ *     data: { orderId: 42 }
+ *   });
+ */
+@Injectable({ providedIn: 'root' })
+export class AxDrawerService {
+  private readonly overlay = inject(Overlay);
+  private readonly parentInjector = inject(Injector);
+
+  open<T, R = unknown, D = unknown>(
+    component: Type<T>,
+    config: AxDrawerConfig<D> = {},
+  ): AxDrawerRef<T, R> {
+    const size = config.size ?? 'md';
+    const position = config.position ?? 'right';
+
+    const extraClasses = ([] as string[])
+      .concat(config.panelClass ?? [])
+      .concat('ax-drawer', `ax-drawer-${size}`, `ax-drawer-${position}`);
+
+    const positionStrategy = this.overlay.position().global();
+    if (position === 'right') positionStrategy.right('0');
+    else positionStrategy.left('0');
+    positionStrategy.top('0');
+
+    const overlayConfig = new OverlayConfig({
+      hasBackdrop: true,
+      backdropClass: 'ax-backdrop',
+      panelClass: extraClasses,
+      positionStrategy,
+      scrollStrategy: this.overlay.scrollStrategies.block(),
+      disposeOnNavigation: true,
+      height: '100vh',
+    });
+
+    const overlayRef = this.overlay.create(overlayConfig);
+
+    const refPlaceholder = { ref: undefined as unknown as AxDrawerRef<T, R> };
+    const injector = Injector.create({
+      parent: this.parentInjector,
+      providers: [
+        { provide: AX_DRAWER_DATA, useValue: config.data ?? null },
+        { provide: AxDrawerRef, useFactory: () => refPlaceholder.ref },
+      ],
+    });
+
+    const portal = new ComponentPortal(component, null, injector);
+    const componentRef = overlayRef.attach(portal);
+
+    const drawerRef = new AxDrawerRef<T, R>(overlayRef, componentRef);
+    refPlaceholder.ref = drawerRef;
+
+    if (!config.disableBackdropClose) {
+      overlayRef.backdropClick().subscribe(() => drawerRef.close());
+    }
+    if (!config.disableClose) {
+      overlayRef.keydownEvents().subscribe(event => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+          drawerRef.close();
+        }
+      });
+    }
+
+    const paneEl = overlayRef.overlayElement;
+    paneEl.setAttribute('role', 'dialog');
+    paneEl.setAttribute('aria-modal', 'true');
+    if (config.ariaLabel) {
+      paneEl.setAttribute('aria-label', config.ariaLabel);
+    }
+
+    return drawerRef;
+  }
+}

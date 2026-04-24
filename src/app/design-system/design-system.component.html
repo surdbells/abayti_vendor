@@ -2,21 +2,21 @@
   <header class="ax-page-header">
     <div class="ax-page-header-content">
       <span class="ax-page-header-eyebrow">Design system</span>
-      <h1 class="ax-page-title">Phase 2 — form kit</h1>
+      <h1 class="ax-page-title">Form kit &amp; overlays</h1>
       <p class="ax-page-subtitle">
-        Every form control shipped in Phase 2, exercised in one place so you can judge
-        the direction before we start migrating pages.
+        Every primitive shipped in Phases 2 and 3, exercised in one place so
+        you can judge the direction before we start migrating pages.
       </p>
     </div>
   </header>
 
-  <!-- ========== TEXT INPUTS ========== -->
+  <!-- ========== FORM KIT (Phase 2) — short recap ========== -->
   <section class="ax-page-section">
     <div class="ax-page-section-header">
-      <h2 class="ax-page-section-title">Text inputs</h2>
+      <h2 class="ax-page-section-title">Form kit (Phase 2)</h2>
     </div>
     <div class="ax-card ax-p-6">
-      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-5">
+      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-6">
         <div class="ax-form-field">
           <label class="ax-label ax-label-required">Store name</label>
           <input type="text" class="ax-input" placeholder="e.g. Abayti Essentials" />
@@ -32,105 +32,62 @@
         </div>
 
         <div class="ax-form-field">
-          <label class="ax-label">Phone</label>
-          <div class="ax-input-group">
-            <span class="ax-input-group-prefix material-symbols-outlined">call</span>
-            <input type="tel" class="ax-input" placeholder="+971 50 000 0000" />
-          </div>
+          <label class="ax-label">Categories (multi-select)</label>
+          <app-ax-multiselect
+            [options]="categoryOptions"
+            [(ngModel)]="categoryIds"
+            placeholder="Choose categories"
+            [maxSelections]="5">
+          </app-ax-multiselect>
         </div>
 
         <div class="ax-form-field">
-          <label class="ax-label">Category</label>
-          <select class="ax-select">
-            <option>Fashion</option>
-            <option>Electronics</option>
-            <option>Beauty</option>
-          </select>
-        </div>
-
-        <div class="ax-form-field ax-md-col-span-2">
-          <label class="ax-label">Description</label>
-          <textarea class="ax-textarea" rows="4" placeholder="Tell customers about your store…"></textarea>
+          <label class="ax-label">Country (searchable)</label>
+          <app-ax-combobox
+            [options]="countryOptions"
+            [(ngModel)]="countryId"
+            placeholder="Pick a country">
+          </app-ax-combobox>
         </div>
 
         <div class="ax-form-field">
-          <label class="ax-label">Disabled field</label>
-          <input type="text" class="ax-input" value="Read-only value" disabled />
+          <label class="ax-label">Single date</label>
+          <app-ax-date-picker
+            [(ngModel)]="singleDate"
+            placeholder="Pick a date">
+          </app-ax-date-picker>
         </div>
 
         <div class="ax-form-field">
-          <label class="ax-label">Field with error</label>
-          <input type="text" class="ax-input ax-invalid" value="invalid-value" />
-          <span class="ax-error">
-            <span class="material-symbols-outlined" style="font-size: 0.9rem;">error</span>
-            Please enter a valid value
-          </span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SELECTIONS ========== -->
-  <section class="ax-page-section">
-    <div class="ax-page-section-header">
-      <h2 class="ax-page-section-title">Selections</h2>
-    </div>
-    <div class="ax-card ax-p-6">
-      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-6">
-
-        <!-- Checkboxes -->
-        <div class="ax-form-field">
-          <label class="ax-label">Checkboxes</label>
-          <label class="ax-check">
-            <input type="checkbox" checked />
-            <span class="ax-check-box"></span>
-            <span class="ax-check-label">Enable notifications</span>
-          </label>
-          <label class="ax-check">
-            <input type="checkbox" />
-            <span class="ax-check-box"></span>
-            <span class="ax-check-label">Send me marketing emails</span>
-          </label>
-          <label class="ax-check">
-            <input #indet type="checkbox" (click)="onIndeterminateClick(indet)" />
-            <span class="ax-check-box"></span>
-            <span class="ax-check-label">Indeterminate (click me)</span>
-          </label>
-          <label class="ax-check">
-            <input type="checkbox" disabled />
-            <span class="ax-check-box"></span>
-            <span class="ax-check-label">Disabled</span>
-          </label>
+          <label class="ax-label">Date range</label>
+          <app-ax-date-picker
+            mode="range"
+            [(ngModel)]="dateRange"
+            placeholder="Select date range">
+          </app-ax-date-picker>
         </div>
 
-        <!-- Radios -->
         <div class="ax-form-field">
           <label class="ax-label">Shipping method</label>
           <label class="ax-radio">
             <input type="radio" name="ship" [(ngModel)]="shipping" value="standard" />
             <span class="ax-radio-dot"></span>
-            <span class="ax-radio-label">Standard (3–5 days)</span>
+            <span class="ax-radio-label">Standard</span>
           </label>
           <label class="ax-radio">
             <input type="radio" name="ship" [(ngModel)]="shipping" value="express" />
             <span class="ax-radio-dot"></span>
-            <span class="ax-radio-label">Express (1–2 days)</span>
+            <span class="ax-radio-label">Express</span>
           </label>
           <label class="ax-radio">
             <input type="radio" name="ship" [(ngModel)]="shipping" value="same" />
             <span class="ax-radio-dot"></span>
             <span class="ax-radio-label">Same day</span>
           </label>
-          <label class="ax-radio">
-            <input type="radio" name="ship" disabled />
-            <span class="ax-radio-dot"></span>
-            <span class="ax-radio-label">Disabled option</span>
-          </label>
         </div>
 
-        <!-- Switches -->
         <div class="ax-form-field">
-          <label class="ax-label">Switches</label>
+          <label class="ax-label">Preferences</label>
           <label class="ax-switch">
             <input type="checkbox" [(ngModel)]="notifications" />
             <span class="ax-switch-track"></span>
@@ -141,115 +98,252 @@
             <span class="ax-switch-track"></span>
             <span class="ax-switch-label">Marketing updates</span>
           </label>
-          <label class="ax-switch ax-switch-sm">
-            <input type="checkbox" />
-            <span class="ax-switch-track"></span>
-            <span class="ax-switch-label">Small size</span>
-          </label>
-          <label class="ax-switch ax-switch-lg">
+          <label class="ax-switch ax-switch-sm ax-mt-2">
             <input type="checkbox" checked />
             <span class="ax-switch-track"></span>
-            <span class="ax-switch-label">Large size</span>
+            <span class="ax-switch-label">Small size variant</span>
           </label>
         </div>
 
-        <!-- Range -->
-        <div class="ax-form-field">
+        <div class="ax-form-field ax-md-col-span-2">
           <label class="ax-label">Quantity — {{ quantity }} units</label>
           <input type="range" class="ax-range" min="0" max="100" step="1" [(ngModel)]="quantity" />
-          <span class="ax-hint">Drag to adjust</span>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ========== CUSTOM COMPONENTS ========== -->
+  <!-- ========== MODALS & DRAWERS (Phase 3) ========== -->
   <section class="ax-page-section">
     <div class="ax-page-section-header">
-      <h2 class="ax-page-section-title">Custom dropdowns</h2>
+      <h2 class="ax-page-section-title">Modals &amp; drawers</h2>
     </div>
     <div class="ax-card ax-p-6">
-      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-6">
-
-        <div class="ax-form-field">
-          <label class="ax-label">Categories (multi-select)</label>
-          <app-ax-multiselect
-            [options]="categoryOptions"
-            [(ngModel)]="categoryIds"
-            placeholder="Choose categories"
-            [maxSelections]="5">
-          </app-ax-multiselect>
-          <span class="ax-hint">Max 5. Selected ids: {{ categoryIds | json }}</span>
+      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-5">
+        <div>
+          <h3 class="ax-h5 ax-mb-3">Modal dialog</h3>
+          <p class="ax-text-sm ax-text-secondary ax-mb-4">
+            Opened programmatically via <code>AxModalService.open(Component)</code>.
+            Focus-trapped, ESC-closable, backdrop click dismisses.
+          </p>
+          <div class="ax-flex ax-gap-2 ax-flex-wrap">
+            <button class="ax-btn ax-btn-primary" (click)="openModal()">Open modal</button>
+            <button class="ax-btn ax-btn-outline" (click)="openLargeModal()">Open large</button>
+          </div>
+          <p *ngIf="lastModalResult" class="ax-text-xs ax-text-tertiary ax-mt-3 ax-font-mono">
+            Last result: {{ lastModalResult | json }}
+          </p>
         </div>
 
-        <div class="ax-form-field">
-          <label class="ax-label">Country (searchable single-select)</label>
-          <app-ax-combobox
-            [options]="countryOptions"
-            [(ngModel)]="countryId"
-            placeholder="Pick a country">
-          </app-ax-combobox>
-          <span class="ax-hint">Selected: {{ countryId || 'none' }}</span>
+        <div>
+          <h3 class="ax-h5 ax-mb-3">Side drawer</h3>
+          <p class="ax-text-sm ax-text-secondary ax-mb-4">
+            Slides in from left or right. Same API as the modal service.
+          </p>
+          <div class="ax-flex ax-gap-2 ax-flex-wrap">
+            <button class="ax-btn ax-btn-primary" (click)="openRightDrawer()">Open right drawer</button>
+            <button class="ax-btn ax-btn-outline" (click)="openLeftDrawer()">Open left drawer</button>
+          </div>
+          <p *ngIf="lastDrawerResult" class="ax-text-xs ax-text-tertiary ax-mt-3 ax-font-mono">
+            Last result: {{ lastDrawerResult | json }}
+          </p>
         </div>
-
-        <div class="ax-form-field">
-          <label class="ax-label">Single date</label>
-          <app-ax-date-picker
-            [(ngModel)]="singleDate"
-            placeholder="Pick a date">
-          </app-ax-date-picker>
-          <span class="ax-hint">{{ singleDate ? singleDate.toDateString() : 'No date selected' }}</span>
-        </div>
-
-        <div class="ax-form-field">
-          <label class="ax-label">Date range</label>
-          <app-ax-date-picker
-            mode="range"
-            [(ngModel)]="dateRange"
-            placeholder="Select date range">
-          </app-ax-date-picker>
-          <span class="ax-hint">
-            {{ dateRange?.start?.toDateString() || '—' }} to {{ dateRange?.end?.toDateString() || '—' }}
-          </span>
-        </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ========== BUTTONS (for reference) ========== -->
+  <!-- ========== DROPDOWN / TOOLTIP / POPOVER ========== -->
   <section class="ax-page-section">
     <div class="ax-page-section-header">
-      <h2 class="ax-page-section-title">Button variants (Phase 1)</h2>
+      <h2 class="ax-page-section-title">Dropdowns, tooltips &amp; popovers</h2>
     </div>
     <div class="ax-card ax-p-6">
-      <div class="ax-flex ax-gap-3 ax-flex-wrap">
-        <button class="ax-btn ax-btn-primary">Primary</button>
-        <button class="ax-btn ax-btn-secondary">Secondary</button>
-        <button class="ax-btn ax-btn-outline">Outline</button>
-        <button class="ax-btn ax-btn-outline-brand">Outline brand</button>
-        <button class="ax-btn ax-btn-ghost">Ghost</button>
-        <button class="ax-btn ax-btn-link">Link</button>
-        <button class="ax-btn ax-btn-danger">Danger</button>
-        <button class="ax-btn ax-btn-success">Success</button>
-        <button class="ax-btn ax-btn-primary" disabled>Disabled</button>
-      </div>
-      <div class="ax-flex ax-gap-3 ax-flex-wrap ax-mt-4">
-        <button class="ax-btn ax-btn-primary ax-btn-sm">Small</button>
-        <button class="ax-btn ax-btn-primary">Default</button>
-        <button class="ax-btn ax-btn-primary ax-btn-lg">Large</button>
-        <button class="ax-btn ax-btn-outline ax-btn-icon" aria-label="Search">
-          <span class="material-symbols-outlined">search</span>
-        </button>
+      <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-3 ax-gap-5">
+
+        <div>
+          <h3 class="ax-h5 ax-mb-3">Dropdown menu</h3>
+          <button class="ax-btn ax-btn-outline" [axDropdown]="accountMenu">
+            <span class="material-symbols-outlined">account_circle</span>
+            Account
+            <span class="material-symbols-outlined">expand_more</span>
+          </button>
+          <ng-template #accountMenu>
+            <a routerLink="/profile" class="ax-dropdown-item" axDropdownItem (click)="menuAction('Profile')">
+              <span class="material-symbols-outlined" aria-hidden="true">person</span>
+              Profile
+            </a>
+            <a routerLink="/security" class="ax-dropdown-item" axDropdownItem (click)="menuAction('Security')">
+              <span class="material-symbols-outlined" aria-hidden="true">shield</span>
+              Security
+            </a>
+            <div class="ax-dropdown-divider"></div>
+            <button class="ax-dropdown-item ax-dropdown-item-danger" axDropdownItem (click)="menuAction('Sign out')">
+              <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+              Sign out
+            </button>
+          </ng-template>
+        </div>
+
+        <div>
+          <h3 class="ax-h5 ax-mb-3">Tooltip (hover)</h3>
+          <div class="ax-flex ax-gap-2 ax-flex-wrap">
+            <button class="ax-btn ax-btn-outline ax-btn-icon"
+                    [axTooltip]="'Refresh data'" aria-label="Refresh">
+              <span class="material-symbols-outlined">refresh</span>
+            </button>
+            <button class="ax-btn ax-btn-outline ax-btn-icon"
+                    [axTooltip]="'Export as CSV'" aria-label="Export">
+              <span class="material-symbols-outlined">download</span>
+            </button>
+            <button class="ax-btn ax-btn-outline"
+                    [axTooltip]="'Tooltip content can be longer — it wraps cleanly at 14rem.'"
+                    axTooltipPosition="right">
+              Hover me (right)
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="ax-h5 ax-mb-3">Popover (click)</h3>
+          <button class="ax-btn ax-btn-outline-brand" [axPopover]="helpTpl">
+            <span class="material-symbols-outlined">help</span>
+            How does this work?
+          </button>
+          <ng-template #helpTpl>
+            <div class="ax-popover-header">Quick tip</div>
+            <div class="ax-popover-body">
+              Popovers hold richer content than tooltips — titles, links,
+              even small forms. Dismissed on outside click or Escape.
+            </div>
+            <div class="ax-popover-footer">
+              <button class="ax-btn ax-btn-link ax-btn-sm">Learn more</button>
+            </div>
+          </ng-template>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ========== FORM SUMMARY ========== -->
+  <!-- ========== TABS ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Tabs</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <app-ax-tabs [(selectedIndex)]="tabIndex" ariaLabel="Store settings">
+        <app-ax-tab label="General" icon="settings">
+          <div class="ax-py-2">
+            <h3 class="ax-h5 ax-mb-2">General settings</h3>
+            <p class="ax-text-sm ax-text-secondary">
+              Tab content is lazy — it only renders when its tab is active.
+              Arrow keys navigate between tabs, Home/End jump to first/last.
+            </p>
+          </div>
+        </app-ax-tab>
+        <app-ax-tab label="Orders" icon="receipt_long" [badge]="12">
+          <div class="ax-py-2">
+            <h3 class="ax-h5 ax-mb-2">Orders</h3>
+            <p class="ax-text-sm ax-text-secondary">
+              Badge on the tab shows pending count. Current count: 12.
+            </p>
+          </div>
+        </app-ax-tab>
+        <app-ax-tab label="Shipping" icon="local_shipping">
+          <div class="ax-py-2">
+            <h3 class="ax-h5 ax-mb-2">Shipping</h3>
+            <p class="ax-text-sm ax-text-secondary">Configure zones, carriers and rates here.</p>
+          </div>
+        </app-ax-tab>
+        <app-ax-tab label="Disabled" icon="block" [disabled]="true">
+          <div class="ax-py-2">You shouldn't be able to reach this.</div>
+        </app-ax-tab>
+      </app-ax-tabs>
+    </div>
+  </section>
+
+  <!-- ========== ACCORDION ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Accordion</h2>
+    </div>
+    <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-5">
+      <div>
+        <h3 class="ax-h5 ax-mb-3">Single-open (default)</h3>
+        <app-ax-accordion [defaultOpenIndex]="0">
+          <app-ax-accordion-item title="Shipping &amp; delivery" icon="local_shipping">
+            <p class="ax-m-0">We ship UAE-wide with same-day options in Dubai and Abu Dhabi. Most orders arrive within 2 business days.</p>
+          </app-ax-accordion-item>
+          <app-ax-accordion-item title="Returns" icon="assignment_return" [badge]="3">
+            <p class="ax-m-0">30-day free returns on unworn items with tags intact. Initiate a return from your orders page.</p>
+          </app-ax-accordion-item>
+          <app-ax-accordion-item title="Billing" icon="credit_card">
+            <p class="ax-m-0">We accept all major cards plus Apple Pay and bank transfer. Invoices are emailed instantly.</p>
+          </app-ax-accordion-item>
+        </app-ax-accordion>
+      </div>
+      <div>
+        <h3 class="ax-h5 ax-mb-3">Multi-open</h3>
+        <app-ax-accordion [multi]="true" [defaultOpenIndex]="[0, 2]">
+          <app-ax-accordion-item title="Question one">
+            <p class="ax-m-0">Both of these can be open at the same time.</p>
+          </app-ax-accordion-item>
+          <app-ax-accordion-item title="Question two">
+            <p class="ax-m-0">Click any header to toggle independently.</p>
+          </app-ax-accordion-item>
+          <app-ax-accordion-item title="Question three">
+            <p class="ax-m-0">Open by default thanks to [defaultOpenIndex]="[0, 2]".</p>
+          </app-ax-accordion-item>
+        </app-ax-accordion>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== COLLAPSE (inline) ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Inline collapse</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <p class="ax-text-sm ax-text-secondary ax-mb-3">
+        Lightweight alternative to accordion when you just want a show/hide toggle on one region.
+      </p>
+      <button class="ax-btn ax-btn-outline" (click)="collapseOpen = !collapseOpen">
+        <span class="material-symbols-outlined">{{ collapseOpen ? 'expand_less' : 'expand_more' }}</span>
+        {{ collapseOpen ? 'Hide details' : 'Show details' }}
+      </button>
+      <div [axCollapse]="collapseOpen" class="ax-mt-3">
+        <div class="ax-card ax-card-brand ax-p-4">
+          <p class="ax-m-0 ax-text-sm">
+            This region expands and collapses with a smooth height animation.
+            Useful for advanced filters, additional settings, or inline details on a list row.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TOASTS ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Toasts</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <p class="ax-text-sm ax-text-secondary ax-mb-4">
+        Hot-toast themed to match our palette. Already injected by <code>provideHotToastConfig()</code>.
+      </p>
+      <div class="ax-flex ax-gap-2 ax-flex-wrap">
+        <button class="ax-btn ax-btn-success" (click)="showToast('success')">Show success</button>
+        <button class="ax-btn ax-btn-danger" (click)="showToast('error')">Show error</button>
+        <button class="ax-btn ax-btn-outline" (click)="showToast('info')">Show info</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FORM STATE (live) ========== -->
   <section class="ax-page-section">
     <div class="ax-card ax-card-brand ax-p-6">
-      <h3 class="ax-h4 ax-mb-3">Form state (live)</h3>
+      <h3 class="ax-h5 ax-mb-3">Live form state</h3>
       <pre class="ax-text-xs ax-font-mono ax-bg-surface ax-p-4 ax-rounded-md ax-overflow-x-auto ax-m-0">{{ {
   categoryIds: categoryIds,
   countryId: countryId,
@@ -257,8 +351,9 @@
   dateRange: dateRange,
   shipping: shipping,
   notifications: notifications,
-  marketing: marketing,
-  quantity: quantity
+  quantity: quantity,
+  tabIndex: tabIndex,
+  collapseOpen: collapseOpen
 } | json }}</pre>
     </div>
   </section>
