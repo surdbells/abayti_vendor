@@ -1,196 +1,196 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CrudService} from '../../services/crud.service';
-import {Location, NgForOf, NgIf} from '@angular/common';
-import {HotToastService} from '@ngneat/hot-toast';
-import {GlobalComponent} from '../../global-component';
-import {TUI_CONFIRM} from '@taiga-ui/kit';
-import {AngularEditorConfig, AngularEditorModule} from '@kolkov/angular-editor';
-import {FormsModule} from '@angular/forms';
-import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
-import {SideComponent} from '../../partials/side/side.component';
-import {TuiIcon, TuiLoader} from '@taiga-ui/core';
-import {AdminTopComponent} from '../../partials/admin-top/admin-top.component';
-import {Category} from '../../class/category';
-import {Labels} from '../../class/labels';
+import { Component, inject, OnInit } from '@angular/core';
+import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CrudService } from '../../services/crud.service';
+import { CommonModule, Location } from '@angular/common';
+import { HotToastService } from '@ngneat/hot-toast';
+import { GlobalComponent } from '../../global-component';
+import { TUI_CONFIRM } from '@taiga-ui/kit';
+import { FormsModule } from '@angular/forms';
+
+import { AsideComponent } from '../../partials/aside/aside.component';
+import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
+import { Category } from '../../class/category';
+import { Labels } from '../../class/labels';
+
+// Ax design-system components
+import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
+import {
+  AxMultiselectComponent,
+  AxMultiselectOption,
+} from '../../shared/forms/ax-multiselect.component';
+import {
+  AxAccordionComponent,
+  AxAccordionItemComponent,
+} from '../../shared/overlays';
+
 interface ColorOption {
   id: string;
   text: string;
   hex: string;
 }
-type EncodedFile = {
-  file: File;
-  name: string;
-  type: string;
-  size: number;
-  dataUrl: string;
-  base64: string;
-};
+
 @Component({
   selector: 'app-admin-view-product',
   standalone: true,
   imports: [
-    AngularEditorModule,
+    CommonModule,
     FormsModule,
-    NgForOf,
-    NgIf,
-    NgMultiSelectDropDownModule,
-    SideComponent,
-    TuiIcon,
-    TuiLoader,
-    AdminTopComponent
+    AsideComponent,
+    AdminTopComponent,
+    AxRichEditorComponent,
+    AxMultiselectComponent,
+    AxAccordionComponent,
+    AxAccordionItemComponent,
   ],
   templateUrl: './admin-view-product.component.html',
-  styleUrl: './admin-view-product.component.css'
+  styleUrl: './admin-view-product.component.css',
 })
-export class AdminViewProductComponent implements OnInit{
+export class AdminViewProductComponent implements OnInit {
   category?: Category[];
   labels?: Labels[];
+
+  /** Server list of collections. */
   dropdownList: { id: number; collection: string }[] = [];
-  selectedItems: { id: number; collection: string }[] = [];
-  dropdownSettings = {};
+  /** Ids selected by the AxMultiselect. */
+  selectedCollectionIds: (string | number)[] = [];
+
+  get collectionOptions(): AxMultiselectOption[] {
+    return this.dropdownList.map(c => ({ id: c.id, label: c.collection }));
+  }
+
+  get selectedItemsForPayload(): { id: number; collection: string }[] {
+    const ids = new Set(this.selectedCollectionIds.map(String));
+    return this.dropdownList.filter(c => ids.has(String(c.id)));
+  }
+
   private readonly dialogs = inject(TuiResponsiveDialogService);
   colorOptions: ColorOption[] = [];
+  base64String: any;
 
-  base64String : any;
-  files: File[] = [];
-  encoded: EncodedFile[] = [];
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private crudService: CrudService,
-    private location: Location,
-
-    private toast: HotToastService,
-  ) {}
   ui_controls = {
     is_loading: false,
     is_creating_label: false,
-    page_loading: false
+    page_loading: false,
+    nav_open: false,
   };
-  session_data: any = ""
-  image_url: any = "https://api.3bayti.ae/vendors/products/"
+
+  session_data: any = '';
+  image_url: any = 'https://api.3bayti.ae/vendors/products/';
   user_session = {
-    id: 0,
-    token: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    is_2fa: false,
-    is_active: false,
-    is_admin: false,
-    is_vendor: false,
-    is_customer: false
+    id: 0, token: '', first_name: '', last_name: '',
+    email: '', phone: '',
+    is_2fa: false, is_active: false, is_admin: false,
+    is_vendor: false, is_customer: false,
   };
-  update = {
+
+  update: any = {
     id: 0,
-    token: "",
+    token: '',
     product: 0,
     store: 0,
     category: 0,
-    name: "",
-    description: "",
-    image_1: "assets/img/placeholder-1.png",
+    name: '',
+    description: '',
+    image_1: 'assets/img/placeholder-1.png',
     images: [] as string[],
     collection: {},
     quantity: 0,
     allow_checkout_when_out_of_stock: false,
     with_storehouse_management: false,
-    stock_status: "in_stock",
+    stock_status: 'in_stock',
     price: 0,
     minimum_order_quantity: 1,
     maximum_order_quantity: 1,
     cost_per_item: 0,
-    delivery_time: "",
-    custom_delivery_time: "",
-    size_xs: false,
-    size_s: false,
-    size_m: false,
-    size_l: false,
-    size_xl: false,
-    size_xxl: false,
-    size_50: false,
-    size_52: false,
-    size_54: false,
-    size_56: false,
-    size_58: false,
-    size_60: false,
-    size_62: false,
+    delivery_time: '',
+    custom_delivery_time: '',
+    size_xs: false, size_s: false, size_m: false, size_l: false,
+    size_xl: false, size_xxl: false,
+    size_50: false, size_52: false, size_54: false, size_56: false,
+    size_58: false, size_60: false, size_62: false,
     require_extra_msmt: false,
-    extra_msmt: "",
+    extra_msmt: '',
     size_custom: false,
-    is_hot: false,
-    is_new: false,
-    is_sale: false,
-    is_featured: false,
-    delivery_note: "",
-    colors: "",
-    label: 0
+    is_hot: false, is_new: false, is_sale: false, is_featured: false,
+    delivery_note: '',
+    colors: '',
+    label: 0,
   };
-  vendor_labels = {
-    id: 0,
-    token: ""
-  };
-  vendor_label_create = {
-    id: 0,
-    token: "",
-    label: ""
-  };
-  single_product = {
-    id: 0,
-    product: 0,
-    token: ""
-  }
+
+  vendor_labels = { id: 0, token: '' };
+  vendor_label_create = { id: 0, token: '', label: '' };
+  single_product = { id: 0, product: 0, token: '' };
+
   selected = new Set<string>();
   trackById = (_: number, item: ColorOption) => item.id;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private crudService: CrudService,
+    private location: Location,
+    private toast: HotToastService,
+  ) {}
 
   toggle(id: string, checked: boolean) {
     checked ? this.selected.add(id) : this.selected.delete(id);
   }
-  isSelected(id: string) {
+
+  isSelected(id: string): boolean {
     return this.selected.has(id);
   }
-  // Show chips for selected colors
+
   get selectedColors(): ColorOption[] {
     return this.colorOptions.filter(c => this.selected.has(c.id));
   }
-  // Add a subtle border for very light swatches
+
   needsBorder(hex: string): boolean {
+    if (hex.startsWith('linear')) return false;
     const rgb = this.hexToRgb(hex);
     const brightness = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-    return brightness > 220; // white-ish tones
+    return brightness > 220;
   }
+
   private hexToRgb(hex: string) {
     const n = hex.replace('#', '');
     const bigint = parseInt(n.length === 3 ? n.split('').map(c => c + c).join('') : n, 16);
     return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
   }
-  // If you need the ids as an array for submit:
-  getSelectedIds(): string[] {
-    return Array.from(this.selected);
-  }
+
   getSelectedIdsCsv(delimiter = ','): string {
     return [...this.selected].map(String).join(delimiter);
   }
+
+  getImageUrl(src: string): string {
+    if (!src) return 'assets/img/placeholder-1.png';
+    return src.length > 100 ? src : this.image_url + src;
+  }
+
   ngOnInit(): void {
-    this.session_data = sessionStorage.getItem("SESSION");
+    this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
+
+    const productId = Number(this.route.snapshot.queryParamMap.get('id'));
+
     this.update.id = this.user_session.id;
     this.update.token = this.user_session.token;
-    this.update.product =  Number(this.route.snapshot.queryParamMap.get('id'));
+    this.update.product = productId;
+
     this.single_product.id = this.user_session.id;
     this.single_product.token = this.user_session.token;
-    this.single_product.product =  Number(this.route.snapshot.queryParamMap.get('id'));
+    this.single_product.product = productId;
+
     this.vendor_labels.id = this.user_session.id;
     this.vendor_labels.token = this.user_session.token;
     this.vendor_label_create.id = this.user_session.id;
     this.vendor_label_create.token = this.user_session.token;
+
     this.get_product_by_id();
     this.get_category();
     this.get_collections();
     this.get_vendor_labels();
+
     this.colorOptions = [
       { id: 'black', text: 'Black', hex: '#000000' },
       { id: 'white', text: 'White', hex: '#FFFFFF' },
@@ -234,202 +234,135 @@ export class AdminViewProductComponent implements OnInit{
       { id: 'bronze', text: 'Bronze', hex: '#CD7F32' },
       { id: 'champagne', text: 'Champagne', hex: '#F7E7CE' },
       { id: 'ivory', text: 'Ivory', hex: '#FFFFF0' },
-      { id: 'multicolor', text: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)' }
+      { id: 'multicolor', text: 'Multicolor', hex: 'linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet)' },
     ];
-    this.dropdownList = [];
-    this.selectedItems = [];
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'id',
-      textField: 'collection',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
   }
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
-  }
+
   goBack() {
     this.location.back();
   }
+
   error_notification(message: string) {
     this.toast.error(message);
   }
+
   success_notification(message: string) {
     this.toast.success(message);
   }
+
   updateProduct() {
     this.update.colors = this.getSelectedIdsCsv();
-    this.update.collection = this.selectedItems;
+    this.update.collection = this.selectedItemsForPayload;
     this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.update, GlobalComponent.updateProduct)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.ui_controls.is_loading = false;
-            this.success_notification(response.message);
-          }
-          if (response.response_code == 200 && response.status === "failed") {
-            this.ui_controls.is_loading = false;
-            this.error_notification(response.message);
-          }
-          if (response.response_code == 400 && response.status === "failed") {
-            this.ui_controls.is_loading = false;
-            this.error_notification(response.message);
-          }
-        },
-        error: (e) => {
-          console.error(e);
-          this.error_notification(e);
-          this.error_notification("Unable to complete your request at this time.");
-          this.ui_controls.is_loading = false;
-        },
-        complete: () => {
-          console.info('complete');
+    this.crudService.post_request(this.update, GlobalComponent.updateProduct).subscribe({
+      next: (response: any) => {
+        this.ui_controls.is_loading = false;
+        if (response.response_code === 200 && response.status === 'success') {
+          this.success_notification(response.message);
+        } else if ((response.response_code === 200 || response.response_code === 400) && response.status === 'failed') {
+          this.error_notification(response.message);
         }
-      }))
+      },
+      error: (e: any) => {
+        console.error(e);
+        this.error_notification('Unable to complete your request at this time.');
+        this.ui_controls.is_loading = false;
+      },
+    });
   }
+
   create_vendor_labels() {
     if (this.vendor_label_create.label.length === 0) {
-      this.error_notification("Label name is required");
+      this.error_notification('Label name is required');
       return;
     }
     this.ui_controls.is_creating_label = true;
-    this.crudService.post_request(this.vendor_label_create, GlobalComponent.createLabel)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.vendor_label_create.label = "";
-            this.ui_controls.is_creating_label = false;
-            this.success_notification(response.message);
-            this.get_vendor_labels();
-          }
-          if (response.response_code == 200 && response.status === "failed") {
-            this.ui_controls.is_creating_label = false;
-            this.error_notification(response.message);
-          }
-          if (response.response_code == 400 && response.status === "failed") {
-            this.ui_controls.is_creating_label = false;
-            this.error_notification(response.message);
-          }
-        },
-        error: (e) => {
-          console.error(e);
-          this.error_notification(e);
-          this.ui_controls.is_loading = false;
-        },
-        complete: () => {
-          console.info('complete');
+    this.crudService.post_request(this.vendor_label_create, GlobalComponent.createLabel).subscribe({
+      next: (response: any) => {
+        this.ui_controls.is_creating_label = false;
+        if (response.response_code === 200 && response.status === 'success') {
+          this.vendor_label_create.label = '';
+          this.success_notification(response.message);
+          this.get_vendor_labels();
+        } else if ((response.response_code === 200 || response.response_code === 400) && response.status === 'failed') {
+          this.error_notification(response.message);
         }
-      }))
+      },
+      error: (e: any) => {
+        console.error(e);
+        this.ui_controls.is_creating_label = false;
+        this.error_notification('Unable to complete your request at this time.');
+      },
+    });
   }
+
   select_image_1(event: any) {
     const file = event.target.files[0];
+    if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
       this.base64String = reader.result as string;
-      this.update.image_1 =  this.base64String;
+      this.update.image_1 = this.base64String;
     };
-    if(file){ reader.readAsDataURL(file); }
+    reader.readAsDataURL(file);
   }
+
   get_category() {
     this.ui_controls.page_loading = true;
-    this.crudService.get_request(GlobalComponent.UtilityCategory)
-      .subscribe(({ next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.category =  response.data;
-            this.get_vendor_labels();
-          }
+    this.crudService.get_request(GlobalComponent.UtilityCategory).subscribe({
+      next: (response: any) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.category = response.data;
+          this.get_vendor_labels();
         }
-      }))
+      },
+    });
   }
+
   get_vendor_labels() {
-    this.crudService.post_request(this.vendor_labels, GlobalComponent.readLabel)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.labels =  response.data;
-          }
+    this.crudService.post_request(this.vendor_labels, GlobalComponent.readLabel).subscribe({
+      next: (response: any) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.labels = response.data;
         }
-      }))
+      },
+    });
   }
+
   get_collections() {
     this.ui_controls.page_loading = true;
-    this.crudService.get_request(GlobalComponent.UtilityCollections)
-      .subscribe(({ next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.dropdownList =  response.data;
-            this.ui_controls.page_loading = false;
-          }
+    this.crudService.get_request(GlobalComponent.UtilityCollections).subscribe({
+      next: (response: any) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.dropdownList = response.data;
+          this.ui_controls.page_loading = false;
         }
-      }))
+      },
+    });
   }
-  get_product_by_id() {
-    this.crudService.post_request(this.single_product, GlobalComponent.getProductById)
-      .subscribe(({
-        next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.update =  response.data;
-            this.selectedItems =  response.data.collection;
-            for (const item of this.update.colors.split(',').map(s => s.trim()).filter(Boolean)) {
-              this.selected.add(item);
-            }
-            console.log(this.update);
-            this.ui_controls.page_loading = false;
-          }
-        }
-      }))
-  }
-  editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: true,
-    height: '250px',
-    minHeight: '250px',
-    maxHeight: 'auto',
-    width: 'auto',
-    minWidth: '0',
-    translate: 'yes',
-    enableToolbar: true,
-    showToolbar: true,
-    placeholder: 'Detailed description, Include: Fabric type, care instructions, style details, delivery time, etc.',
-    defaultParagraphSeparator: '',
-    defaultFontName: '',
-    defaultFontSize: '',
-    fonts: [
-      {class: 'arial', name: 'Arial'},
-      {class: 'times-new-roman', name: 'Times New Roman'},
-      {class: 'calibri', name: 'Calibri'},
-      {class: 'comic-sans-ms', name: 'Comic Sans MS'}
-    ],
-    customClasses: [
-      {
-        name: 'quote',
-        class: 'quote',
-      },
-      {
-        name: 'redText',
-        class: 'redText'
-      },
-      {
-        name: 'titleText',
-        class: 'titleText',
-        tag: 'h1',
-      },
-    ],
-    sanitize: true,
-    toolbarPosition: 'top',
-    toolbarHiddenButtons: [
-      ['bold', 'italic'],
-      ['fontSize'],
-      ['insertImage','insertVideo']
 
-    ]
-  };
+  get_product_by_id() {
+    this.crudService.post_request(this.single_product, GlobalComponent.getProductById).subscribe({
+      next: (response: any) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.update = response.data;
+
+          // Seed multiselect from server shape [{id, collection}]
+          const serverCollection = response.data.collection ?? [];
+          this.selectedCollectionIds = Array.isArray(serverCollection)
+            ? serverCollection.map((c: any) => c.id)
+            : [];
+
+          // Restore colours CSV into Set
+          for (const item of (this.update.colors || '').split(',').map((s: string) => s.trim()).filter(Boolean)) {
+            this.selected.add(item);
+          }
+          this.ui_controls.page_loading = false;
+        }
+      },
+    });
+  }
+
   start_update() {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -441,9 +374,7 @@ export class AdminViewProductComponent implements OnInit{
         },
       })
       .subscribe((response) => {
-        if (response){
-          this.updateProduct();
-        }
+        if (response) this.updateProduct();
       });
   }
 }

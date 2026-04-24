@@ -1,45 +1,80 @@
-<app-admin-top></app-admin-top>
-<main class="main">
-  <div class="container-fluid">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
+<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
+
+<div class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+
+  <main class="ax-main">
+    <div class="ax-container">
+      <!-- Page header -->
+      <header class="ax-page-header">
+        <div class="ax-page-header-content">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+            style="align-self: flex-start;">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to collections
+          </button>
+          <span class="ax-page-header-eyebrow">Catalog</span>
+          <h1 class="ax-page-title">Edit collection</h1>
+          <p *ngIf="update.name" class="ax-page-subtitle">{{ update.name }}</p>
         </div>
+      </header>
+
+      <!-- Loading -->
+      <div *ngIf="ui_controls.is_loading && !update.name" class="ax-flex ax-justify-center ax-py-8">
+        <span class="ax-spinner ax-spinner-lg" aria-label="Loading collection"></span>
       </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">{{update.name}}</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <a routerLink="/create-product" class="btn btn-sm btn-outline-secondary abayti_secondary_background text-white d-block">
-          <span class="material-symbols-outlined text-white me-1"> add </span> New
-        </a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 offset-3">
-        <div  class="card card mt-2 mt-2">
-          <div class="card-body">
-            <div *ngIf="!ui_controls.is_loading" class="mb-2">
-              <div class="form-label">Name</div>
-              <input [(ngModel)]="update.name" type="text" class="form-control" name="">
-            </div>
-            <div *ngIf="!ui_controls.is_loading" class="mb-2">
-              <label class="form-check">
-                <input [checked]="update.is_active" (change)="update.is_active = !update.is_active" type="checkbox" id="size_xs" name="size_xs" class="form-check-input">
-                <span class="form-check-label"> Status </span>
-              </label>
-            </div>
-            <div class="mb-2">
-              <button  *ngIf="!ui_controls.is_loading" (click)="updateCollection()" type="button" class="btn btn-secondary text-white" name="submit">Submit</button>
-              <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-            </div>
+
+      <!-- Form -->
+      <section *ngIf="!ui_controls.is_loading || update.name" class="ax-page-section" style="max-width: 32rem;">
+        <div class="ax-card ax-p-5">
+          <div class="ax-form-field ax-mb-4">
+            <label class="ax-label ax-label-required" for="collection_name">Collection name</label>
+            <input
+              id="collection_name"
+              name="name"
+              type="text"
+              class="ax-input"
+              [(ngModel)]="update.name"
+              placeholder="Collection name" />
+          </div>
+
+          <div class="ax-form-field ax-mb-4">
+            <label class="ax-label">Status</label>
+            <label class="ax-switch">
+              <input
+                type="checkbox"
+                [checked]="update.is_active"
+                (change)="update.is_active = !update.is_active"
+                name="is_active" />
+              <span class="ax-switch-track"></span>
+              <span class="ax-switch-label">
+                {{ update.is_active ? 'Active — visible to vendors' : 'Inactive — hidden from vendors' }}
+              </span>
+            </label>
+          </div>
+
+          <div class="ax-flex ax-gap-2 ax-justify-end">
+            <button
+              type="button"
+              class="ax-btn ax-btn-outline"
+              (click)="goBack()">
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary"
+              (click)="updateCollection()"
+              [disabled]="ui_controls.is_loading">
+              <span *ngIf="ui_controls.is_loading" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span *ngIf="!ui_controls.is_loading" class="material-symbols-outlined" aria-hidden="true">save</span>
+              Save changes
+            </button>
           </div>
         </div>
-      </div>
+      </section>
     </div>
-  </div>
-</main>
+  </main>
+</div>
