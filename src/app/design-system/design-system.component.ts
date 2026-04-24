@@ -35,6 +35,16 @@ import {
   AxSkeletonComponent,
   AxEmptyStateComponent,
 } from '../shared/data';
+import {
+  AxFileUploadComponent,
+  AxUploadFile,
+  AxRichEditorComponent,
+  AxRatingComponent,
+  AxNumberStepperComponent,
+  AxCopyToClipboardDirective,
+  AxActivityFeedComponent,
+  AxActivityItem,
+} from '../shared/rich';
 
 /**
  * Design-system demo — exercises every Phase 2 form control AND every
@@ -67,6 +77,12 @@ import {
     AxProgressComponent,
     AxSkeletonComponent,
     AxEmptyStateComponent,
+    AxFileUploadComponent,
+    AxRichEditorComponent,
+    AxRatingComponent,
+    AxNumberStepperComponent,
+    AxCopyToClipboardDirective,
+    AxActivityFeedComponent,
   ],
   templateUrl: './design-system.component.html',
 })
@@ -224,5 +240,53 @@ export class DesignSystemComponent {
 
   onSelectionChange(selection: any[]): void {
     this.tableSelection = selection;
+  }
+
+  // ---------- Phase 5: rich inputs & data viz state ----------
+  uploadedFiles: AxUploadFile[] = [];
+  editorContent = '<p>Welcome to the editor! Try <strong>bold</strong>, <em>italic</em>, and <u>underline</u> formatting.</p>';
+  ratingValue = 4.5;
+  readOnlyRating = 4.2;
+  stepperQty = 3;
+  copyableRef = 'ABY-240098';
+
+  readonly orderActivity: AxActivityItem[] = [
+    {
+      icon: 'shopping_bag',
+      variant: 'brand',
+      title: 'Order placed',
+      meta: '22 Apr 2026 · 10:34 AM',
+      body: '<p>Customer placed order <strong>ABY-240098</strong> for 3 items totalling AED 2,450.</p>',
+    },
+    {
+      icon: 'payments',
+      variant: 'success',
+      title: 'Payment received',
+      meta: '22 Apr 2026 · 10:35 AM',
+      body: '<p>Payment of <strong>AED 2,450</strong> confirmed via Apple Pay.</p>',
+    },
+    {
+      icon: 'inventory_2',
+      variant: 'info',
+      title: 'Preparing for dispatch',
+      meta: '22 Apr 2026 · 2:15 PM',
+    },
+    {
+      icon: 'local_shipping',
+      variant: 'info',
+      title: 'Handed to courier',
+      meta: '23 Apr 2026 · 9:00 AM',
+      body: '<p>Tracking number: <code>DHL-484-3821-992</code></p>',
+    },
+    {
+      icon: 'check_circle',
+      variant: 'success',
+      title: 'Delivered',
+      meta: '23 Apr 2026 · 4:22 PM',
+    },
+  ];
+
+  onFilesChange(files: AxUploadFile[]): void {
+    this.toast.success(`${files.length} file(s) staged`);
   }
 }

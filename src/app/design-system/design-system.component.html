@@ -495,6 +495,104 @@
     </div>
   </section>
 
+  <!-- ========== PHASE 5: FILE UPLOAD ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">File upload</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <app-ax-file-upload
+        [accept]="'image/*,application/pdf,.doc,.docx,.xls,.xlsx'"
+        [multiple]="true"
+        [maxFiles]="8"
+        [maxSizeMb]="5"
+        hint="Images, PDFs, and Office docs up to 5 MB each"
+        [(ngModel)]="uploadedFiles"
+        (filesChange)="onFilesChange($event)">
+      </app-ax-file-upload>
+    </div>
+  </section>
+
+  <!-- ========== PHASE 5: RICH EDITOR ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Rich text editor</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <label class="ax-label">Product description</label>
+      <app-ax-rich-editor
+        [(ngModel)]="editorContent"
+        placeholder="Describe your product in detail...">
+      </app-ax-rich-editor>
+      <details class="ax-mt-3">
+        <summary class="ax-text-xs ax-text-tertiary ax-cursor-pointer">View raw HTML</summary>
+        <pre class="ax-text-xs ax-font-mono ax-bg-canvas ax-p-3 ax-mt-2 ax-rounded-sm ax-overflow-x-auto">{{ editorContent }}</pre>
+      </details>
+    </div>
+  </section>
+
+  <!-- ========== PHASE 5: RATING / STEPPER / COPY ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Rating, stepper &amp; copy-to-clipboard</h2>
+    </div>
+    <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-3 ax-gap-5">
+
+      <div class="ax-card ax-p-5">
+        <h3 class="ax-h5 ax-mb-3">Rating</h3>
+        <div class="ax-mb-3">
+          <span class="ax-text-xs ax-text-tertiary ax-block ax-mb-1">Interactive (half-stars)</span>
+          <app-ax-rating [(ngModel)]="ratingValue" size="lg" [showValue]="true"></app-ax-rating>
+        </div>
+        <div class="ax-mb-3">
+          <span class="ax-text-xs ax-text-tertiary ax-block ax-mb-1">Read-only</span>
+          <app-ax-rating [value]="readOnlyRating" [readonly]="true" [showValue]="true"></app-ax-rating>
+        </div>
+        <div>
+          <span class="ax-text-xs ax-text-tertiary ax-block ax-mb-1">Small, read-only</span>
+          <app-ax-rating [value]="4" [readonly]="true" size="sm"></app-ax-rating>
+        </div>
+      </div>
+
+      <div class="ax-card ax-p-5">
+        <h3 class="ax-h5 ax-mb-3">Number stepper</h3>
+        <p class="ax-text-sm ax-text-secondary ax-mb-3">
+          Min 1, max 99. Step 1. Bounded even when typed directly.
+        </p>
+        <app-ax-number-stepper [(ngModel)]="stepperQty" [min]="1" [max]="99" ariaLabel="Quantity">
+        </app-ax-number-stepper>
+        <p class="ax-text-xs ax-text-tertiary ax-mt-3">Current value: {{ stepperQty }}</p>
+      </div>
+
+      <div class="ax-card ax-p-5">
+        <h3 class="ax-h5 ax-mb-3">Copy to clipboard</h3>
+        <p class="ax-text-sm ax-text-secondary ax-mb-3">
+          Click the button to copy the order reference. Toast confirms.
+        </p>
+        <div class="ax-flex ax-items-center ax-gap-3">
+          <code class="ax-text-sm ax-font-mono">{{ copyableRef }}</code>
+          <button class="ax-btn ax-btn-outline ax-btn-sm"
+                  [axCopyToClipboard]="copyableRef"
+                  axCopyLabel="Order reference">
+            <span class="material-symbols-outlined">content_copy</span>
+            Copy
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== PHASE 5: ACTIVITY FEED ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Activity feed</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <app-ax-activity-feed [items]="orderActivity"></app-ax-activity-feed>
+    </div>
+  </section>
+
   <!-- ========== FORM STATE (live) ========== -->
   <section class="ax-page-section">
     <div class="ax-card ax-card-brand ax-p-6">
