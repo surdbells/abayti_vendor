@@ -340,6 +340,161 @@
     </div>
   </section>
 
+  <!-- ========== PHASE 4: BREADCRUMB ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Breadcrumb</h2>
+    </div>
+    <div class="ax-card ax-p-6">
+      <app-ax-breadcrumb [items]="breadcrumbTrail"></app-ax-breadcrumb>
+      <p class="ax-text-xs ax-text-tertiary ax-mt-3">
+        Last item is marked <code>aria-current="page"</code> and not linked.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== PHASE 4: TABLE + PAGINATION ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Data table</h2>
+    </div>
+    <div class="ax-card" style="padding: 0;">
+      <div class="ax-flex ax-items-center ax-justify-between ax-px-5 ax-py-4 ax-border-b ax-border-subtle">
+        <div>
+          <h3 class="ax-h5 ax-m-0">Recent orders</h3>
+          <p class="ax-text-xs ax-text-tertiary ax-m-0 ax-mt-1">
+            Click any column header to sort. Select rows via checkboxes.
+          </p>
+        </div>
+        <div class="ax-flex ax-gap-2">
+          <button class="ax-btn ax-btn-outline ax-btn-sm"
+                  [disabled]="!tableSelection.length"
+                  (click)="menuAction(tableSelection.length + ' selected')">
+            <span class="material-symbols-outlined">check</span>
+            {{ tableSelection.length }} selected
+          </button>
+          <button class="ax-btn ax-btn-outline ax-btn-sm" (click)="ordersTable.exportCsv('orders.csv')">
+            <span class="material-symbols-outlined">download</span>
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <app-ax-table
+        #ordersTable
+        [data]="sampleOrders"
+        [selectable]="true"
+        [(selection)]="tableSelection"
+        (selectionChange)="onSelectionChange($event)"
+        (rowClick)="onRowClick($event)"
+        [interactive]="true"
+        [pageSize]="tablePageSize"
+        [pageIndex]="tablePageIndex"
+        trackBy="id"
+        emptyTitle="No orders yet"
+        emptyDescription="New orders will appear here when customers check out."
+      >
+        <app-ax-column key="ref" label="Order #" sortable>
+          <ng-template axCell let-row>
+            <span class="ax-font-medium ax-text-primary">{{ row.ref }}</span>
+          </ng-template>
+        </app-ax-column>
+
+        <app-ax-column key="customer" label="Customer" sortable>
+          <ng-template axCell let-row>
+            <div class="ax-flex ax-items-center ax-gap-2">
+              <span class="ax-avatar ax-avatar-xs">
+                {{ row.customer.charAt(0) }}
+              </span>
+              <span>{{ row.customer }}</span>
+            </div>
+          </ng-template>
+        </app-ax-column>
+
+        <app-ax-column key="date" label="Date" sortable>
+          <ng-template axCell let-row>
+            <span class="ax-text-secondary">{{ row.date }}</span>
+          </ng-template>
+        </app-ax-column>
+
+        <app-ax-column key="total" label="Total" sortable align="right">
+          <ng-template axCell let-row>
+            <span class="ax-font-semibold ax-numeric">AED {{ row.total | number }}</span>
+          </ng-template>
+        </app-ax-column>
+
+        <app-ax-column key="status" label="Status" sortable>
+          <ng-template axCell let-row>
+            <span class="ax-badge" [ngClass]="statusBadgeClass(row.status)">
+              {{ row.status }}
+            </span>
+          </ng-template>
+        </app-ax-column>
+      </app-ax-table>
+
+      <app-ax-pagination
+        [totalCount]="sampleOrders.length"
+        [pageSize]="tablePageSize"
+        [pageIndex]="tablePageIndex"
+        [pageSizeOptions]="[5, 10, 25]"
+        (pageIndexChange)="tablePageIndex = $event"
+        (pageSizeChange)="tablePageSize = $event"
+      ></app-ax-pagination>
+    </div>
+  </section>
+
+  <!-- ========== PHASE 4: PROGRESS + SKELETON + EMPTY STATE ========== -->
+  <section class="ax-page-section">
+    <div class="ax-page-section-header">
+      <h2 class="ax-page-section-title">Progress, skeleton &amp; empty state</h2>
+    </div>
+    <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-3 ax-gap-5">
+      <div class="ax-card ax-p-5">
+        <h3 class="ax-h5 ax-mb-3">Progress</h3>
+        <div class="ax-flex ax-flex-col ax-gap-3">
+          <div>
+            <span class="ax-text-xs ax-text-tertiary">Determinate — {{ progressValue }}%</span>
+            <app-ax-progress [value]="progressValue" class="ax-mt-1 ax-block"></app-ax-progress>
+          </div>
+          <div>
+            <span class="ax-text-xs ax-text-tertiary">Indeterminate</span>
+            <app-ax-progress class="ax-mt-1 ax-block"></app-ax-progress>
+          </div>
+          <div>
+            <span class="ax-text-xs ax-text-tertiary">Success variant</span>
+            <app-ax-progress [value]="100" variant="success" class="ax-mt-1 ax-block"></app-ax-progress>
+          </div>
+          <input type="range" class="ax-range" min="0" max="100" [(ngModel)]="progressValue" />
+        </div>
+      </div>
+
+      <div class="ax-card ax-p-5">
+        <h3 class="ax-h5 ax-mb-3">Skeleton placeholders</h3>
+        <div class="ax-flex ax-items-center ax-gap-3 ax-mb-3">
+          <app-ax-skeleton kind="avatar-lg"></app-ax-skeleton>
+          <div class="ax-flex-1">
+            <app-ax-skeleton kind="heading"></app-ax-skeleton>
+            <app-ax-skeleton kind="text" width="80%"></app-ax-skeleton>
+          </div>
+        </div>
+        <app-ax-skeleton kind="rect" height="4rem"></app-ax-skeleton>
+      </div>
+
+      <div class="ax-card ax-p-0">
+        <app-ax-empty-state
+          icon="shopping_bag"
+          title="No orders yet"
+          description="When customers check out, their orders will appear here."
+        >
+          <button class="ax-btn ax-btn-primary">
+            <span class="material-symbols-outlined">add</span>
+            Add first product
+          </button>
+        </app-ax-empty-state>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== FORM STATE (live) ========== -->
   <section class="ax-page-section">
     <div class="ax-card ax-card-brand ax-p-6">
@@ -353,7 +508,9 @@
   notifications: notifications,
   quantity: quantity,
   tabIndex: tabIndex,
-  collapseOpen: collapseOpen
+  collapseOpen: collapseOpen,
+  tableSelection: tableSelection.length + ' row(s)',
+  tablePageIndex: tablePageIndex
 } | json }}</pre>
     </div>
   </section>

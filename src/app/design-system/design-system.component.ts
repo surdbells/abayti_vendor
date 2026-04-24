@@ -26,6 +26,15 @@ import {
 } from '../shared/overlays';
 import { SampleModalComponent } from './sample-modal.component';
 import { SampleDrawerComponent } from './sample-drawer.component';
+import {
+  AxTableComponent,
+  AxColumnComponent,
+  AxPaginationComponent,
+  AxBreadcrumbComponent,
+  AxProgressComponent,
+  AxSkeletonComponent,
+  AxEmptyStateComponent,
+} from '../shared/data';
 
 /**
  * Design-system demo — exercises every Phase 2 form control AND every
@@ -51,6 +60,13 @@ import { SampleDrawerComponent } from './sample-drawer.component';
     AxTabComponent,
     AxAccordionComponent,
     AxAccordionItemComponent,
+    AxTableComponent,
+    AxColumnComponent,
+    AxPaginationComponent,
+    AxBreadcrumbComponent,
+    AxProgressComponent,
+    AxSkeletonComponent,
+    AxEmptyStateComponent,
   ],
   templateUrl: './design-system.component.html',
 })
@@ -158,5 +174,55 @@ export class DesignSystemComponent {
   // For dropdown demo menu actions
   menuAction(action: string): void {
     this.toast.success(`Selected: ${action}`);
+  }
+
+  // ---------- Phase 4: data display state ----------
+  tablePageIndex = 0;
+  tablePageSize = 5;
+  tableSelection: any[] = [];
+  progressValue = 60;
+
+  readonly breadcrumbTrail = [
+    { label: 'Dashboard', link: '/backend', icon: 'home' },
+    { label: 'Orders', link: '/processing' },
+    { label: 'ABY-240098' },
+  ];
+
+  readonly sampleOrders = [
+    { id: 1,  ref: 'ABY-240100', customer: 'Amal Al-Maktoum', total: 1240, status: 'Delivered',       date: '2026-04-22' },
+    { id: 2,  ref: 'ABY-240099', customer: 'Yousef Rahman',   total:  890, status: 'Ready for Delivery', date: '2026-04-22' },
+    { id: 3,  ref: 'ABY-240098', customer: 'Fatima Al-Nasser',total: 2450, status: 'Accepted',         date: '2026-04-21' },
+    { id: 4,  ref: 'ABY-240097', customer: 'Omar Khalid',     total:  320, status: 'Cancelled',        date: '2026-04-21' },
+    { id: 5,  ref: 'ABY-240096', customer: 'Layla Hassan',    total: 1890, status: 'Delivered',        date: '2026-04-20' },
+    { id: 6,  ref: 'ABY-240095', customer: 'Khalid Al-Sabah', total:  650, status: 'Return Requested', date: '2026-04-19' },
+    { id: 7,  ref: 'ABY-240094', customer: 'Noor Abdullah',   total: 1120, status: 'Delivered',        date: '2026-04-19' },
+    { id: 8,  ref: 'ABY-240093', customer: 'Hassan Ali',      total:  780, status: 'Refunded',         date: '2026-04-18' },
+    { id: 9,  ref: 'ABY-240092', customer: 'Aisha Mohammed',  total: 3200, status: 'Delivered',        date: '2026-04-18' },
+    { id: 10, ref: 'ABY-240091', customer: 'Ibrahim Said',    total:  450, status: 'Returned',         date: '2026-04-17' },
+    { id: 11, ref: 'ABY-240090', customer: 'Mariam Al-Zahra', total: 2100, status: 'Accepted',         date: '2026-04-16' },
+    { id: 12, ref: 'ABY-240089', customer: 'Zaid Rahman',     total:  980, status: 'Delivered',        date: '2026-04-15' },
+    { id: 13, ref: 'ABY-240088', customer: 'Huda Al-Amiri',   total:  540, status: 'Ready for Delivery', date: '2026-04-15' },
+    { id: 14, ref: 'ABY-240087', customer: 'Salim Khoury',    total: 1750, status: 'Delivered',        date: '2026-04-14' },
+  ];
+
+  statusBadgeClass(status: string): string {
+    switch (status) {
+      case 'Delivered':          return 'ax-badge-success';
+      case 'Ready for Delivery': return 'ax-badge-info';
+      case 'Accepted':           return 'ax-badge-warning';
+      case 'Cancelled':          return 'ax-badge-danger';
+      case 'Return Requested':   return 'ax-badge-warning';
+      case 'Returned':           return 'ax-badge-neutral';
+      case 'Refunded':           return 'ax-badge-brand';
+      default:                   return 'ax-badge-neutral';
+    }
+  }
+
+  onRowClick(row: any): void {
+    this.toast.success(`Clicked order ${row.ref}`);
+  }
+
+  onSelectionChange(selection: any[]): void {
+    this.tableSelection = selection;
   }
 }

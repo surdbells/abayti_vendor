@@ -223,3 +223,137 @@
   color: var(--ax-color-text-primary);
   margin: 0;
 }
+
+
+/* ============== PUBLIC / HOME TOPBAR ============== */
+/*
+  Variant topbar used on the public marketing site (home, login, register).
+  Sticky white bar with logo, nav links, language switcher, and auth CTAs.
+  Collapses into a mobile sheet below lg.
+*/
+.ax-home-top {
+  position: sticky;
+  top: 0;
+  z-index: var(--ax-z-topbar);
+  background-color: var(--ax-color-bg-surface);
+  border-bottom: 1px solid var(--ax-color-border-subtle);
+  backdrop-filter: saturate(1.1);
+}
+
+.ax-home-top-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--ax-space-4);
+  max-width: var(--ax-page-max-width);
+  margin: 0 auto;
+  padding: var(--ax-space-3) var(--ax-space-5);
+  position: relative;
+}
+
+.ax-home-top-brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.ax-home-top-logo {
+  height: 2.5rem;
+  width: auto;
+  border-radius: var(--ax-radius-sm);
+  background-color: var(--ax-color-bg-surface);
+  padding: 2px;
+}
+
+.ax-home-top-toggle {
+  margin-left: auto;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--ax-radius-md);
+  background: transparent;
+  color: var(--ax-color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--ax-duration-fast) var(--ax-ease-out);
+}
+.ax-home-top-toggle:hover { background-color: var(--ax-color-bg-muted); }
+
+.ax-home-top-nav {
+  /* Mobile: slide-down sheet */
+  display: none;
+  flex-direction: column;
+  gap: var(--ax-space-2);
+  padding: var(--ax-space-3) var(--ax-space-4) var(--ax-space-4);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: var(--ax-color-bg-surface);
+  border-bottom: 1px solid var(--ax-color-border-subtle);
+  box-shadow: var(--ax-shadow-md);
+}
+.ax-home-top-nav-open {
+  display: flex;
+}
+
+.ax-home-top-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ax-home-top-link {
+  display: block;
+  padding: 0.625rem 0.75rem;
+  font-size: var(--ax-fs-sm);
+  font-weight: var(--ax-fw-medium);
+  color: var(--ax-color-text-primary);
+  text-decoration: none;
+  border-radius: var(--ax-radius-md);
+  transition: background-color var(--ax-duration-fast) var(--ax-ease-out);
+}
+.ax-home-top-link:hover {
+  background-color: var(--ax-color-bg-muted);
+}
+
+.ax-home-top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ax-space-2);
+  padding-top: var(--ax-space-3);
+  border-top: 1px solid var(--ax-color-border-subtle);
+}
+
+/* Desktop layout */
+@media (min-width: 992px) {
+  .ax-home-top-toggle { display: none; }
+  .ax-home-top-nav,
+  .ax-home-top-nav-open {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ax-space-4);
+    position: static;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    flex: 1;
+  }
+  .ax-home-top-links {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--ax-space-2);
+    margin-left: auto;
+  }
+  .ax-home-top-actions {
+    border-top: 0;
+    padding-top: 0;
+    flex-wrap: nowrap;
+  }
+}
