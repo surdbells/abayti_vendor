@@ -24,20 +24,9 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@taiga-ui/icons/src",
-                "output": "assets/taiga-ui/icons"
-              },
-              {
-                "glob": "**/*",
-                "input": "node_modules/@kolkov/angular-editor/assets/icons",
-                "output": "assets/ae-icons/"
               }
             ],
             "styles": [
-              "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css",
               "node_modules/@ngneat/hot-toast/src/styles/styles.css",
               "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
               "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
@@ -46,9 +35,6 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/datatables.net/js/dataTables.min.js",
-              "node_modules/datatables.net-bs5/js/dataTables.bootstrap5.min.js",
               "node_modules/apexcharts/dist/apexcharts.min.js",
               "public/assets/js/theme.bundle.js",
               "public/assets/js/vendor.bundle.js"

@@ -1,7 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {SideComponent} from "../../partials/side/side.component";
-import {TuiIcon, TuiLoader} from "@taiga-ui/core";
 import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CrudService} from '../../services/crud.service';
@@ -16,9 +15,7 @@ import {TUI_CONFIRM} from '@taiga-ui/kit';
   standalone: true,
     imports: [
         NgIf,
-        SideComponent,
-        TuiIcon,
-        TuiLoader
+        SideComponent
     ],
   templateUrl: './receipt.component.html',
   styleUrl: './receipt.component.css'

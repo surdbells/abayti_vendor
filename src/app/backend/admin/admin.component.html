@@ -244,7 +244,7 @@
     <ng-container *ngIf="!ui_controls.is_loading && ui_controls.viewing_recent_orders">
       <section class="ax-page-section">
         <div *ngIf="!ui_controls.no_recent" class="ax-table-wrapper">
-          <table datatable [dtOptions]="dtOptions" class="ax-table ax-table-hover ax-table-interactive">
+          <table class="ax-table ax-table-hover ax-table-interactive">
             <thead>
               <tr>
                 <th>{{ 'table_order' | translate }}</th>
@@ -258,7 +258,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let a_recent of recent">
+              <tr *ngFor="let a_recent of pagedRecent">
                 <td class="ax-font-medium ax-text-primary">{{ a_recent.order_ref }}</td>
                 <td class="ax-text-secondary">{{ a_recent.added }}</td>
                 <td>{{ a_recent.customer_name }}</td>
@@ -278,6 +278,14 @@
               </tr>
             </tbody>
           </table>
+
+          <app-ax-pagination
+            *ngIf="recent && recent.length > pageSize"
+            [totalCount]="recent.length"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            (pageIndexChange)="onPageIndexChange($event)">
+          </app-ax-pagination>
         </div>
 
         <div *ngIf="ui_controls.no_recent" class="ax-card">

@@ -36,10 +36,6 @@
 @import './styles/components/_rich.css';
 @import './styles/components/_pages.css';
 
-/* CKEditor is still loaded — removed in Phase 12 */
-@import '../node_modules/ckeditor5/dist/ckeditor5-editor.css';
-@import '../node_modules/ckeditor5/dist/ckeditor5-content.css';
-
 /*
  * Legacy compatibility shims
  * -------------------------

@@ -6,7 +6,7 @@
       <div (click)="goBack()" role="button" class="col-auto">
         <div class="avatar text-center avatar-md rounded text-primary-emphasis">
           <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
+            <span class="material-symbols-outlined">chevron_left</span>
           </i>
         </div>
       </div>
@@ -102,7 +102,7 @@
               <div> {{data.cart_code}} </div>
             </div>
           </div>
-          <tui-loader *ngIf="ui_controls.is_loading" />
+          <span class="ax-spinner" *ngIf="ui_controls.is_loading"></span>
         </div>
       </div>
     </div>

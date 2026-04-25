@@ -21,11 +21,10 @@ import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { Products } from '../../class/products';
 import { ROrders } from '../../class/recent';
-import { DataTablesModule } from 'angular-datatables';
 import { TranslatePipe } from '../../translate.pipe';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-import { Config } from 'datatables.net';
+import { AxPaginationComponent } from '../../shared/data';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -71,7 +70,7 @@ const ICON_MAP: Record<string, string> = {
     TopComponent,
     NgApexchartsModule,
     ChartComponent,
-    DataTablesModule,
+    AxPaginationComponent,
     RouterLink,
     TranslatePipe,
     RouterLinkActive,
@@ -85,7 +84,9 @@ export class AdminComponent implements OnInit {
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
 
-  dtOptions: Config = {};
+  // Recent orders pagination (replaces DataTables)
+  pageIndex = 0;
+  pageSize = 10;
   recent?: ROrders[];
   topProducts?: Products[];
 
@@ -243,16 +244,25 @@ export class AdminComponent implements OnInit {
             } as Partial<ChartOptions>;
 
             this.recent = response.data;
-            this.dtOptions = {
-              pagingType: 'full_numbers',
-              pageLength: 10
-            };
+            this.pageIndex = 0;
             if (response.message === 0) {
               this.ui_controls.no_recent = true;
             }
           }
         }
       });
+  }
+
+
+  /** Slice of `recent` for the current page (replaces DataTables paging). */
+  get pagedRecent(): ROrders[] {
+    if (!this.recent) return [];
+    const start = this.pageIndex * this.pageSize;
+    return this.recent.slice(start, start + this.pageSize);
+  }
+
+  onPageIndexChange(index: number): void {
+    this.pageIndex = index;
   }
 
   super_admin: Action[] = [
