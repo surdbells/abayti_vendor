@@ -1,55 +1,109 @@
-<app-admin-top></app-admin-top>
-<main class="main">
-  <div class="container-fluid">
-    <!-- Page header -->
-    <div style="width: 80%; margin: 0 auto"  class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
+<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
+
+<div class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+
+  <main class="ax-main">
+    <div class="ax-container">
+      <header class="ax-page-header">
+        <div class="ax-page-header-content">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+            style="align-self: flex-start;">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to tickets
+          </button>
+          <span class="ax-page-header-eyebrow">Support</span>
+          <h1 class="ax-page-title">{{ ticket_name || 'Ticket conversation' }}</h1>
         </div>
-      </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">{{ ticket_name }}</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <div class="avatar text-info me-2">
-          <span role="button" (click)="get_ticket_messages()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
+
+        <div class="ax-flex ax-gap-2 ax-items-center">
+          <button
+            type="button"
+            class="ax-btn ax-btn-outline ax-btn-sm"
+            (click)="get_ticket_messages()"
+            [disabled]="ui_controls.is_loading">
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            Refresh
+          </button>
         </div>
-      </div>
-    </div>
-    <div  style="width: 80%; margin: 0 auto" class="row">
-        <div class="card shadow rounded-4">
-          <div class="card-body">
-            <div class="row">
-              <!-- Left Column: Messages -->
-              <div class="col-md-8 border-end" style="max-height: 400px; overflow-y: auto;">
-                <h5 class="mb-3 abayti_secondary_color">Messages</h5>
-                <div class="mb-3">
-                  @for(a_message of message; track $index){
-                    <div class="bg-light p-2 rounded mb-2">
-                      <strong>{{ a_message.sender }}:</strong> {{ a_message.message }}
-                      <span class="message-time">{{ a_message.timestamp }}</span>
-                    </div>
-                  }
-                </div>
+      </header>
+
+      <section class="ax-page-section">
+        <div class="ax-grid ax-grid-cols-1 ax-lg-grid-cols-3 ax-gap-3">
+          <!-- Messages column -->
+          <div class="ax-card ax-p-0" style="grid-column: span 2;">
+            <div class="ax-p-4" style="border-bottom: 1px solid var(--ax-color-border-subtle);">
+              <h3 class="ax-h6 ax-m-0">Messages</h3>
+            </div>
+
+            <div class="ax-p-4" style="max-height: 28rem; overflow-y: auto;">
+              <!-- Loading -->
+              <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-5">
+                <span class="ax-spinner" aria-label="Loading messages"></span>
               </div>
-              <div class="col-md-4">
-                <h5 class="mb-3 abayti_secondary_color">Send Message</h5>
-                <form>
-                  <div class="mb-3">
-                    <textarea [(ngModel)]="add_message.message" name="message" [maxlength]="160" class="form-control" rows="6" placeholder="Type your message..."></textarea>
+
+              <!-- Empty -->
+              <div *ngIf="!ui_controls.is_loading && ui_controls.no_data" class="ax-text-center ax-py-5">
+                <span
+                  class="material-symbols-outlined"
+                  style="font-size: 2.5rem; color: var(--ax-color-text-tertiary);"
+                  aria-hidden="true">forum</span>
+                <h4 class="ax-h6 ax-m-0 ax-mt-2">No messages yet</h4>
+                <p class="ax-text-2xs ax-text-tertiary ax-mt-1">Start the conversation by sending the first message.</p>
+              </div>
+
+              <!-- Messages -->
+              <div *ngIf="!ui_controls.is_loading && !ui_controls.no_data" class="ax-flex ax-flex-col ax-gap-3">
+                <article
+                  *ngFor="let a_message of message; let i = index"
+                  class="ax-card ax-p-3"
+                  [style.background]="isSupport(a_message.sender) ? 'var(--ax-color-bg-canvas)' : 'var(--ax-color-bg-surface)'"
+                  [style.margin-right]="isSupport(a_message.sender) ? 'auto' : '0'"
+                  [style.margin-left]="isSupport(a_message.sender) ? '0' : 'auto'"
+                  style="max-width: 85%;">
+                  <div class="ax-flex ax-items-center ax-justify-between ax-gap-2 ax-mb-2">
+                    <span class="ax-font-semibold ax-text-sm">{{ a_message.sender }}</span>
+                    <span class="ax-text-2xs ax-text-tertiary">{{ a_message.timestamp }}</span>
                   </div>
-                  <div class="d-grid">
-                    <button *ngIf="!ui_controls.is_loading" (click)="send_messages()" type="submit" class="btn abayti_secondary_background btn-outline-secondary text-white">Send</button>
-                    <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
-                  </div>
-                </form>
+                  <div class="ax-text-sm ax-text-primary" style="white-space: pre-wrap;">{{ a_message.message }}</div>
+                </article>
               </div>
             </div>
           </div>
+
+          <!-- Reply column -->
+          <div class="ax-card ax-p-4">
+            <h3 class="ax-h6 ax-m-0 ax-mb-3">Send reply</h3>
+
+            <div class="ax-form-field ax-mb-3">
+              <label class="ax-label ax-text-2xs" for="reply_message">Message</label>
+              <textarea
+                id="reply_message"
+                class="ax-textarea"
+                rows="6"
+                [maxlength]="160"
+                [(ngModel)]="add_message.message"
+                name="message"
+                placeholder="Type your reply…"></textarea>
+              <span class="ax-hint">{{ add_message.message?.length || 0 }} / 160 characters</span>
+            </div>
+
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary"
+              style="width: 100%;"
+              (click)="send_messages()"
+              [disabled]="ui_controls.sending">
+              <span *ngIf="ui_controls.sending" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span *ngIf="!ui_controls.sending" class="material-symbols-outlined" aria-hidden="true">send</span>
+              Send reply
+            </button>
+          </div>
         </div>
+      </section>
     </div>
-  </div>
-</main>
+  </main>
+</div>

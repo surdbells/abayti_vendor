@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { TopComponent } from '../../partials/top/top.component';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
@@ -17,13 +16,12 @@ import { takeUntil, switchMap } from 'rxjs/operators';
   standalone: true,
   imports: [
     SideComponent, AsideComponent, TopComponent,
-    TuiIcon, TuiLoader, CommonModule, FormsModule, RouterLink, AsideComponent, SideComponent,
+    CommonModule, FormsModule,
   ],
   templateUrl: './coupon-analytics.component.html',
   styleUrl: './coupon-analytics.component.css',
 })
 export class CouponAnalyticsComponent implements OnInit, OnDestroy {
-
   session_data: any = '';
   user_session = {
     id: 0, token: '', first_name: '', last_name: '',
@@ -32,14 +30,12 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     is_vendor: false, is_customer: false,
   };
 
-  ui = { loading: true, log_loading: false };
+  ui = { loading: true, log_loading: false, nav_open: false };
 
-  // ── Mode: overview (all coupons) or single coupon ──────────────
-  coupon_id = 0; // 0 = overview mode
+  coupon_id = 0;
   coupon_code = '';
   coupon_name = '';
 
-  // ── Overview stats ─────────────────────────────────────────────
   overview = {
     total_redemptions: 0,
     unique_customers: 0,
@@ -51,7 +47,6 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     avg_order_value: 0,
   };
 
-  // ── Per-coupon stats (when coupon_id > 0) ──────────────────────
   coupon_stats = {
     total_uses: 0,
     unique_customers: 0,
@@ -63,21 +58,17 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     last_used: null as string | null,
   };
 
-  // ── Top coupons ────────────────────────────────────────────────
   top_coupons: any[] = [];
   top_sort_by = 'uses';
 
-  // ── Usage over time (chart) ────────────────────────────────────
   usage_series: { period: string; uses: number; total_discount: number; total_revenue: number }[] = [];
   chart_group_by = 'day';
   chart_days_back = 30;
   chart_max_uses = 0;
 
-  // ── Usage log ──────────────────────────────────────────────────
   usage_log: any[] = [];
   log_pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
 
-  // ── Live counter ───────────────────────────────────────────────
   live_count = 0;
   private destroy$ = new Subject<void>();
 
@@ -88,9 +79,6 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     private toast: HotToastService,
   ) {}
 
-  // ═══════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ═══════════════════════════════════════════════════════════════
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
@@ -113,9 +101,6 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  API HELPERS
-  // ═══════════════════════════════════════════════════════════════
   private analyticsRequest(action: string, extra: any = {}): any {
     return {
       token: this.user_session.token,
@@ -125,9 +110,6 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     };
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  DATA FETCHING
-  // ═══════════════════════════════════════════════════════════════
   fetchOverview(): void {
     this.crudService.post_request(this.analyticsRequest('overview'), GlobalComponent.couponAnalytics).subscribe({
       next: (r: any) => {
@@ -152,7 +134,7 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
   fetchCouponStats(): void {
     this.crudService.post_request(
       this.analyticsRequest('coupon_stats', { coupon_id: this.coupon_id }),
-      GlobalComponent.couponAnalytics
+      GlobalComponent.couponAnalytics,
     ).subscribe({
       next: (r: any) => {
         if (r.response_code === 200) this.coupon_stats = r.data;
@@ -164,7 +146,7 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
   fetchTopCoupons(): void {
     this.crudService.post_request(
       this.analyticsRequest('top_coupons', { sort_by: this.top_sort_by, limit: 5 }),
-      GlobalComponent.couponAnalytics
+      GlobalComponent.couponAnalytics,
     ).subscribe({
       next: (r: any) => {
         if (r.response_code === 200) this.top_coupons = r.data;
@@ -179,7 +161,7 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
         group_by: this.chart_group_by,
         days_back: this.chart_days_back,
       }),
-      GlobalComponent.couponAnalytics
+      GlobalComponent.couponAnalytics,
     ).subscribe({
       next: (r: any) => {
         if (r.response_code === 200) {
@@ -200,7 +182,7 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
         page: this.log_pagination.page,
         per_page: this.log_pagination.per_page,
       }),
-      GlobalComponent.couponAnalytics
+      GlobalComponent.couponAnalytics,
     ).subscribe({
       next: (r: any) => {
         if (r.response_code === 200) {
@@ -212,15 +194,14 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── Live counter (polls every 15 seconds) ──────────────────────
   startLiveCounter(): void {
     interval(15000).pipe(
       takeUntil(this.destroy$),
       switchMap(() =>
         this.crudService.post_request(
           this.analyticsRequest('live_count', { coupon_id: this.coupon_id }),
-          GlobalComponent.couponAnalytics
-        )
+          GlobalComponent.couponAnalytics,
+        ),
       ),
     ).subscribe({
       next: (r: any) => {
@@ -229,9 +210,6 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  CHART CONTROLS
-  // ═══════════════════════════════════════════════════════════════
   onChartSettingsChange(): void {
     this.fetchUsageOverTime();
   }
@@ -240,18 +218,12 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     this.fetchTopCoupons();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  LOG PAGINATION
-  // ═══════════════════════════════════════════════════════════════
   goToLogPage(page: number): void {
     if (page < 1 || page > this.log_pagination.total_pages) return;
     this.log_pagination.page = page;
     this.fetchUsageLog();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  CHART HELPERS (pure CSS bar chart)
-  // ═══════════════════════════════════════════════════════════════
   getBarHeight(uses: number): number {
     if (this.chart_max_uses <= 0) return 0;
     return Math.max(4, (uses / this.chart_max_uses) * 100);
@@ -265,16 +237,12 @@ export class CouponAnalyticsComponent implements OnInit, OnDestroy {
     return period;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  NAVIGATION
-  // ═══════════════════════════════════════════════════════════════
   goBack(): void {
     this.router.navigate(['/coupons']);
   }
 
   viewCouponAnalytics(id: number): void {
     this.router.navigate(['/coupon-analytics'], { queryParams: { id } });
-    // Reload
     this.coupon_id = id;
     this.ui.loading = true;
     this.fetchCouponDetails();

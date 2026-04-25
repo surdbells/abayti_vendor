@@ -1,86 +1,132 @@
-<app-admin-top></app-admin-top>
-<main class="main">
-  <div class="container-fluid">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
-      </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Transactions</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0">
-        <div class="avatar text-info me-2">
-          <span role="button" (click)="get_trxs()" class="material-symbols-outlined abayti_secondary_color fs-1">refresh</span>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
+<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
 
-        <div class="card mt-2 mt-2">
-          <div class="card-header">
-            <div class="row">
-              <div class="col-3">
-                <div class="mb-2">
-                  <label class="form-label">Start date</label>
-                  <input type="date" class="form-control" name="start_date" [(ngModel)]="get_trx_range.start_date">
-                </div>
-              </div>
-              <div class="col-3">
-                <label class="form-label">End date</label>
-                <input type="date" class="form-control" name="end_date" [(ngModel)]="get_trx_range.end_date">
-              </div>
-              <div class="col-3 mt-5">
-                <button (click)="get_range_trx()" class="btn mt-2 btn-outline-secondary abayti_secondary_background text-white">Submit</button>
-              </div>
+<div class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+
+  <main class="ax-main">
+    <div class="ax-container">
+      <header class="ax-page-header">
+        <div class="ax-page-header-content">
+          <button
+            type="button"
+            (click)="goBack()"
+            class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+            style="align-self: flex-start;">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            Back to dashboard
+          </button>
+          <span class="ax-page-header-eyebrow">Finance</span>
+          <h1 class="ax-page-title">Transactions</h1>
+          <p *ngIf="transactions && transactions.length > 0" class="ax-page-subtitle">
+            {{ transactions.length }} transaction{{ transactions.length !== 1 ? 's' : '' }} in the current range.
+          </p>
+        </div>
+
+        <div class="ax-flex ax-gap-2 ax-items-center">
+          <button
+            type="button"
+            class="ax-btn ax-btn-outline ax-btn-sm"
+            (click)="get_trxs()"
+            [disabled]="ui_controls.is_loading">
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            Refresh
+          </button>
+        </div>
+      </header>
+
+      <!-- Date range filter -->
+      <section class="ax-page-section">
+        <div class="ax-card ax-p-4">
+          <div class="ax-flex ax-gap-3 ax-flex-wrap ax-items-end">
+            <div class="ax-form-field" style="flex: 1; min-width: 10rem;">
+              <label class="ax-label ax-text-2xs" for="start_date">Start date</label>
+              <input
+                id="start_date"
+                type="date"
+                class="ax-input ax-input-sm"
+                name="start_date"
+                [(ngModel)]="get_trx_range.start_date" />
             </div>
+            <div class="ax-form-field" style="flex: 1; min-width: 10rem;">
+              <label class="ax-label ax-text-2xs" for="end_date">End date</label>
+              <input
+                id="end_date"
+                type="date"
+                class="ax-input ax-input-sm"
+                name="end_date"
+                [(ngModel)]="get_trx_range.end_date" />
+            </div>
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary ax-btn-sm"
+              (click)="get_range_trx()"
+              [disabled]="ui_controls.is_loading">
+              <span class="material-symbols-outlined" aria-hidden="true">filter_list</span>
+              Filter
+            </button>
           </div>
-          <div style="min-height: 350px" *ngIf="!ui_controls.is_loading" class="table-responsive">
-            <table datatable [dtOptions]="dtOptions" class="table table-hover table-select table-round align-middle mb-0">
-              <thead>
-              <tr class="border-2" >
-                <th>#</th>
-                <th>Order&nbsp;Id</th>
-                <th>Transaction&nbsp;Ref</th>
-                <th>Cart&nbsp;Id</th>
-                <th>Merchant&nbsp;Reference</th>
-                <th>Amount</th>
-                <th>customer</th>
-                <th>status</th>
+        </div>
+      </section>
+
+      <!-- Loading -->
+      <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+        <span class="ax-spinner ax-spinner-lg" aria-label="Loading transactions"></span>
+      </div>
+
+      <!-- Table -->
+      <section
+        *ngIf="!ui_controls.is_loading && !ui_controls.no_data"
+        class="ax-card ax-p-0">
+        <div class="ax-table-wrapper">
+          <table class="ax-table ax-table-hover">
+            <thead>
+              <tr>
+                <th style="width: 3rem;">#</th>
+                <th>Order ID</th>
+                <th>Transaction ref</th>
+                <th>Cart ID</th>
+                <th>Merchant ref</th>
+                <th style="text-align: right;">Amount</th>
+                <th>Customer</th>
+                <th>Status</th>
                 <th>Initiated</th>
                 <th>Updated</th>
               </tr>
-              </thead>
-              <tbody>
-              <tr class="border-2"  *ngFor="let a_transaction of transactions; let i = index">
-                <td>{{ a_transaction.id }}</td>
-                <td>{{ a_transaction.order_id }}</td>
-                <td>{{ a_transaction.transaction_id }}</td>
-                <td>{{ a_transaction.cart_code }}</td>
-                <td>{{ a_transaction.merchantReference }}</td>
-                <td>{{ a_transaction.amount}}</td>
-                <td>{{ a_transaction.customer }}</td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let a_transaction of transactions; let i = index">
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.id }}</span></td>
+                <td><span class="ax-font-medium ax-text-primary">{{ a_transaction.order_id }}</span></td>
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.transaction_id }}</span></td>
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.cart_code }}</span></td>
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.merchantReference }}</span></td>
+                <td style="text-align: right;"><span class="ax-font-semibold ax-numeric">{{ a_transaction.amount }}</span></td>
+                <td><span class="ax-text-sm ax-text-secondary">{{ a_transaction.customer }}</span></td>
                 <td>
-                  @if(a_transaction.status == 'paid'){
-                    <span class="badge bg-success-subtle text-success">Completed</span>
-                  } @else {
-                    <span class="badge bg-danger-subtle text-danger">Pending</span>
-                  }
+                  <span *ngIf="a_transaction.status === 'paid'" class="ax-badge ax-badge-success">Completed</span>
+                  <span *ngIf="a_transaction.status !== 'paid'" class="ax-badge ax-badge-warning">Pending</span>
                 </td>
-                <td>{{ a_transaction.created }}</td>
-                <td>{{ a_transaction.updated }}</td>
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.created }}</span></td>
+                <td><span class="ax-text-2xs ax-text-tertiary">{{ a_transaction.updated }}</span></td>
               </tr>
-              </tbody>
-            </table>
-          </div>
-          <tui-loader class="p-5" *ngIf="ui_controls.is_loading" />
+            </tbody>
+          </table>
         </div>
-      </div>
+      </section>
+
+      <!-- Empty state -->
+      <section *ngIf="!ui_controls.is_loading && ui_controls.no_data" class="ax-page-section">
+        <div class="ax-card ax-p-8 ax-text-center">
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 3rem; color: var(--ax-color-text-tertiary);"
+            aria-hidden="true">payments</span>
+          <h3 class="ax-h4 ax-m-0 ax-mt-3">No transactions in this range</h3>
+          <p class="ax-text-secondary ax-mt-2" style="max-width: 32rem; margin-left: auto; margin-right: auto;">
+            Payment transactions will appear here once customers complete checkout.
+          </p>
+        </div>
+      </section>
     </div>
-  </div>
-</main>
+  </main>
+</div>

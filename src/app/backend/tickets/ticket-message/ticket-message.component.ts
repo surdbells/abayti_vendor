@@ -1,14 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {AdminTopComponent} from '../../../partials/admin-top/admin-top.component';
-import {DataTablesModule} from 'angular-datatables';
-import {NgForOf, NgIf} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TuiIcon, TuiLoader} from '@taiga-ui/core';
-import {Config} from 'datatables.net';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CrudService} from '../../../services/crud.service';
-import {HotToastService} from '@ngneat/hot-toast';
-import {GlobalComponent} from '../../../global-component';
+import { Component, OnInit } from '@angular/core';
+import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
+import { AsideComponent } from '../../../partials/aside/aside.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CrudService } from '../../../services/crud.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { GlobalComponent } from '../../../global-component';
+
 export interface Message {
   id: number;
   ticket: number;
@@ -16,44 +15,35 @@ export interface Message {
   message: string;
   timestamp: string;
 }
+
 @Component({
   selector: 'app-ticket-message',
   standalone: true,
-  imports: [
-    AdminTopComponent,
-    DataTablesModule,
-    NgForOf,
-    NgIf,
-    ReactiveFormsModule,
-    TuiIcon,
-    TuiLoader,
-    FormsModule
-  ],
+  imports: [AdminTopComponent, AsideComponent, CommonModule, FormsModule],
   templateUrl: './ticket-message.component.html',
-  styleUrl: './ticket-message.component.css'
+  styleUrl: './ticket-message.component.css',
 })
-export class TicketMessageComponent implements OnInit{
+export class TicketMessageComponent implements OnInit {
   message?: Message[];
-  dtOptions: Config = {};
+
   ui_controls = {
     is_loading: false,
-    no_data: false
+    sending: false,
+    no_data: false,
+    nav_open: false,
   };
-  session_data: any = ""
-  ticket_name: any = ""
+
+  session_data: any = '';
+  ticket_name: any = '';
   user_session = {
-    id: 0,
-    token: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    is_2fa: false,
-    is_active: false,
-    is_admin: false,
-    is_vendor: false,
-    is_customer: false
+    id: 0, token: '', first_name: '', last_name: '',
+    email: '', phone: '',
+    is_2fa: false, is_active: false, is_admin: false,
+    is_vendor: false, is_customer: false,
   };
+
+  get_msg_t = { id: 0, token: '', ticket: 0 };
+  add_message = { id: 0, token: '', ticket: 0, message: '' };
 
   constructor(
     private router: Router,
@@ -61,23 +51,12 @@ export class TicketMessageComponent implements OnInit{
     private route: ActivatedRoute,
     private toast: HotToastService,
   ) {}
-  get_msg_t = {
-    id: 0,
-    token: "",
-    ticket: 0
-  }
-  add_message = {
-    id: 0,
-    token: "",
-    ticket: 0,
-    message: ""
 
-  }
   ngOnInit() {
-    this.session_data = sessionStorage.getItem("SESSION");
+    this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
-    const ticketId =  Number(this.route.snapshot.queryParamMap.get('id'));
-    this.ticket_name =  this.route.snapshot.queryParamMap.get('name');
+    const ticketId = Number(this.route.snapshot.queryParamMap.get('id'));
+    this.ticket_name = this.route.snapshot.queryParamMap.get('name');
 
     this.get_msg_t.token = this.user_session.token;
     this.get_msg_t.id = this.user_session.id;
@@ -86,48 +65,59 @@ export class TicketMessageComponent implements OnInit{
     this.add_message.token = this.user_session.token;
     this.add_message.id = this.user_session.id;
     this.add_message.ticket = ticketId;
-    this.get_ticket_messages()
+    this.get_ticket_messages();
   }
-  product = {
-    token: '',
-    id: 0,
-    store: 0
-  };
+
   goBack() {
     this.router.navigate(['/admintickets']).then(r => console.log(r));
   }
 
-  get_ticket_messages() {
-    this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.get_msg_t, GlobalComponent.ticketsMessages)
-      .subscribe(({ next: (response) => {
-            this.message = response.data;
-            this.ui_controls.is_loading = false;
-            this.dtOptions = {
-              pagingType: 'full_numbers',
-              pageLength: 10
-            };
-          }
-
-      }))
-  }
- send_messages() {
-    this.ui_controls.is_loading = true;
-    this.crudService.post_request(this.add_message, GlobalComponent.sendTicketMessage)
-      .subscribe(({ next: (response) => {
-          if (response.response_code === 200 && response.status === "success") {
-            this.add_message.message = "";
-            this.ui_controls.is_loading = false;
-            this.success_notification(response.message);
-            this.get_ticket_messages();
-          }
-        }
-      }))
-  }
   error_notification(message: string) {
     this.toast.error(message);
   }
+
   success_notification(message: string) {
     this.toast.success(message);
+  }
+
+  get_ticket_messages() {
+    this.ui_controls.is_loading = true;
+    this.crudService.post_request(this.get_msg_t, GlobalComponent.ticketsMessages).subscribe({
+      next: (response: any) => {
+        this.message = response.data;
+        this.ui_controls.no_data = !this.message || this.message.length === 0;
+        this.ui_controls.is_loading = false;
+      },
+      error: () => {
+        this.ui_controls.is_loading = false;
+      },
+    });
+  }
+
+  send_messages() {
+    if (!this.add_message.message || this.add_message.message.trim().length === 0) {
+      this.error_notification('Message cannot be empty.');
+      return;
+    }
+    this.ui_controls.sending = true;
+    this.crudService.post_request(this.add_message, GlobalComponent.sendTicketMessage).subscribe({
+      next: (response: any) => {
+        if (response.response_code === 200 && response.status === 'success') {
+          this.add_message.message = '';
+          this.success_notification(response.message);
+          this.get_ticket_messages();
+        }
+        this.ui_controls.sending = false;
+      },
+      error: () => {
+        this.ui_controls.sending = false;
+      },
+    });
+  }
+
+  isSupport(sender: string): boolean {
+    // Best-effort: treat messages from admin/support users as inbound bubbles on the left
+    const s = (sender || '').toLowerCase();
+    return s.includes('support') || s.includes('admin') || s.includes('system');
   }
 }

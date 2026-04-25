@@ -3,17 +3,21 @@ import { Router, RouterLink } from '@angular/router';
 import { TopComponent } from '../../partials/top/top.component';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
-import { TuiButton, TuiIcon, TuiLoader, TuiTitle } from '@taiga-ui/core';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiHeader } from '@taiga-ui/layout';
 import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+
+import {
+  AxDropdownDirective,
+  AxDropdownItemDirective,
+} from '../../shared/overlays';
+import { AxPaginationComponent } from '../../shared/data';
 
 interface CouponListItem {
   coupon_id: number;
@@ -49,30 +53,28 @@ interface Pagination {
   standalone: true,
   imports: [
     TopComponent, SideComponent, AsideComponent,
-    TuiIcon, TuiLoader, TuiButton, TuiTitle,
-    TuiHeader,
-    CommonModule, FormsModule, RouterLink, AsideComponent, SideComponent,
+    CommonModule, FormsModule, RouterLink,
+    AxDropdownDirective, AxDropdownItemDirective,
+    AxPaginationComponent,
   ],
   templateUrl: './coupon-list.component.html',
   styleUrl: './coupon-list.component.css',
 })
 export class CouponListComponent implements OnInit, OnDestroy {
-
-  // ── Data ───────────────────────────────────────────────────────
   coupons: CouponListItem[] = [];
   pagination: Pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
 
-  // ── UI ─────────────────────────────────────────────────────────
   private readonly dialogs = inject(TuiResponsiveDialogService);
+
   ui = {
     loading: false,
     no_coupons: false,
     deleting: false,
     toggling: false,
     filters_open: false,
+    nav_open: false,
   };
 
-  // ── Session ────────────────────────────────────────────────────
   session_data: any = '';
   user_session = {
     id: 0, token: '', first_name: '', last_name: '',
@@ -81,7 +83,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     is_vendor: false, is_customer: false,
   };
 
-  // ── Filters ────────────────────────────────────────────────────
   filters = {
     search: '',
     status: '',
@@ -90,7 +91,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
 
   per_page_options = [10, 25, 50];
 
-  // ── Debounced search ───────────────────────────────────────────
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
 
@@ -100,9 +100,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     private toast: HotToastService,
   ) {}
 
-  // ═══════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ═══════════════════════════════════════════════════════════════
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
@@ -124,9 +121,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  DATA FETCHING
-  // ═══════════════════════════════════════════════════════════════
   fetchCoupons(): void {
     this.ui.loading = true;
 
@@ -137,9 +131,9 @@ export class CouponListComponent implements OnInit, OnDestroy {
       per_page: this.pagination.per_page,
     };
 
-    if (this.filters.search.trim())     payload.search = this.filters.search.trim();
-    if (this.filters.status)            payload.status = this.filters.status;
-    if (this.filters.discount_type)     payload.discount_type = this.filters.discount_type;
+    if (this.filters.search.trim()) payload.search = this.filters.search.trim();
+    if (this.filters.status) payload.status = this.filters.status;
+    if (this.filters.discount_type) payload.discount_type = this.filters.discount_type;
 
     this.crudService.post_request(payload, GlobalComponent.getCoupons).subscribe({
       next: (response: any) => {
@@ -160,9 +154,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  SEARCH & FILTER
-  // ═══════════════════════════════════════════════════════════════
   onSearchInput(): void {
     this.searchSubject.next(this.filters.search);
   }
@@ -193,12 +184,13 @@ export class CouponListComponent implements OnInit, OnDestroy {
     this.ui.filters_open = !this.ui.filters_open;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  PAGINATION
-  // ═══════════════════════════════════════════════════════════════
-  goToPage(page: number): void {
-    if (page < 1 || page > this.pagination.total_pages) return;
-    this.pagination.page = page;
+  /** AxPagination is 0-indexed. Map to/from legacy 1-indexed pagination. */
+  get pageIndex(): number {
+    return Math.max(0, (this.pagination.page ?? 1) - 1);
+  }
+
+  onPageIndexChange(newIndex: number): void {
+    this.pagination.page = newIndex + 1;
     this.fetchCoupons();
   }
 
@@ -207,27 +199,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     this.fetchCoupons();
   }
 
-  get pageNumbers(): number[] {
-    const total = this.pagination.total_pages;
-    const current = this.pagination.page;
-    const pages: number[] = [];
-    if (total <= 7) {
-      for (let i = 1; i <= total; i++) pages.push(i);
-    } else {
-      pages.push(1);
-      if (current > 3) pages.push(-1);
-      const start = Math.max(2, current - 1);
-      const end = Math.min(total - 1, current + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
-      if (current < total - 2) pages.push(-1);
-      pages.push(total);
-    }
-    return pages;
-  }
-
-  // ═══════════════════════════════════════════════════════════════
-  //  ACTIONS
-  // ═══════════════════════════════════════════════════════════════
   editCoupon(id: number): void {
     this.router.navigate(['/edit-coupon'], { queryParams: { id } });
   }
@@ -236,7 +207,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/coupon-analytics'], { queryParams: { id } });
   }
 
-  // ── Toggle status ──────────────────────────────────────────────
   toggleStatus(coupon: CouponListItem): void {
     const newStatus = coupon.status === 'active' ? 'inactive' : 'active';
     const label = newStatus === 'active' ? 'activate' : 'deactivate';
@@ -281,7 +251,6 @@ export class CouponListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ── Delete ─────────────────────────────────────────────────────
   startDelete(coupon: CouponListItem): void {
     this.dialogs
       .open<boolean>(TUI_CONFIRM, {
@@ -322,62 +291,62 @@ export class CouponListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  UTILITIES
-  // ═══════════════════════════════════════════════════════════════
   trackById = (_: number, item: CouponListItem) => item.coupon_id;
 
   getDiscountLabel(c: CouponListItem): string {
     switch (c.discount_type) {
-      case 'percentage':
+      case 'percentage': {
         const cap = c.max_discount_amount ? ` (max AED ${c.max_discount_amount})` : '';
         return `${c.discount_value}% off${cap}`;
-      case 'fixed_amount':
-        return `AED ${c.discount_value} off`;
-      case 'free_shipping':
-        return 'Free Shipping';
-      default:
-        return '';
+      }
+      case 'fixed_amount':  return `AED ${c.discount_value} off`;
+      case 'free_shipping': return 'Free shipping';
+      default:              return '';
     }
   }
 
   getDiscountTypeBadge(type: string): string {
     switch (type) {
-      case 'percentage': return 'badge-type-percentage';
-      case 'fixed_amount': return 'badge-type-fixed';
-      case 'free_shipping': return 'badge-type-shipping';
-      default: return '';
+      case 'percentage':    return 'ax-badge ax-badge-brand';
+      case 'fixed_amount':  return 'ax-badge ax-badge-info';
+      case 'free_shipping': return 'ax-badge ax-badge-success';
+      default:              return 'ax-badge ax-badge-neutral';
     }
   }
 
   getDiscountTypeLabel(type: string): string {
     switch (type) {
-      case 'percentage': return 'Percentage';
-      case 'fixed_amount': return 'Fixed';
-      case 'free_shipping': return 'Free Shipping';
-      default: return type;
+      case 'percentage':    return 'Percentage';
+      case 'fixed_amount':  return 'Fixed';
+      case 'free_shipping': return 'Free shipping';
+      default:              return type;
     }
   }
 
   getStatusBadge(status: string): string {
     switch (status) {
-      case 'active': return 'badge-status-active';
-      case 'inactive': return 'badge-status-inactive';
-      case 'expired': return 'badge-status-expired';
-      default: return '';
+      case 'active':   return 'ax-badge ax-badge-success';
+      case 'inactive': return 'ax-badge ax-badge-neutral';
+      case 'expired':  return 'ax-badge ax-badge-danger';
+      default:         return 'ax-badge ax-badge-neutral';
     }
   }
 
   getUsageText(c: CouponListItem): string {
-    if (c.max_uses) {
-      return `${c.times_used} / ${c.max_uses}`;
-    }
+    if (c.max_uses) return `${c.times_used} / ${c.max_uses}`;
     return `${c.times_used} / ∞`;
   }
 
   getUsagePercent(c: CouponListItem): number {
     if (!c.max_uses) return 0;
     return Math.min(100, Math.round((c.times_used / c.max_uses) * 100));
+  }
+
+  usageToneClass(c: CouponListItem): string {
+    const p = this.getUsagePercent(c);
+    if (p >= 90) return 'ax-progress-bar-danger';
+    if (p >= 70) return 'ax-progress-bar-warning';
+    return 'ax-progress-bar-success';
   }
 
   isExpired(c: CouponListItem): boolean {

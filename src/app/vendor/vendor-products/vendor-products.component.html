@@ -1,8 +1,9 @@
 <app-side *ngIf="user_session.is_vendor"></app-side>
 <app-aside *ngIf="user_session.is_admin"></app-aside>
-<app-top *ngIf="user_session.is_vendor"></app-top>
 
-<main class="ax-main" style="margin-left: 0;">
+<div class="ax-app-shell">
+  <app-top *ngIf="user_session.is_vendor"></app-top>
+  <main class="ax-main">
   <div class="ax-container">
 
     <!-- Page header -->
@@ -374,6 +375,7 @@
     </section>
   </div>
 </main>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!--  PREVIEW DRAWER — Mobile App Preview                            -->

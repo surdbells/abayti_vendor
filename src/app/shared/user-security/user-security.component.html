@@ -1,83 +1,102 @@
+<!-- Dual shell: vendor gets side nav, admin gets aside + admin-top -->
 <app-side *ngIf="user_session.is_vendor"></app-side>
-<app-aside *ngIf="user_session.is_admin"></app-aside>
-<app-top></app-top>
-<main class="main ml-desktop-22rem px-lg-6">
-  <div class="container-lg">
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
+<app-aside *ngIf="user_session.is_admin" [(isOpen)]="ui_controls.nav_open"></app-aside>
+
+<ng-container *ngIf="user_session.is_vendor">
+  <div class="ax-app-shell">
+    <app-top></app-top>
+    <main class="ax-main">
+    <ng-container *ngTemplateOutlet="securityContent"></ng-container>
+    </main>
+  </div>
+</ng-container>
+
+<div *ngIf="user_session.is_admin" class="ax-app-shell">
+  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
+  <main class="ax-main">
+    <ng-container *ngTemplateOutlet="securityContent"></ng-container>
+  </main>
+</div>
+
+<ng-template #securityContent>
+  <div class="ax-container">
+    <header class="ax-page-header">
+      <div class="ax-page-header-content">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+          style="align-self: flex-start;">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back
+        </button>
+        <span class="ax-page-header-eyebrow">Account</span>
+        <h1 class="ax-page-title">{{ 'security_title' | translate }}</h1>
+      </div>
+    </header>
+
+    <section class="ax-page-section">
+      <!-- Two-factor authentication -->
+      <div class="ax-card ax-p-5 ax-mb-4" style="max-width: 48rem;">
+        <h2 class="ax-h5 ax-m-0 ax-mb-1">{{ 'security_2fa_title' | translate }}</h2>
+        <p class="ax-text-sm ax-text-secondary ax-m-0 ax-mb-4">{{ 'security_2fa_subtext' | translate }}</p>
+
+        <div class="ax-flex ax-items-center ax-justify-between ax-gap-3 ax-flex-wrap">
+          <div style="flex: 1; min-width: 14rem;">
+            <div class="ax-font-medium ax-text-primary">{{ 'security_2fa_locked' | translate }}</div>
+          </div>
+
+          <label class="ax-switch">
+            <input type="checkbox" checked disabled />
+            <span class="ax-switch-track"></span>
+            <span class="ax-switch-label">{{ 'security_2fa_enable' | translate }}</span>
+          </label>
+
+          <button type="button" class="ax-btn ax-btn-outline ax-btn-sm" disabled>
+            {{ 'save_changes' | translate }}
+          </button>
         </div>
       </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">{{ 'security_title' | translate }}</h1>
+
+      <!-- Change password -->
+      <div class="ax-card ax-p-5" style="max-width: 48rem;">
+        <h2 class="ax-h5 ax-m-0 ax-mb-1">{{ 'security_change_password_title' | translate }}</h2>
+        <p class="ax-text-sm ax-text-secondary ax-m-0 ax-mb-4">{{ 'security_change_password_subtext' | translate }}</p>
+
+        <div class="ax-form-field ax-mb-3">
+          <label class="ax-label" for="password">{{ 'password_label' | translate }}</label>
+          <input
+            id="password"
+            type="password"
+            class="ax-input"
+            autocomplete="new-password"
+            name="password"
+            [(ngModel)]="update_password.password" />
+        </div>
+
+        <div class="ax-form-field ax-mb-4">
+          <label class="ax-label" for="confirm_password">{{ 'password_confirm_label' | translate }}</label>
+          <input
+            id="confirm_password"
+            type="password"
+            class="ax-input"
+            autocomplete="new-password"
+            name="confirm_password"
+            [(ngModel)]="update_password.confirm_password" />
+        </div>
+
+        <div class="ax-flex ax-justify-end">
+          <button
+            type="button"
+            class="ax-btn ax-btn-primary"
+            (click)="password_change()"
+            [disabled]="ui_controls.is_saving">
+            <span *ngIf="ui_controls.is_saving" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+            <span *ngIf="!ui_controls.is_saving" class="material-symbols-outlined" aria-hidden="true">save</span>
+            {{ 'save_changes' | translate }}
+          </button>
+        </div>
       </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0"></div>
-    </div>
-
-    <!-- Page content -->
-    <div class="row">
-      <div class="col-12 col-lg-9" data-bs-spy="scroll" data-bs-target="#accountNav" data-bs-smooth-scroll="true" tabindex="0">
-        <!-- Two-step verification -->
-        <section *ngIf="!ui_controls.is_loading" class="card card-line bg-body-tertiary border-transparent mb-5" id="visibility">
-          <div class="card-body">
-            <h2 class="fs-5 mb-1">{{ 'security_2fa_title' | translate }}</h2>
-            <p class="text-body-secondary">{{ 'security_2fa_subtext' | translate }}</p>
-            <div class="card border-transparent">
-              <div class="card-body py-0">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item px-0">
-                    <div class="row align-items-center">
-                      <div class="col">
-                        {{ 'security_2fa_locked' | translate }}
-                      </div>
-                      <div class="col-auto">
-                        <div class="form-check form-switch mb-3 align-items-center d-flex">
-                          <input checked class="form-check-input" type="checkbox" role="switch">
-                          <label class="form-check-label mx-2">
-                            {{ 'security_2fa_enable' | translate }}
-                          </label>
-                          <button [disabled]="true" type="button" class="btn btn-sm btn-secondary ms-auto">
-                            {{ 'save_changes' | translate }}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Change password -->
-        <section *ngIf="!ui_controls.is_loading" class="card card-line bg-body-tertiary border-transparent mb-5" id="password">
-          <div class="card-body">
-            <h2 class="fs-5 mb-1">{{ 'security_change_password_title' | translate }}</h2>
-            <p class="text-body-secondary">{{ 'security_change_password_subtext' | translate }}</p>
-            <div class="card border-transparent">
-              <div class="card-body">
-                <div class="mb-4">
-                  <label class="form-label">{{ 'password_label' | translate }}</label>
-                  <input [(ngModel)]="update_password.password" type="password" name="password" class="form-control">
-                </div>
-                <div class="mb-4">
-                  <label class="form-label">{{ 'password_confirm_label' | translate }}</label>
-                  <input [(ngModel)]="update_password.confirm_password" type="password" name="confirm_password" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <button (click)="password_change()" class="btn btn-secondary text-white" type="button">{{ 'save_changes' | translate }}</button>
-          </div>
-        </section>
-
-        <tui-loader *ngIf="ui_controls.is_loading" />
-      </div>
-    </div>
+    </section>
   </div>
-</main>
+</ng-template>

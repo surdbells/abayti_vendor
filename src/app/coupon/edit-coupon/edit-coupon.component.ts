@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { TopComponent } from '../../partials/top/top.component';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
@@ -11,22 +10,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { Category } from '../../class/category';
+import { AxMultiselectComponent, AxMultiselectOption } from '../../shared/forms';
+
+interface StoreOption { id: number; store_name: string; }
+interface NamedOption { id: number; name: string; }
 
 @Component({
   selector: 'app-edit-coupon',
   standalone: true,
   imports: [
     SideComponent, AsideComponent, TopComponent,
-    TuiIcon, TuiLoader, CommonModule, FormsModule,
-    NgMultiSelectDropDownModule, SideComponent, AsideComponent,
+    CommonModule, FormsModule,
+    AxMultiselectComponent,
   ],
   templateUrl: './edit-coupon.component.html',
   styleUrl: './edit-coupon.component.css',
 })
 export class EditCouponComponent implements OnInit {
-
   private readonly dialogs = inject(TuiResponsiveDialogService);
 
   session_data: any = '';
@@ -37,10 +37,10 @@ export class EditCouponComponent implements OnInit {
     is_vendor: false, is_customer: false,
   };
 
-  ui = { loading: false, page_loading: true };
+  ui = { loading: false, page_loading: true, nav_open: false };
 
   coupon_id = 0;
-  coupon_code = ''; // Read-only — cannot change code after creation
+  coupon_code = '';
 
   form = {
     name: '',
@@ -58,12 +58,10 @@ export class EditCouponComponent implements OnInit {
     status: 'active',
   };
 
-  // ── Admin: coupon mode (read from existing data) ───────────────
   coupon_mode: 'platform' | 'as_vendor' = 'platform';
   assign_to_store: number | null = null;
-  original_store_id: number | null = null; // Track original for display
+  original_store_id: number | null = null;
 
-  // Stats (read-only display)
   stats = {
     total_uses: 0,
     unique_customers: 0,
@@ -71,18 +69,13 @@ export class EditCouponComponent implements OnInit {
     total_revenue_generated: 0,
   };
 
-  // Lookups
-  categories: Category[] = [];
-  products: { id: number; name: string }[] = [];
-  stores: { id: number; store_name: string }[] = [];
+  categories: NamedOption[] = [];
+  products: NamedOption[] = [];
+  stores: StoreOption[] = [];
 
-  selectedProducts: { id: number; name: string }[] = [];
-  selectedCategories: { id: number; name: string }[] = [];
-  selectedStores: { id: number; store_name: string }[] = [];
-
-  productDropdownSettings: any = {};
-  categoryDropdownSettings: any = {};
-  storeDropdownSettings: any = {};
+  selectedProductIds: (string | number)[] = [];
+  selectedCategoryIds: (string | number)[] = [];
+  selectedStoreIds: (string | number)[] = [];
 
   constructor(
     private router: Router,
@@ -96,25 +89,10 @@ export class EditCouponComponent implements OnInit {
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
     this.coupon_id = Number(this.route.snapshot.queryParamMap.get('id'));
 
-    this.productDropdownSettings = {
-      singleSelection: false, idField: 'id', textField: 'name',
-      selectAllText: 'Select All', unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3, allowSearchFilter: true,
-    };
-    this.categoryDropdownSettings = { ...this.productDropdownSettings };
-    this.storeDropdownSettings = {
-      singleSelection: false, idField: 'id', textField: 'store_name',
-      selectAllText: 'Select All', unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3, allowSearchFilter: true,
-    };
-
     this.fetchCoupon();
     this.fetchLookupData();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  DATA LOADING
-  // ═══════════════════════════════════════════════════════════════
   fetchCoupon(): void {
     const payload = {
       token: this.user_session.token,
@@ -142,23 +120,15 @@ export class EditCouponComponent implements OnInit {
           this.form.expires_at = d.expires_at ? this.toDatetimeLocal(d.expires_at) : '';
           this.form.status = d.status;
 
-          // Stats
-          if (d.stats) {
-            this.stats = d.stats;
-          }
+          if (d.stats) this.stats = d.stats;
 
-          // Targets
           const targets = d.target_products || [];
-          this.selectedProducts = targets.filter((t: any) => t.target_type === 'product').map((t: any) => ({ id: t.target_id, name: `Product #${t.target_id}` }));
-          this.selectedCategories = targets.filter((t: any) => t.target_type === 'category').map((t: any) => ({ id: t.target_id, name: `Category #${t.target_id}` }));
+          this.selectedProductIds = targets.filter((t: any) => t.target_type === 'product').map((t: any) => t.target_id);
+          this.selectedCategoryIds = targets.filter((t: any) => t.target_type === 'category').map((t: any) => t.target_id);
+          this.selectedStoreIds = (d.target_stores || []).map((s: any) => s.store_id);
 
-          // Stores
-          this.selectedStores = (d.target_stores || []).map((s: any) => ({ id: s.store_id, store_name: s.store_name || `Store #${s.store_id}` }));
-
-          // Determine coupon mode for admin
           this.original_store_id = d.store_id;
           if (d.created_by_role === 'admin' && d.store_id !== null) {
-            // Admin created this "as vendor" — it has a direct store_id
             this.coupon_mode = 'as_vendor';
             this.assign_to_store = d.store_id;
           } else if (d.created_by_role === 'admin') {
@@ -183,11 +153,6 @@ export class EditCouponComponent implements OnInit {
       next: (r: any) => {
         if (r.response_code === 200 && r.status === 'success') {
           this.categories = (r.data || []).map((c: any) => ({ id: c.id ?? c.category_id, name: c.name ?? c.category_name }));
-          // Re-map selected category names
-          this.selectedCategories = this.selectedCategories.map(sc => {
-            const found = this.categories.find((c: any) => c.id === sc.id);
-            return found ? { id: found.id, name: (found as any).name } : sc;
-          });
         }
       },
     });
@@ -198,11 +163,6 @@ export class EditCouponComponent implements OnInit {
         next: (r: any) => {
           if (r.response_code === 200 && r.status === 'success') {
             this.products = (r.data || []).map((p: any) => ({ id: p.id, name: p.name }));
-            // Re-map selected product names
-            this.selectedProducts = this.selectedProducts.map(sp => {
-              const found = this.products.find(p => p.id === sp.id);
-              return found ? found : sp;
-            });
           }
         },
       });
@@ -213,19 +173,22 @@ export class EditCouponComponent implements OnInit {
         next: (r: any) => {
           if (r.response_code === 200 && r.status === 'success') {
             this.stores = (r.data || []).map((s: any) => ({ id: s.user_id ?? s.id, store_name: s.store_name }));
-            this.selectedStores = this.selectedStores.map(ss => {
-              const found = this.stores.find(s => s.id === ss.id);
-              return found ? found : ss;
-            });
           }
         },
       });
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  SUBMIT
-  // ═══════════════════════════════════════════════════════════════
+  get productOptions(): AxMultiselectOption[] {
+    return this.products.map(p => ({ id: p.id, label: p.name }));
+  }
+  get categoryOptions(): AxMultiselectOption[] {
+    return this.categories.map(c => ({ id: c.id, label: c.name }));
+  }
+  get storeOptions(): AxMultiselectOption[] {
+    return this.stores.map(s => ({ id: s.id, label: s.store_name }));
+  }
+
   private validate(): boolean {
     if (!this.form.name.trim()) { this.toast.error('Coupon name is required.'); return false; }
     if (this.form.discount_type !== 'free_shipping' && this.form.discount_value <= 0) {
@@ -239,7 +202,6 @@ export class EditCouponComponent implements OnInit {
 
   startUpdate(): void {
     if (!this.validate()) return;
-
     if (this.user_session.is_admin && this.coupon_mode === 'as_vendor' && !this.assign_to_store) {
       this.toast.error('Please select a store to assign this coupon to.');
       return;
@@ -250,10 +212,13 @@ export class EditCouponComponent implements OnInit {
         label: 'Save changes',
         data: {
           content: 'Update this coupon? Changes take effect immediately.',
-          yes: 'Save', no: 'Cancel',
+          yes: 'Save',
+          no: 'Cancel',
         },
       })
-      .subscribe((ok) => { if (ok) this.submitUpdate(); });
+      .subscribe((ok) => {
+        if (ok) this.submitUpdate();
+      });
   }
 
   private submitUpdate(): void {
@@ -261,13 +226,13 @@ export class EditCouponComponent implements OnInit {
 
     const target_products: any[] = [];
     if (this.form.scope === 'specific_products') {
-      for (const p of this.selectedProducts) {
-        target_products.push({ target_type: 'product', target_id: p.id });
+      for (const id of this.selectedProductIds) {
+        target_products.push({ target_type: 'product', target_id: Number(id) });
       }
     }
     if (this.form.scope === 'specific_categories') {
-      for (const c of this.selectedCategories) {
-        target_products.push({ target_type: 'category', target_id: c.id });
+      for (const id of this.selectedCategoryIds) {
+        target_products.push({ target_type: 'category', target_id: Number(id) });
       }
     }
 
@@ -289,10 +254,9 @@ export class EditCouponComponent implements OnInit {
       expires_at: this.form.expires_at || null,
       status: this.form.status,
       target_products,
-      target_stores: this.selectedStores.map(s => s.id),
+      target_stores: this.selectedStoreIds.map(id => Number(id)),
     };
 
-    // Admin mode fields
     if (this.user_session.is_admin) {
       payload.coupon_mode = this.coupon_mode;
       if (this.coupon_mode === 'as_vendor' && this.assign_to_store) {
@@ -317,17 +281,11 @@ export class EditCouponComponent implements OnInit {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  UTILITIES
-  // ═══════════════════════════════════════════════════════════════
   private toDatetimeLocal(dt: string): string {
     if (!dt) return '';
     const d = new Date(dt);
     return d.toISOString().slice(0, 16);
   }
-
-  onItemSelect(_: any): void {}
-  onSelectAll(_: any): void {}
 
   goBack(): void {
     this.router.navigate(['/coupons']);

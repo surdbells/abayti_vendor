@@ -1,144 +1,185 @@
 <app-side></app-side>
-<app-top></app-top>
-<main class="main ml-desktop-22rem px-lg-6">
-  <!-- Content -->
-  <div class="container-lg">
-    <!-- Page header -->
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
+
+<div class="ax-app-shell">
+  <app-top></app-top>
+  <main class="ax-main">
+  <div class="ax-container">
+    <header class="ax-page-header">
+      <div class="ax-page-header-content">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+          style="align-self: flex-start;">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back to account
+        </button>
+        <span class="ax-page-header-eyebrow">Settings</span>
+        <h1 class="ax-page-title">Manage your store</h1>
+        <p class="ax-page-subtitle">Keep your storefront information up to date.</p>
+      </div>
+
+      <div class="ax-flex ax-gap-2 ax-items-center">
+        <span *ngIf="store_single.store_approved" class="ax-badge ax-badge-success">Approved</span>
+        <span *ngIf="!store_single.store_approved" class="ax-badge ax-badge-warning">Pending approval</span>
+      </div>
+    </header>
+
+    <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+      <span class="ax-spinner ax-spinner-lg" aria-label="Loading"></span>
+    </div>
+
+    <section *ngIf="!ui_controls.is_loading" class="ax-page-section">
+      <div class="ax-grid ax-grid-cols-1 ax-lg-grid-cols-3 ax-gap-3">
+        <!-- Main form -->
+        <div class="ax-card ax-p-5" style="grid-column: span 2;">
+          <h2 class="ax-h5 ax-m-0 ax-mb-1">Store information</h2>
+          <p class="ax-text-sm ax-text-secondary ax-m-0 ax-mb-4">
+            Details customers see on your storefront.
+          </p>
+
+          <div class="ax-form-field ax-mb-3">
+            <label class="ax-label ax-label-required" for="store_name">Store name</label>
+            <input
+              id="store_name"
+              type="text"
+              class="ax-input"
+              [maxlength]="50"
+              name="store_name"
+              [(ngModel)]="store_single.store_name" />
+          </div>
+
+          <div class="ax-form-field ax-mb-3">
+            <label class="ax-label ax-label-required" for="store_address">Store location</label>
+            <input
+              id="store_address"
+              type="text"
+              class="ax-input"
+              [maxlength]="255"
+              name="store_address"
+              [(ngModel)]="store_single.store_address" />
+          </div>
+
+          <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-3 ax-mb-3">
+            <div class="ax-form-field">
+              <label class="ax-label ax-label-required" for="store_email">Email</label>
+              <input
+                id="store_email"
+                type="text"
+                class="ax-input"
+                name="store_email"
+                [(ngModel)]="store_single.store_email" />
+            </div>
+            <div class="ax-form-field">
+              <label class="ax-label ax-label-required" for="store_phone">Phone</label>
+              <input
+                id="store_phone"
+                type="text"
+                class="ax-input"
+                name="store_phone"
+                [(ngModel)]="store_single.store_phone" />
+            </div>
+          </div>
+
+          <div class="ax-form-field ax-mb-4">
+            <label class="ax-label ax-label-required">Description</label>
+            <app-ax-rich-editor
+              name="store_description"
+              [(ngModel)]="store_single.store_description"
+              placeholder="Tell customers about your store."
+              minHeight="200px">
+            </app-ax-rich-editor>
+          </div>
+
+          <!-- Logo + cover -->
+          <h3 class="ax-h6 ax-m-0 ax-mb-3">Brand imagery</h3>
+          <div class="ax-grid ax-grid-cols-1 ax-md-grid-cols-2 ax-gap-3 ax-mb-3">
+            <div class="ax-card ax-p-3">
+              <div class="ax-text-2xs ax-text-tertiary ax-mb-2" style="text-transform: uppercase; letter-spacing: 0.06em;">Store logo</div>
+              <img
+                [src]="store_single.store_logo"
+                alt="Store logo"
+                style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: center; border-radius: var(--ax-radius-md); border: 1px solid var(--ax-color-border-subtle);" />
+              <input
+                type="file"
+                class="ax-input ax-input-sm ax-mt-3"
+                accept="image/png,image/jpeg,image/jpg"
+                (change)="select_logo($event)"
+                name="store_logo_file" />
+              <span class="ax-hint">Square, 600×600 px. JPG, JPEG or PNG.</span>
+            </div>
+            <div class="ax-card ax-p-3">
+              <div class="ax-text-2xs ax-text-tertiary ax-mb-2" style="text-transform: uppercase; letter-spacing: 0.06em;">Cover image</div>
+              <img
+                [src]="store_single.store_cover"
+                alt="Store cover"
+                style="width: 100%; aspect-ratio: 800 / 428; object-fit: cover; object-position: center; border-radius: var(--ax-radius-md); border: 1px solid var(--ax-color-border-subtle);" />
+              <input
+                type="file"
+                class="ax-input ax-input-sm ax-mt-3"
+                accept="image/png,image/jpeg,image/jpg"
+                (change)="select_cover($event)"
+                name="store_cover_file" />
+              <span class="ax-hint">Landscape, 800×428 px. JPG, JPEG or PNG.</span>
+            </div>
+          </div>
+
+          <div class="ax-flex ax-justify-end ax-mt-3">
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary"
+              (click)="update_changes()"
+              [disabled]="ui_controls.is_saving_basic">
+              <span *ngIf="ui_controls.is_saving_basic" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span *ngIf="!ui_controls.is_saving_basic" class="material-symbols-outlined" aria-hidden="true">save</span>
+              Save changes
+            </button>
+          </div>
+        </div>
+
+        <!-- Side: Store status -->
+        <div>
+          <div class="ax-card ax-p-5">
+            <h2 class="ax-h6 ax-m-0 ax-mb-1">Store visibility</h2>
+            <p class="ax-text-sm ax-text-secondary ax-m-0 ax-mb-4">
+              Control whether customers can browse and order from your storefront.
+            </p>
+
+            <label class="ax-switch ax-mb-3">
+              <input
+                type="checkbox"
+                name="store_status"
+                [(ngModel)]="store_single.store_status"
+                [disabled]="!store_single.store_approved" />
+              <span class="ax-switch-track"></span>
+              <span class="ax-switch-label">
+                {{ store_single.store_status ? 'Visible to customers' : 'Hidden from customers' }}
+              </span>
+            </label>
+
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary ax-btn-sm"
+              style="width: 100%;"
+              (click)="change_store_status()"
+              [disabled]="!store_single.store_approved || ui_controls.is_saving_status">
+              <span *ngIf="ui_controls.is_saving_status" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span *ngIf="!ui_controls.is_saving_status" class="material-symbols-outlined" aria-hidden="true">save</span>
+              Save visibility
+            </button>
+
+            <div *ngIf="!store_single.store_approved" class="ax-card ax-p-3 ax-mt-4" style="background: rgba(var(--ax-color-bg-warning-rgb, 253 230 138), 0.18); border-color: var(--ax-color-border-warning, rgba(234, 179, 8, 0.3));">
+              <div class="ax-flex ax-gap-2 ax-items-start">
+                <span class="material-symbols-outlined" aria-hidden="true" style="font-size: 1.125rem; color: var(--ax-color-text-warning);">info</span>
+                <div class="ax-text-2xs ax-text-secondary">
+                  We're reviewing your store. Until approval is finalised, you can't change visibility. Contact support with any questions.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Manage your store</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0"></div>
-    </div>
-
-    <!-- Page content -->
-    <div class="row">
-      <div *ngIf="ui_controls.is_loading" class="col-12">
-        <tui-loader  />
-      </div>
-      <div *ngIf="!ui_controls.is_loading" class="col-xxl-8 col-xl-8 col-lg-6 col-12">
-        <section class="card bg-body-tertiary border-transparent mb-5">
-          <div class="card-body">
-            <h2 class="fs-5 mb-1">Store information</h2>
-            <p class="text-body-secondary">Keep your store up to date</p>
-            <div class="card border-transparent">
-              <div class="card-body">
-                <div class="mb-4">
-                  <label class="form-label required">Store name</label>
-                  <input [maxlength]="50" type="text" [(ngModel)]="store_single.store_name" name="store_name" class="form-control form-control-sm">
-                </div>
-                <div class="mb-4">
-                  <label class="form-label required">Store location</label>
-                  <input [maxlength]="255" type="text" [(ngModel)]="store_single.store_address" name="store_address" class="form-control form-control-sm">
-                </div>
-                <div class="row">
-                  <div class="col-xxl-6 col-xl-6 col-12">
-                    <div class="mb-4">
-                      <label class="form-label required">Email</label>
-                      <input type="text" [(ngModel)]="store_single.store_email" name="store_email" class="form-control form-control-sm">
-                    </div>
-                  </div>
-                  <div class="col-xxl-6 col-xl-6 col-12">
-                    <div class="mb-4">
-                      <label class="form-label required">Phone number</label>
-                      <input [(ngModel)]="store_single.store_phone" type="text" name="store_phone" class="form-control form-control-sm">
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <label class="form-label required">Description</label>
-                  <angular-editor [config]="editorConfig" [maxlength]="200" [(ngModel)]="store_single.store_description" [placeholder]="'Enter your description here'"></angular-editor>
-                </div>
-                <div class="row">
-                  <div class="col-xxl-4 col-xl-4 col-12">
-                    <div class="mb-4">
-                      <div class="card shadow-sm">
-                        <img src="{{store_single.store_logo}}" class="card-img-top" style="height: 160px; object-fit: cover" alt="">
-                        <div class="card-body">
-                          <div class="mb-3">
-                            <label for="store_logo" class="form-label required">Store logo</label>
-                            <input [(ngModel)]="store_single.store_logo" (change)="select_logo($event)" name="store_logo" class="form-control form-control-sm" type="file" id="store_logo" accept="image/png,image/jpeg,image/jpg">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xxl-8 col-xl-8 col-12">
-                    <div class="mb-4">
-                      <div class="card shadow-sm">
-                        <img src="{{store_single.store_cover}}" class="card-img-top" style="height: 160px; object-fit: cover" alt="">
-                        <div class="card-body">
-                          <div class="mb-3">
-                            <label for="store_cover" class="form-label required">Store Cover Image</label>
-                            <input [(ngModel)]="store_single.store_cover" (change)="select_cover($event)" name="store_cover" class="form-control form-control-sm" type="file" id="store_cover" accept="image/png,image/jpeg,image/jpg">
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12">
-                    <div class="form-text small text-muted"> Upload a 600px [width] × 600px [height] logo image in JPG, JPEG, or PNG. </div>
-                    <div class="form-text small text-muted"> Upload a 800px [width] × 428px [height] cover image in JPG, JPEG, or PNG. </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <button (click)="update_changes()" class="btn btn-secondary text-white" type="button">Save Changes</button>
-          </div>
-        </section>
-      </div>
-      <div *ngIf="!ui_controls.is_loading" class="col-xxl-4 col-xl-4 col-lg-6 col-12">
-        <section class="card card-line bg-body-tertiary border-transparent mb-5">
-          <div class="card-body">
-            <h2 class="fs-5 mb-1">Store Status</h2>
-            <p class="text-body-secondary">Control your storefront’s presence - toggle visibility on or off anytime.</p>
-            <div class="card border-transparent">
-              <div class="card-body py-0">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item px-0">
-                    <div class="row align-items-center">
-                      <div class="col">
-                        Store visibility
-                      </div>
-                      <div class="col-auto">
-                        <div class="form-check form-switch mb-3 align-items-center d-flex">
-                          <input [checked]="store_single.store_status" (change)="store_single.store_status = !store_single.store_status" name="store_status" id="store_status" class="form-check-input" type="checkbox" role="switch">
-                          <label class="form-check-label mx-2">
-                            Enable
-                          </label>
-                          <button [disabled]="!store_single.store_approved" (click)="change_store_status()" type="button" class="btn btn-sm btn-secondary ms-auto">
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section *ngIf="!store_single.store_approved" class="card bg-body-tertiary border-transparent">
-          <div class="card-body">
-            <div class="alert alert-danger m-0 p-0" role="alert">
-              We’re reviewing your store. Until approval is finalized, you won’t be able to change your store’s visibility or status. If you have questions, please contact support.
-            </div>
-          </div>
-        </section>
-
-      </div>
-    </div>
+    </section>
   </div>
 </main>
+</div>

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { SideComponent } from '../../partials/side/side.component';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { TopComponent } from '../../partials/top/top.component';
-import { TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
@@ -11,25 +10,32 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { Category } from '../../class/category';
+import { AxMultiselectComponent, AxMultiselectOption } from '../../shared/forms';
+
+interface StoreOption {
+  id: number;
+  store_name: string;
+}
+
+interface NamedOption {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-create-coupon',
   standalone: true,
   imports: [
     SideComponent, AsideComponent, TopComponent,
-    TuiIcon, TuiLoader, CommonModule, FormsModule,
-    NgMultiSelectDropDownModule, SideComponent, AsideComponent,
+    CommonModule, FormsModule,
+    AxMultiselectComponent,
   ],
   templateUrl: './create-coupon.component.html',
   styleUrl: './create-coupon.component.css',
 })
 export class CreateCouponComponent implements OnInit {
-
   private readonly dialogs = inject(TuiResponsiveDialogService);
 
-  // ── Session ────────────────────────────────────────────────────
   session_data: any = '';
   user_session = {
     id: 0, token: '', first_name: '', last_name: '',
@@ -38,10 +44,8 @@ export class CreateCouponComponent implements OnInit {
     is_vendor: false, is_customer: false,
   };
 
-  // ── UI ─────────────────────────────────────────────────────────
-  ui = { loading: false, page_loading: false, generating_code: false };
+  ui = { loading: false, page_loading: false, generating_code: false, nav_open: false };
 
-  // ── Form model ─────────────────────────────────────────────────
   form = {
     code: '',
     name: '',
@@ -58,23 +62,18 @@ export class CreateCouponComponent implements OnInit {
     expires_at: '',
   };
 
-  // ── Admin: coupon creation mode ────────────────────────────────
   coupon_mode: 'platform' | 'as_vendor' = 'platform';
   assign_to_store: number | null = null;
 
-  // ── Lookup data ────────────────────────────────────────────────
-  categories: Category[] = [];
-  products: { id: number; name: string }[] = [];
-  stores: { id: number; store_name: string }[] = [];
+  // Raw data from API
+  categories: NamedOption[] = [];
+  products: NamedOption[] = [];
+  stores: StoreOption[] = [];
 
-  // ── Multi-select targets ───────────────────────────────────────
-  selectedProducts: { id: number; name: string }[] = [];
-  selectedCategories: { id: number; name: string }[] = [];
-  selectedStores: { id: number; store_name: string }[] = [];
-
-  productDropdownSettings: any = {};
-  categoryDropdownSettings: any = {};
-  storeDropdownSettings: any = {};
+  // Selected IDs (from AxMultiselect ngModel)
+  selectedProductIds: (string | number)[] = [];
+  selectedCategoryIds: (string | number)[] = [];
+  selectedStoreIds: (string | number)[] = [];
 
   constructor(
     private router: Router,
@@ -82,39 +81,15 @@ export class CreateCouponComponent implements OnInit {
     private toast: HotToastService,
   ) {}
 
-  // ═══════════════════════════════════════════════════════════════
-  //  LIFECYCLE
-  // ═══════════════════════════════════════════════════════════════
   ngOnInit(): void {
     this.session_data = sessionStorage.getItem('SESSION');
     this.user_session = GlobalComponent.decodeBase64(this.session_data);
-
-    this.productDropdownSettings = {
-      singleSelection: false, idField: 'id', textField: 'name',
-      selectAllText: 'Select All', unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3, allowSearchFilter: true,
-    };
-    this.categoryDropdownSettings = {
-      singleSelection: false, idField: 'id', textField: 'name',
-      selectAllText: 'Select All', unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3, allowSearchFilter: true,
-    };
-    this.storeDropdownSettings = {
-      singleSelection: false, idField: 'id', textField: 'store_name',
-      selectAllText: 'Select All', unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3, allowSearchFilter: true,
-    };
-
     this.fetchLookupData();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  DATA LOADING
-  // ═══════════════════════════════════════════════════════════════
   fetchLookupData(): void {
     this.ui.page_loading = true;
 
-    // Categories
     this.crudService.get_request(GlobalComponent.UtilityCategory).subscribe({
       next: (r: any) => {
         if (r.response_code === 200 && r.status === 'success') {
@@ -123,7 +98,6 @@ export class CreateCouponComponent implements OnInit {
       },
     });
 
-    // Products (vendor's own)
     if (this.user_session.is_vendor) {
       const payload = { token: this.user_session.token, id: this.user_session.id, store: this.user_session.id };
       this.crudService.post_request(payload, GlobalComponent.getProduct).subscribe({
@@ -136,7 +110,6 @@ export class CreateCouponComponent implements OnInit {
       });
     }
 
-    // Stores (admin only)
     if (this.user_session.is_admin) {
       this.crudService.get_request(GlobalComponent.UtilityStores).subscribe({
         next: (r: any) => {
@@ -153,9 +126,19 @@ export class CreateCouponComponent implements OnInit {
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  CODE GENERATION
-  // ═══════════════════════════════════════════════════════════════
+  /** Adapt products to AxMultiselect options. */
+  get productOptions(): AxMultiselectOption[] {
+    return this.products.map(p => ({ id: p.id, label: p.name }));
+  }
+
+  get categoryOptions(): AxMultiselectOption[] {
+    return this.categories.map(c => ({ id: c.id, label: c.name }));
+  }
+
+  get storeOptions(): AxMultiselectOption[] {
+    return this.stores.map(s => ({ id: s.id, label: s.store_name }));
+  }
+
   generateCode(): void {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
@@ -165,9 +148,6 @@ export class CreateCouponComponent implements OnInit {
     this.form.code = code;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  VALIDATION
-  // ═══════════════════════════════════════════════════════════════
   private validate(): boolean {
     if (!this.form.name.trim()) { this.toast.error('Coupon name is required.'); return false; }
     if (this.form.discount_type !== 'free_shipping' && this.form.discount_value <= 0) {
@@ -182,13 +162,8 @@ export class CreateCouponComponent implements OnInit {
     return true;
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  SUBMIT
-  // ═══════════════════════════════════════════════════════════════
   startCreate(): void {
     if (!this.validate()) return;
-
-    // Admin "as vendor" validation
     if (this.user_session.is_admin && this.coupon_mode === 'as_vendor' && !this.assign_to_store) {
       this.toast.error('Please select a store to assign this coupon to.');
       return;
@@ -199,29 +174,31 @@ export class CreateCouponComponent implements OnInit {
         label: 'Create coupon',
         data: {
           content: `Create coupon "${this.form.code || '(auto-generated)'}" and make it active immediately?`,
-          yes: 'Create', no: 'Cancel',
+          yes: 'Create',
+          no: 'Cancel',
         },
       })
-      .subscribe((ok) => { if (ok) this.submitCoupon(); });
+      .subscribe((ok) => {
+        if (ok) this.submitCoupon();
+      });
   }
 
   private submitCoupon(): void {
     this.ui.loading = true;
 
-    // Build targets
     const target_products: any[] = [];
     if (this.form.scope === 'specific_products') {
-      for (const p of this.selectedProducts) {
-        target_products.push({ target_type: 'product', target_id: p.id });
+      for (const id of this.selectedProductIds) {
+        target_products.push({ target_type: 'product', target_id: Number(id) });
       }
     }
     if (this.form.scope === 'specific_categories') {
-      for (const c of this.selectedCategories) {
-        target_products.push({ target_type: 'category', target_id: c.id });
+      for (const id of this.selectedCategoryIds) {
+        target_products.push({ target_type: 'category', target_id: Number(id) });
       }
     }
 
-    const target_stores = this.selectedStores.map(s => s.id);
+    const target_stores = this.selectedStoreIds.map(id => Number(id));
 
     const payload: any = {
       token: this.user_session.token,
@@ -243,7 +220,6 @@ export class CreateCouponComponent implements OnInit {
       target_stores,
     };
 
-    // Admin mode fields
     if (this.user_session.is_admin) {
       payload.coupon_mode = this.coupon_mode;
       if (this.coupon_mode === 'as_vendor' && this.assign_to_store) {
@@ -268,15 +244,6 @@ export class CreateCouponComponent implements OnInit {
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  MULTI-SELECT HANDLERS
-  // ═══════════════════════════════════════════════════════════════
-  onItemSelect(_: any): void {}
-  onSelectAll(_: any): void {}
-
-  // ═══════════════════════════════════════════════════════════════
-  //  NAVIGATION
-  // ═══════════════════════════════════════════════════════════════
   goBack(): void {
     this.router.navigate(['/coupons']);
   }

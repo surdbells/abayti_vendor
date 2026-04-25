@@ -1,70 +1,123 @@
 <app-side></app-side>
-<app-top></app-top>
-<main class="main ml-desktop-22rem px-lg-6">
-  <!-- Content -->
-  <div class="container-lg">
-    <!-- Page header -->
-    <!-- Page header -->
-    <div class="row align-items-center mb-7">
-      <div (click)="goBack()" role="button" class="col-auto">
-        <div class="avatar text-center avatar-md rounded text-primary-emphasis">
-          <i class="fs-5">
-            <tui-icon icon="@tui.chevron-left" />
-          </i>
-        </div>
+
+<div class="ax-app-shell">
+  <app-top></app-top>
+  <main class="ax-main">
+  <div class="ax-container">
+    <header class="ax-page-header">
+      <div class="ax-page-header-content">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="ax-btn ax-btn-ghost ax-btn-sm ax-mb-2"
+          style="align-self: flex-start;">
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+          Back to account
+        </button>
+        <span class="ax-page-header-eyebrow">Settings</span>
+        <h1 class="ax-page-title">Product labels</h1>
+        <p class="ax-page-subtitle">
+          Group your products into themed collections customers can browse.
+        </p>
       </div>
-      <div class="col">
-        <h1 class="fs-4 mb-0">Product labels</h1>
-      </div>
-      <div class="col-12 col-sm-auto mt-4 mt-sm-0"></div>
+    </header>
+
+    <div *ngIf="ui_controls.is_loading" class="ax-flex ax-justify-center ax-py-8">
+      <span class="ax-spinner ax-spinner-lg" aria-label="Loading labels"></span>
     </div>
 
-    <!-- Page content -->
-    <div class="row">
-      <div class="col-12 col-lg-9" data-bs-spy="scroll" data-bs-target="#accountNav" data-bs-smooth-scroll="true" tabindex="0">
-        <section *ngIf="!ui_controls.is_loading" class="card bg-body-tertiary border-transparent" id="security">
-          <div class="card-body">
-            <h2 class="fs-5 mb-1">Product labels</h2>
-            <p class="text-body-secondary">
-              Labels let you group your products into meaningful categories, making it easier for customers to browse and discover what they’re looking for. Whether it’s seasonal items, special promotions, or curated themes, collections help you showcase your products in an organized way.
-            </p>
-            <div class="card">
-              <div class="card-body">
-                By creating and managing labels, you can: <hr>
-                <ul class="list-group-flush">
-                  <li class="list-group-item">🛍️ Highlight featured or best-selling products.</li>
-                  <li class="list-group-item">🎯 Target specific customer interests (e.g., “Summer Collection”, “New Arrivals”, “Festive Deals”).</li>
-                  <li class="list-group-item">📂 Keep your store organized and visually appealing.</li>
-                </ul>
-              </div>
-              <div class="card-body">
-                <tui-loader *ngIf="ui_controls.is_creating_label" />
-                <div *ngIf="!ui_controls.is_creating_label" class="input-group mb-3">
-                  <input [(ngModel)]="vendor_label_create.label" [max]="20" type="text" class="form-control form-control-sm" placeholder="e.g Clearance Sale" aria-label="e.g clearance sale" aria-describedby="basic-addon2">
-                  <div class="input-group-append">
-                    <button (click)="create_vendor_labels()" class="btn btn-sm btn-dark" type="button">Create label</button>
-                  </div>
-                </div>
-                <ul class="list-group list-group-flush">
-                  <li *ngFor="let a_label of labels; let i = index" class="list-group-item border-0 px-0">
-                    <div class="input-group">
-                      <span class="input-group-text">{{ a_label.label }}</span>
-                      <input value="{{ a_label.label }}" placeholder="{{ a_label.label }}" [(ngModel)]="update.label" type="text" class="form-control form-control-sm">
-                      <button (click)="update_label(a_label.id, update.label)" type="button" class="btn btn-sm abayti_secondary_background">
-                        <span class="material-symbols-outlined fs-3 abayti_secondary_color">save</span>
-                      </button>
-                      <button (click)="start_delete_label(a_label.id, a_label.label)" type="button" class="btn btn-sm abayti_secondary_background">
-                        <span class="material-symbols-outlined fs-3 abayti_secondary_color">delete</span>
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+    <section *ngIf="!ui_controls.is_loading" class="ax-page-section">
+      <div class="ax-card ax-p-5" style="max-width: 56rem;">
+        <!-- Education strip -->
+        <div class="ax-card ax-p-4 ax-mb-4" style="background: var(--ax-color-bg-canvas);">
+          <h3 class="ax-h6 ax-m-0 ax-mb-2">How labels help</h3>
+          <div class="ax-text-sm ax-text-secondary" style="display: grid; gap: 0.5rem;">
+            <div class="ax-flex ax-gap-2 ax-items-start">
+              <span class="material-symbols-outlined ax-text-brand" aria-hidden="true" style="font-size: 1.125rem;">storefront</span>
+              Highlight featured or best-selling products.
+            </div>
+            <div class="ax-flex ax-gap-2 ax-items-start">
+              <span class="material-symbols-outlined ax-text-brand" aria-hidden="true" style="font-size: 1.125rem;">category</span>
+              Target specific customer interests — "Summer Collection", "New Arrivals", "Festive Deals".
+            </div>
+            <div class="ax-flex ax-gap-2 ax-items-start">
+              <span class="material-symbols-outlined ax-text-brand" aria-hidden="true" style="font-size: 1.125rem;">folder_open</span>
+              Keep your store organised and visually appealing.
             </div>
           </div>
-        </section>
-        <tui-loader *ngIf="ui_controls.is_loading" />
+        </div>
+
+        <!-- Create row -->
+        <div class="ax-mb-4">
+          <label class="ax-label" for="new_label">Add a label</label>
+          <div class="ax-input-group">
+            <input
+              id="new_label"
+              type="text"
+              class="ax-input"
+              [maxlength]="20"
+              placeholder="e.g. Clearance Sale"
+              name="new_label"
+              [(ngModel)]="vendor_label_create.label" />
+            <button
+              type="button"
+              class="ax-btn ax-btn-primary ax-input-group-action"
+              (click)="create_vendor_labels()"
+              [disabled]="ui_controls.is_creating_label">
+              <span *ngIf="ui_controls.is_creating_label" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+              <span *ngIf="!ui_controls.is_creating_label" class="material-symbols-outlined" aria-hidden="true">add</span>
+              Create
+            </button>
+          </div>
+        </div>
+
+        <!-- Labels list -->
+        <div *ngIf="labels && labels.length > 0" class="ax-flex ax-flex-col ax-gap-2">
+          <div *ngFor="let a_label of labels; let i = index" class="ax-card ax-p-3">
+            <div class="ax-flex ax-gap-2 ax-items-center ax-flex-wrap">
+              <span class="ax-badge ax-badge-brand" style="flex-shrink: 0;">{{ a_label.label }}</span>
+
+              <input
+                type="text"
+                class="ax-input ax-input-sm"
+                style="flex: 1; min-width: 10rem;"
+                [(ngModel)]="editMap[a_label.id]"
+                [name]="'edit_' + a_label.id"
+                placeholder="Rename label…" />
+
+              <button
+                type="button"
+                class="ax-btn ax-btn-outline ax-btn-sm"
+                (click)="update_label(a_label.id)"
+                [disabled]="ui_controls.is_saving_label_id === a_label.id">
+                <span *ngIf="ui_controls.is_saving_label_id === a_label.id" class="ax-spinner ax-spinner-sm" aria-hidden="true"></span>
+                <span *ngIf="ui_controls.is_saving_label_id !== a_label.id" class="material-symbols-outlined" aria-hidden="true">save</span>
+                Save
+              </button>
+
+              <button
+                type="button"
+                class="ax-btn ax-btn-ghost ax-btn-sm"
+                style="color: var(--ax-color-text-danger);"
+                (click)="start_delete_label(a_label.id, a_label.label)">
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!labels || labels.length === 0" class="ax-card ax-p-5 ax-text-center" style="background: var(--ax-color-bg-canvas); border-style: dashed;">
+          <span
+            class="material-symbols-outlined"
+            style="font-size: 2.5rem; color: var(--ax-color-text-tertiary);"
+            aria-hidden="true">sell</span>
+          <h4 class="ax-h6 ax-m-0 ax-mt-2">No labels yet</h4>
+          <p class="ax-text-2xs ax-text-tertiary ax-mt-1">Create your first label above to start organising your products.</p>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </main>
+</div>
