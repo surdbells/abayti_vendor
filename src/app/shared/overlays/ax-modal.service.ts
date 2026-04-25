@@ -26,14 +26,17 @@ export const AX_MODAL_DATA = new InjectionToken<unknown>('AX_MODAL_DATA');
 /**
  * Handle returned by AxModalService.open(). Use it to close the modal
  * programmatically and to listen for its eventual close result.
+ *
+ * `componentRef` is assigned by AxModalService immediately after the portal
+ * attaches; consumers should treat it as defined for the lifetime of the modal.
  */
 export class AxModalRef<TComponent = unknown, TResult = unknown> {
   private readonly _afterClosed$ = new Subject<TResult | undefined>();
 
-  constructor(
-    private readonly overlayRef: OverlayRef,
-    public readonly componentRef: ComponentRef<TComponent>,
-  ) {}
+  /** Set by AxModalService after `overlayRef.attach()` returns. */
+  componentRef!: ComponentRef<TComponent>;
+
+  constructor(private readonly overlayRef: OverlayRef) {}
 
   /** Emits once with the close result (if provided) when the modal is closed. */
   afterClosed(): Observable<TResult | undefined> {
@@ -94,23 +97,23 @@ export class AxModalService {
 
     const overlayRef = this.overlay.create(overlayConfig);
 
-    // Placeholder ref so we can inject AxModalRef into the child component;
-    // we mutate its fields once the component is attached.
-    const modalRefPlaceholder = { ref: undefined as unknown as AxModalRef<T, R> };
+    // Construct the modal ref BEFORE attaching the portal so that
+    // `inject(AxModalRef)` inside the body component resolves to a real ref
+    // (not a placeholder that's still undefined at injection time).
+    // `componentRef` is assigned right after `attach()` returns.
+    const modalRef = new AxModalRef<T, R>(overlayRef);
 
     const injector = Injector.create({
       parent: this.parentInjector,
       providers: [
         { provide: AX_MODAL_DATA, useValue: config.data ?? null },
-        { provide: AxModalRef, useFactory: () => modalRefPlaceholder.ref },
+        { provide: AxModalRef, useValue: modalRef },
       ],
     });
 
     const portal = new ComponentPortal(component, null, injector);
     const componentRef = overlayRef.attach(portal);
-
-    const modalRef = new AxModalRef<T, R>(overlayRef, componentRef);
-    modalRefPlaceholder.ref = modalRef;
+    modalRef.componentRef = componentRef;
 
     // Backdrop click
     if (!config.disableBackdropClose) {

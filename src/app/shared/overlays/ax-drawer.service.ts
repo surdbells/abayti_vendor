@@ -28,10 +28,10 @@ export const AX_DRAWER_DATA = new InjectionToken<unknown>('AX_DRAWER_DATA');
 export class AxDrawerRef<TComponent = unknown, TResult = unknown> {
   private readonly _afterClosed$ = new Subject<TResult | undefined>();
 
-  constructor(
-    private readonly overlayRef: OverlayRef,
-    public readonly componentRef: ComponentRef<TComponent>,
-  ) {}
+  /** Set by AxDrawerService after `overlayRef.attach()` returns. */
+  componentRef!: ComponentRef<TComponent>;
+
+  constructor(private readonly overlayRef: OverlayRef) {}
 
   afterClosed(): Observable<TResult | undefined> {
     return this._afterClosed$.asObservable();
@@ -93,20 +93,22 @@ export class AxDrawerService {
 
     const overlayRef = this.overlay.create(overlayConfig);
 
-    const refPlaceholder = { ref: undefined as unknown as AxDrawerRef<T, R> };
+    // Construct drawer ref BEFORE attaching the portal so `inject(AxDrawerRef)`
+    // inside the body component resolves to a real ref. `componentRef` is
+    // assigned right after `attach()` returns.
+    const drawerRef = new AxDrawerRef<T, R>(overlayRef);
+
     const injector = Injector.create({
       parent: this.parentInjector,
       providers: [
         { provide: AX_DRAWER_DATA, useValue: config.data ?? null },
-        { provide: AxDrawerRef, useFactory: () => refPlaceholder.ref },
+        { provide: AxDrawerRef, useValue: drawerRef },
       ],
     });
 
     const portal = new ComponentPortal(component, null, injector);
     const componentRef = overlayRef.attach(portal);
-
-    const drawerRef = new AxDrawerRef<T, R>(overlayRef, componentRef);
-    refPlaceholder.ref = drawerRef;
+    drawerRef.componentRef = componentRef;
 
     if (!config.disableBackdropClose) {
       overlayRef.backdropClick().subscribe(() => drawerRef.close());
