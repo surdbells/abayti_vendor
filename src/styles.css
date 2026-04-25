@@ -1,13 +1,10 @@
 /* =========================================================================
    Abayti Vendor — Global Styles
    --------------------------------------------------------------------------
-   PHASE 1 (Proof of Concept):
-     Our new design system is loaded alongside the legacy theme.
-     - Migrated pages use `ax-*` classes and render with the new system.
-     - Non-migrated pages keep their Bootstrap classes and render via
-       the still-loaded legacy theme bundle.
-     - Migration proceeds page-by-page in Phases 4–11.
-     - Phase 12 removes the legacy theme entirely.
+   The design system (`ax-*`) is the only style layer.
+   Phases 1–11: page-by-page migration off Bootstrap to the ax design system.
+   Phase 12: removed legacy theme bundles (Bootstrap CSS/JS, jQuery, vendor
+             plugins). All pages now render exclusively via ax-* tokens.
    ========================================================================= */
 
 /* External fonts & icons */
@@ -36,29 +33,7 @@
 @import './styles/components/_rich.css';
 @import './styles/components/_pages.css';
 
-/*
- * Legacy compatibility shims
- * -------------------------
- * These map the two legacy brand helpers to the new tokens so any
- * lingering legacy template continues to render correctly until migrated.
- */
-.abayti_primary_background { background-color: var(--ax-color-bg-brand-subtle) !important; }
-.abayti_primary_color      { color: var(--ax-color-text-primary) !important; }
-.abayti_secondary_background { background-color: var(--ax-color-bg-brand) !important; }
-.abayti_secondary_color      { color: var(--ax-color-text-brand) !important; }
-
-/* Kept from old file until all templates migrate */
+/* Legacy desktop sidebar offset — still in use until receipt page is restructured */
 @media (min-width: 1180px) {
   .ml-desktop-22rem { margin-left: 18rem; }
-}
-@media (max-width: 991px) {
-  .hide-on-mobile { display: none !important; }
-}
-@media (min-width: 992px) {
-  .show-on-mobile { display: none !important; }
-}
-.form-label.required::after {
-  color: var(--ax-color-bg-danger);
-  content: '*';
-  margin-left: 0.25rem;
 }

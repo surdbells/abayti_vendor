@@ -28,15 +28,9 @@
             ],
             "styles": [
               "node_modules/@ngneat/hot-toast/src/styles/styles.css",
-              "public/assets/css/libs.bundle.css",
-              "public/assets/css/theme.bundle.css",
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/apexcharts/dist/apexcharts.min.js",
-              "public/assets/js/theme.bundle.js",
-              "public/assets/js/vendor.bundle.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

@@ -410,8 +410,8 @@
       <div *ngIf="ui.loaded_preview" class="phone-frame mx-auto">
         <div class="phone-screen">
           <div class="phone-status-bar">
-            <span class="small">1:37</span>
-            <div class="d-flex gap-1 align-items-center">
+            <span class="ax-text-sm">1:37</span>
+            <div class="ax-flex ax-gap-1 ax-items-center">
               <span class="material-symbols-outlined" style="font-size: 14px;">signal_cellular_alt</span>
               <span class="material-symbols-outlined" style="font-size: 14px;">wifi</span>
               <span class="material-symbols-outlined" style="font-size: 14px;">battery_5_bar</span>
@@ -422,7 +422,7 @@
             <span class="phone-back-btn">
               <span class="material-symbols-outlined">arrow_back</span>
             </span>
-            <div class="d-flex gap-3">
+            <div class="ax-flex ax-gap-3">
               <span class="material-symbols-outlined">favorite_border</span>
               <span class="material-symbols-outlined">shopping_cart</span>
             </div>
@@ -457,7 +457,7 @@
           </div>
 
           <div class="phone-content">
-            <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="ax-flex ax-justify-between ax-items-start ax-mb-2">
               <div>
                 <div class="phone-category">{{ single_product.category_name || 'PRODUCT' }}</div>
                 <div class="phone-product-name">{{ single_product.name }}</div>
@@ -476,7 +476,7 @@
               Delivery Time: {{ previewDeliveryTime }}
             </div>
 
-            <div *ngIf="previewColors.length > 0" class="mt-3">
+            <div *ngIf="previewColors.length > 0" class="ax-mt-3">
               <div class="phone-section-label">Color</div>
               <div class="phone-color-chips">
                 <div *ngFor="let c of previewColors" class="phone-color-chip">
@@ -489,14 +489,14 @@
               </div>
             </div>
 
-            <div *ngIf="previewSizes.length > 0" class="mt-3">
+            <div *ngIf="previewSizes.length > 0" class="ax-mt-3">
               <div class="phone-section-label">Size</div>
               <div class="phone-size-chips">
                 <span *ngFor="let s of previewSizes" class="phone-size-chip">{{ s }}</span>
               </div>
             </div>
 
-            <div *ngIf="single_product.delivery_note" class="mt-3">
+            <div *ngIf="single_product.delivery_note" class="ax-mt-3">
               <div class="phone-section-label">Note</div>
               <div class="phone-note-box">{{ single_product.delivery_note }}</div>
             </div>
@@ -508,7 +508,7 @@
               <div class="phone-total-price">{{ formatCurrency(single_product.price, 'en', 'AED ') }}</div>
             </div>
             <div class="phone-add-to-cart">
-              <span class="material-symbols-outlined me-1" style="font-size: 18px;">shopping_cart</span>
+              <span class="material-symbols-outlined ax-mr-1" style="font-size: 18px;">shopping_cart</span>
               Add to Cart
             </div>
           </div>

@@ -92,6 +92,11 @@
       </div>
     </section>
 
+    <!-- Coupons overview widget (vendors only) -->
+    <section *ngIf="!ui_controls.is_loading && user_session.is_vendor" class="ax-page-section">
+      <app-coupon-widget></app-coupon-widget>
+    </section>
+
     <!-- Recent orders -->
     <section *ngIf="!ui_controls.is_loading" class="ax-page-section">
       <!-- Has recent orders: table -->

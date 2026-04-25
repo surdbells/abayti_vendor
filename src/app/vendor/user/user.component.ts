@@ -29,6 +29,7 @@ import {
   AxEmptyStateComponent,
 } from '../../shared/data';
 import { themedChart } from '../../shared/rich/ax-chart-theme';
+import { CouponWidgetComponent } from '../../coupon/coupon-widget/coupon-widget.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -58,6 +59,7 @@ export type ChartOptions = {
     AxTableComponent,
     AxColumnComponent,
     AxEmptyStateComponent,
+    CouponWidgetComponent,
   ],
   styleUrl: './user.component.css',
 })
