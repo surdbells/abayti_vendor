@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -31,6 +29,7 @@ import {
 import { themedChart } from '../../shared/rich/ax-chart-theme';
 import { CouponWidgetComponent } from '../../coupon/coupon-widget/coupon-widget.component';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -49,9 +48,8 @@ export type ChartOptions = {
   standalone: true,
   templateUrl: './user.component.html',
   imports: [
-    SideComponent,
+    VendorShellComponent,
     CommonModule,
-    TopComponent,
     NgApexchartsModule,
     ChartComponent,
     RouterLink,

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -10,6 +8,7 @@ import { GlobalComponent } from '../../global-component';
 import { TranslatePipe } from '../../translate.pipe';
 import imageCompression from 'browser-image-compression';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 import {
   AxAccordionComponent,
   AxAccordionItemComponent,
@@ -19,10 +18,9 @@ import {
   selector: 'app-vendor-compliance',
   standalone: true,
   imports: [
+    VendorShellComponent,
     FormsModule,
     CommonModule,
-    SideComponent,
-    TopComponent,
     TranslatePipe,
     AxAccordionComponent,
     AxAccordionItemComponent,

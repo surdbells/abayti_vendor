@@ -4,15 +4,14 @@ import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { CommonModule } from '@angular/common';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Labels } from '../../class/labels';
 import { FormsModule } from '@angular/forms';
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-labels',
   standalone: true,
-  imports: [CommonModule, SideComponent, TopComponent, FormsModule],
+  imports: [VendorShellComponent, CommonModule, FormsModule],
   templateUrl: './label-component.html',
   styleUrl: './label.component.css',
 })

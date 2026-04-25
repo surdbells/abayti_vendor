@@ -1,10 +1,5 @@
-<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
-
-<div class="ax-app-shell">
-  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
-
-  <main class="ax-main">
-    <div class="ax-container">
+<app-admin-shell>
+  <div class="ax-container">
       <header class="ax-page-header">
         <div class="ax-page-header-content">
           <button
@@ -82,7 +77,5 @@
             This vendor hasn't listed any products yet.
           </p>
         </div>
-      </section>
-    </div>
-  </main>
-</div>
+      </section>  </div>
+</app-admin-shell>

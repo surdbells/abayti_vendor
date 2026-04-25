@@ -1,10 +1,5 @@
-<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
-
-<div class="ax-app-shell">
-  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
-
-  <main class="ax-main">
-    <div class="ax-container">
+<app-admin-shell>
+  <div class="ax-container">
       <!-- Page header -->
       <header class="ax-page-header">
         <div class="ax-page-header-content">
@@ -131,7 +126,5 @@
             <span *ngIf="!product_S.status">There are no products listed on the platform yet.</span>
           </p>
         </div>
-      </section>
-    </div>
-  </main>
-</div>
+      </section>  </div>
+</app-admin-shell>

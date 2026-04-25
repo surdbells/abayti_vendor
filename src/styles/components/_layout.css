@@ -98,7 +98,11 @@
   gap: var(--ax-space-2);
 }
 
-/* Mobile menu trigger (burger) — hidden on desktop */
+/* Mobile menu trigger (burger).
+   Visible only in the tablet-landscape range (769–991 px) where the sidenav
+   is hidden but bottom nav doesn't render. On phones / portrait tablets
+   (≤ 768 px), bottom nav handles primary navigation so the hamburger is
+   hidden. On desktop (≥ 992 px) the sidenav is always visible. */
 .ax-topbar-menu-toggle {
   display: inline-flex;
   align-items: center;
@@ -114,6 +118,9 @@
 }
 .ax-topbar-menu-toggle:hover {
   background-color: var(--ax-color-bg-muted);
+}
+@media (max-width: 768px) {
+  .ax-topbar-menu-toggle { display: none; }
 }
 @media (min-width: 992px) {
   .ax-topbar-menu-toggle { display: none; }
@@ -131,6 +138,15 @@
   max-width: 72rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* When inside a shell that renders a fixed bottom nav (vendor-shell on mobile),
+   pad the bottom of the content area so the last items aren't hidden behind it.
+   Bottom nav is ~56px tall + iOS safe-area inset. */
+@media (max-width: 768px) {
+  .ax-main-with-bottom-nav {
+    padding-bottom: calc(var(--ax-space-10) + 56px + env(safe-area-inset-bottom, 0));
+  }
 }
 
 

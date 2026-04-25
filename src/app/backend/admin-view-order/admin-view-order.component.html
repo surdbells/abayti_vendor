@@ -1,9 +1,4 @@
-<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
-
-<div class="ax-app-shell">
-  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
-
-  <main class="ax-main">
+<app-admin-shell>
     <div class="ax-container" style="max-width: 56rem;">
       <!-- Page header -->
       <header class="ax-page-header">
@@ -232,6 +227,4 @@
           </div>
         </article>
       </section>
-    </div>
-  </main>
-</div>
+    </div></app-admin-shell>

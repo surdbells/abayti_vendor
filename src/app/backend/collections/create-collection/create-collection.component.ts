@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AsideComponent } from '../../../partials/aside/aside.component';
 import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
 import { GlobalComponent } from '../../../global-component';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
-
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-create-collection',
   standalone: true,
-  imports: [AsideComponent, NgIf, RouterLink, FormsModule, AdminTopComponent],
+  imports: [AdminShellComponent, NgIf, RouterLink, FormsModule],
   templateUrl: './create-collection.component.html',
   styleUrl: './create-collection.component.css',
 })

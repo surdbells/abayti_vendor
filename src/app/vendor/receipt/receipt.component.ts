@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgIf} from "@angular/common";
-import {SideComponent} from "../../partials/side/side.component";
+import {VendorShellComponent} from "../../partials/vendor-shell/vendor-shell.component";
 import {ActivatedRoute, Router} from '@angular/router';
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
@@ -13,7 +13,7 @@ import { AxConfirmService } from '../../shared/overlays';
   standalone: true,
     imports: [
         NgIf,
-        SideComponent
+        VendorShellComponent
     ],
   templateUrl: './receipt.component.html',
   styleUrl: './receipt.component.css'

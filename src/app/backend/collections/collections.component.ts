@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { GlobalComponent } from '../../global-component';
 import { Labels } from '../../class/labels';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-collections',
   standalone: true,
-  imports: [CommonModule, RouterLink, AsideComponent, AdminTopComponent],
+  imports: [AdminShellComponent, CommonModule, RouterLink],
   templateUrl: './collections.component.html',
   styleUrl: './collections.component.css',
 })

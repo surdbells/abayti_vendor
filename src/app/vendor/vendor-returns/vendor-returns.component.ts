@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Orders } from '../../class/orders';
 import { GlobalComponent } from '../../global-component';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-returns',
-  imports: [TopComponent, SideComponent, NgClass, NgForOf, NgIf, RouterLink],
+  imports: [VendorShellComponent, NgClass, NgForOf, NgIf, RouterLink],
   standalone: true,
   templateUrl: './vendor-returns.component.html',
   styleUrl: './vendor-returns.component.css',

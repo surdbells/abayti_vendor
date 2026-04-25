@@ -1,11 +1,17 @@
-<app-side *ngIf="user_session.is_vendor"></app-side>
-<app-aside *ngIf="user_session.is_admin"></app-aside>
+<ng-container *ngIf="user_session.is_vendor; else adminShell">
+  <app-vendor-shell>
+    <ng-container *ngTemplateOutlet="pageContent"></ng-container>
+  </app-vendor-shell>
+</ng-container>
 
-<div class="ax-app-shell">
-  <app-top *ngIf="user_session.is_vendor"></app-top>
-  <main class="ax-main">
+<ng-template #adminShell>
+  <app-admin-shell>
+    <ng-container *ngTemplateOutlet="pageContent"></ng-container>
+  </app-admin-shell>
+</ng-template>
+
+<ng-template #pageContent>
   <div class="ax-container">
-
     <!-- Page header -->
     <header class="ax-page-header">
       <div class="ax-page-header-content">
@@ -471,7 +477,5 @@
           </button>
         </div>
       </aside>
-    </div>
-  </div>
-</main>
-</div>
+    </div>  </div>
+</ng-template>

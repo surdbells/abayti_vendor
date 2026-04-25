@@ -3,13 +3,12 @@ import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { FormsModule } from '@angular/forms';
 import { AxDropdownDirective, AxDropdownItemDirective } from '../../shared/overlays';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 export interface Tickets {
   ticket_id: number;
   ticket_ref: string;
@@ -29,9 +28,8 @@ export interface Tickets {
   selector: 'app-tickets',
   standalone: true,
   imports: [
-    AsideComponent,
+    AdminShellComponent,
     CommonModule,
-    AdminTopComponent,
     FormsModule,
     AxDropdownDirective,
     AxDropdownItemDirective,

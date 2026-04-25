@@ -1,8 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SideComponent } from '../../partials/side/side.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
@@ -11,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { AxMultiselectComponent, AxMultiselectOption } from '../../shared/forms';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 interface StoreOption {
   id: number;
   store_name: string;
@@ -25,7 +24,8 @@ interface NamedOption {
   selector: 'app-create-coupon',
   standalone: true,
   imports: [
-    SideComponent, AsideComponent, TopComponent,
+    VendorShellComponent,
+    AdminShellComponent,
     CommonModule, FormsModule,
     AxMultiselectComponent,
   ],

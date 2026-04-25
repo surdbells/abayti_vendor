@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { Products } from '../../class/products';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,10 +7,11 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { FormsModule } from '@angular/forms';
 
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-admin-products',
   standalone: true,
-  imports: [AdminTopComponent, AsideComponent, CommonModule, FormsModule],
+  imports: [AdminShellComponent, CommonModule, FormsModule],
   templateUrl: './admin-products.component.html',
   styleUrl: './admin-products.component.css',
 })

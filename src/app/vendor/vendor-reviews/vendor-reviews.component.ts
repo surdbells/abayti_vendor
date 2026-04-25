@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { Reviews } from '../../class/reviews';
 import { GlobalComponent } from '../../global-component';
 import { CommonModule } from '@angular/common';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-reviews',
-  imports: [TopComponent, SideComponent, CommonModule, RouterLink],
+  imports: [VendorShellComponent, CommonModule, RouterLink],
   standalone: true,
   templateUrl: './vendor-reviews.component.html',
   styleUrl: './vendor-reviews.component.css',

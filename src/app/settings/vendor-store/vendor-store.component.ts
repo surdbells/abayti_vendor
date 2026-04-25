@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-store',
   standalone: true,
-  imports: [CommonModule, FormsModule, SideComponent, TopComponent, AxRichEditorComponent],
+  imports: [VendorShellComponent, CommonModule, FormsModule, AxRichEditorComponent],
   templateUrl: './vendor-store.component.html',
   styleUrl: './vendor-store.component.css',
 })

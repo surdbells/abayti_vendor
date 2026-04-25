@@ -3,13 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../../global-component';
-import { AsideComponent } from '../../../partials/aside/aside.component';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
-
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-store-messages',
   standalone: true,
-  imports: [AsideComponent, AdminTopComponent],
+  imports: [AdminShellComponent, ],
   templateUrl: './store-messages.component.html',
   styleUrl: './store-messages.component.css',
 })

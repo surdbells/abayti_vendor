@@ -2,14 +2,13 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../translate.pipe';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 export interface User {
   id: number;
   token: string;
@@ -27,9 +26,8 @@ export interface User {
   selector: 'app-users',
   standalone: true,
   imports: [
-    AsideComponent,
+    AdminShellComponent,
     CommonModule,
-    AdminTopComponent,
     FormsModule,
     TranslatePipe,
   ],

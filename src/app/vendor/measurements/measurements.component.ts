@@ -1,8 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -10,6 +8,7 @@ import { GlobalComponent } from '../../global-component';
 import { TranslatePipe } from '../../translate.pipe';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 export interface Measurements {
   id: number;
   token: number;
@@ -28,7 +27,7 @@ export interface Measurements {
 @Component({
   selector: 'app-measurements',
   standalone: true,
-  imports: [FormsModule, NgIf, NgClass, SideComponent, TopComponent, TranslatePipe],
+  imports: [VendorShellComponent, FormsModule, NgIf, NgClass, TranslatePipe],
   templateUrl: './measurements.component.html',
   styleUrl: './measurements.component.css',
 })

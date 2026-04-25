@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AsideComponent } from '../../../partials/aside/aside.component';
 import { NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../../global-component';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
-
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-edit-collection',
   standalone: true,
-  imports: [AsideComponent, NgIf, ReactiveFormsModule, RouterLink, FormsModule, AdminTopComponent],
+  imports: [AdminShellComponent, NgIf, ReactiveFormsModule, RouterLink, FormsModule],
   templateUrl: './edit-collection.component.html',
   styleUrl: './edit-collection.component.css',
 })

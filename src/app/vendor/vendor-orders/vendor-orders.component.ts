@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { CommonModule } from '@angular/common';
@@ -18,8 +17,7 @@ import {
 @Component({
   selector: 'app-vendor-orders',
   imports: [
-    TopComponent,
-    SideComponent,
+    VendorShellComponent,
     CommonModule,
     FormsModule,
     AxTableComponent,

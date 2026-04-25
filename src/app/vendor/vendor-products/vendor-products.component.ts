@@ -1,8 +1,5 @@
 import { Component, inject, OnInit, signal, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +15,8 @@ import {
 import { AxPaginationComponent } from '../../shared/data';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 // ── Color map for preview drawer ─────────────────────────────────
 const COLOR_HEX_MAP: Record<string, string> = {
   'black': '#000000', 'white': '#FFFFFF', 'off-white': '#FAF9F6',
@@ -65,9 +64,8 @@ interface ProductListItem {
   selector: 'app-vendor-products',
   standalone: true,
   imports: [
-    TopComponent,
-    SideComponent,
-    AsideComponent,
+    VendorShellComponent,
+    AdminShellComponent,
     CommonModule,
     FormsModule,
     RouterLink,

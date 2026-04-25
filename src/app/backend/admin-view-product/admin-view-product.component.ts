@@ -6,14 +6,13 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { FormsModule } from '@angular/forms';
 
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { Category } from '../../class/category';
 import { Labels } from '../../class/labels';
 
 // Ax design-system components
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
 import { AxConfirmService } from '../../shared/overlays';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 import {
   AxMultiselectComponent,
   AxMultiselectOption,
@@ -33,10 +32,9 @@ interface ColorOption {
   selector: 'app-admin-view-product',
   standalone: true,
   imports: [
+    AdminShellComponent,
     CommonModule,
     FormsModule,
-    AsideComponent,
-    AdminTopComponent,
     AxRichEditorComponent,
     AxMultiselectComponent,
     AxAccordionComponent,

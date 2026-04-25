@@ -1,8 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SideComponent } from '../../partials/side/side.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
@@ -11,11 +8,14 @@ import { FormsModule } from '@angular/forms';
 import { interval, Subject } from 'rxjs';
 import { takeUntil, switchMap } from 'rxjs/operators';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-coupon-analytics',
   standalone: true,
   imports: [
-    SideComponent, AsideComponent, TopComponent,
+    VendorShellComponent,
+    AdminShellComponent,
     CommonModule, FormsModule,
   ],
   templateUrl: './coupon-analytics.component.html',

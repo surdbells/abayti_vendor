@@ -295,6 +295,19 @@
 /* Loading overlay on the table */
 .ax-table-wrapper {
   position: relative;
+  /* Allow wide tables to scroll horizontally inside their card on small screens.
+     Without this, content overflows the page and forces the body to scroll. */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tables inside a wrapper that aren't using .ax-table-responsive (stack rows)
+   behaviour should at minimum stay aligned via min-width on mobile so columns
+   don't collapse awkwardly. */
+@media (max-width: 768px) {
+  .ax-table-wrapper > .ax-table:not(.ax-table-responsive) {
+    min-width: max-content;
+  }
 }
 .ax-table-loading-overlay {
   position: absolute;

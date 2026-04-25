@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Orders } from '../../class/orders';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-delivery',
   standalone: true,
-  imports: [NgClass, NgForOf, NgIf, RouterLink, SideComponent, TopComponent],
+  imports: [VendorShellComponent, NgClass, NgForOf, NgIf, RouterLink],
   templateUrl: './vendor-delivery.component.html',
   styleUrl: './vendor-delivery.component.css',
 })

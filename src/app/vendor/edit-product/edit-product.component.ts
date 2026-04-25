@@ -1,9 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SideComponent } from '../../partials/side/side.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Category } from '../../class/category';
 import { Labels } from '../../class/labels';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -15,6 +12,8 @@ import imageCompression from 'browser-image-compression';
 // Ax design-system components (Phase 2, 3, 5)
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 import {
   AxFileUploadComponent,
   AxUploadFile,
@@ -96,12 +95,11 @@ const SIZED_CATEGORIES = [1, 2, 3, 6, 7];
   selector: 'app-edit-product',
   standalone: true,
   imports: [
+    VendorShellComponent,
+    AdminShellComponent,
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    SideComponent,
-    AsideComponent,
-    TopComponent,
     AxRichEditorComponent,
     AxFileUploadComponent,
     AxMultiselectComponent,

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
-import { AsideComponent } from '../../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../../services/crud.service';
@@ -8,10 +6,11 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../../global-component';
 import { Products } from '../../../class/products';
 
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-store-products',
   standalone: true,
-  imports: [AdminTopComponent, AsideComponent, CommonModule],
+  imports: [AdminShellComponent, CommonModule],
   templateUrl: './store-products.component.html',
   styleUrl: './store-products.component.css',
 })

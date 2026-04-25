@@ -33,6 +33,9 @@
 @import './styles/components/_rich.css';
 @import './styles/components/_pages.css';
 
+/* Loaded last so it overrides component CSS at mobile breakpoints. */
+@import './styles/_mobile-safety-net.css';
+
 /* Legacy desktop sidebar offset — still in use until receipt page is restructured */
 @media (min-width: 1180px) {
   .ml-desktop-22rem { margin-left: 18rem; }

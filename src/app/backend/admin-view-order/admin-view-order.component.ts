@@ -6,14 +6,12 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-
 import { AxConfirmService } from '../../shared/overlays';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-admin-view-order',
   standalone: true,
-  imports: [CommonModule, AsideComponent, AdminTopComponent],
+  imports: [AdminShellComponent, CommonModule],
   templateUrl: './admin-view-order.component.html',
   styleUrl: './admin-view-order.component.css',
 })

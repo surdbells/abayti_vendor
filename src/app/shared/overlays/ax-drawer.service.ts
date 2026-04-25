@@ -4,7 +4,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Subject, Observable } from 'rxjs';
 
 export type AxDrawerSize = 'sm' | 'md' | 'lg' | 'xl';
-export type AxDrawerPosition = 'left' | 'right';
+export type AxDrawerPosition = 'left' | 'right' | 'bottom';
 
 export interface AxDrawerConfig<D = unknown> {
   /** Drawer width preset. Default 'md'. */
@@ -77,9 +77,14 @@ export class AxDrawerService {
       .concat('ax-drawer', `ax-drawer-${size}`, `ax-drawer-${position}`);
 
     const positionStrategy = this.overlay.position().global();
-    if (position === 'right') positionStrategy.right('0');
-    else positionStrategy.left('0');
-    positionStrategy.top('0');
+    if (position === 'right') {
+      positionStrategy.right('0').top('0');
+    } else if (position === 'left') {
+      positionStrategy.left('0').top('0');
+    } else {
+      // 'bottom' — full-width sheet anchored to bottom edge
+      positionStrategy.bottom('0').left('0').right('0');
+    }
 
     const overlayConfig = new OverlayConfig({
       hasBackdrop: true,
@@ -88,7 +93,8 @@ export class AxDrawerService {
       positionStrategy,
       scrollStrategy: this.overlay.scrollStrategies.block(),
       disposeOnNavigation: true,
-      height: '100vh',
+      // Side drawers fill viewport height; bottom sheets size to content (capped via CSS).
+      ...(position === 'bottom' ? {} : { height: '100vh' }),
     });
 
     const overlayRef = this.overlay.create(overlayConfig);

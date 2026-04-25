@@ -2,17 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { Customers } from '../../class/customers';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-
 import { AxConfirmService } from '../../shared/overlays';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [AsideComponent, CommonModule, AdminTopComponent],
+  imports: [AdminShellComponent, CommonModule],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.css',
 })

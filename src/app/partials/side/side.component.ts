@@ -3,7 +3,6 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { LanguageSwitcherComponent } from '../../language-switcher.component';
 import { GlobalComponent } from '../../global-component';
 import { TranslatePipe } from '../../translate.pipe';
 
@@ -13,7 +12,6 @@ import { TranslatePipe } from '../../translate.pipe';
     CommonModule,
     RouterLink,
     RouterLinkActive,
-    LanguageSwitcherComponent,
     TranslatePipe,
   ],
   standalone: true,

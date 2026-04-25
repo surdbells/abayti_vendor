@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -11,16 +7,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../translate.pipe';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-user-security',
   standalone: true,
   imports: [
+    VendorShellComponent,
+    AdminShellComponent,
     CommonModule,
     FormsModule,
-    SideComponent,
-    TopComponent,
-    AdminTopComponent,
-    AsideComponent,
     TranslatePipe,
   ],
   templateUrl: './user-security.component.html',

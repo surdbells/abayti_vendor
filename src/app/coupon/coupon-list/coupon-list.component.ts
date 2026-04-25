@@ -1,8 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
@@ -18,6 +15,8 @@ import {
 import { AxPaginationComponent } from '../../shared/data';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 interface CouponListItem {
   coupon_id: number;
   code: string;
@@ -51,7 +50,8 @@ interface Pagination {
   selector: 'app-coupon-list',
   standalone: true,
   imports: [
-    TopComponent, SideComponent, AsideComponent,
+    VendorShellComponent,
+    AdminShellComponent,
     CommonModule, FormsModule, RouterLink,
     AxDropdownDirective, AxDropdownItemDirective,
     AxPaginationComponent,

@@ -143,6 +143,17 @@
   animation: ax-drawer-enter-left var(--ax-duration-slow) var(--ax-ease-emphasized);
 }
 
+.ax-drawer-bottom {
+  /* Bottom sheet: full-width, anchored to bottom edge, sized to content (capped). */
+  width: 100%;
+  max-width: 100vw;
+  height: auto;
+  max-height: 85vh;
+  border-top-left-radius: var(--ax-radius-xl);
+  border-top-right-radius: var(--ax-radius-xl);
+  animation: ax-drawer-enter-bottom var(--ax-duration-slow) var(--ax-ease-emphasized);
+}
+
 @keyframes ax-drawer-enter-right {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
@@ -150,6 +161,10 @@
 @keyframes ax-drawer-enter-left {
   from { transform: translateX(-100%); }
   to   { transform: translateX(0); }
+}
+@keyframes ax-drawer-enter-bottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
 }
 
 .ax-drawer-header {

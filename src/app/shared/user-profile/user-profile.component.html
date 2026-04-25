@@ -1,22 +1,11 @@
 <!-- Dual shell: vendor gets side nav, admin gets aside + admin-top -->
-<app-side *ngIf="user_session.is_vendor"></app-side>
-<app-aside *ngIf="user_session.is_admin" [(isOpen)]="ui_controls.nav_open"></app-aside>
+<app-vendor-shell *ngIf="user_session.is_vendor">
+  <ng-container *ngTemplateOutlet="profileContent"></ng-container>
+</app-vendor-shell>
 
-<ng-container *ngIf="user_session.is_vendor">
-  <div class="ax-app-shell">
-    <app-top></app-top>
-    <main class="ax-main">
-    <ng-container *ngTemplateOutlet="profileContent"></ng-container>
-    </main>
-  </div>
-</ng-container>
-
-<div *ngIf="user_session.is_admin" class="ax-app-shell">
-  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
-  <main class="ax-main">
-    <ng-container *ngTemplateOutlet="profileContent"></ng-container>
-  </main>
-</div>
+<app-admin-shell *ngIf="user_session.is_admin">
+  <ng-container *ngTemplateOutlet="profileContent"></ng-container>
+</app-admin-shell>
 
 <ng-template #profileContent>
   <div class="ax-container">

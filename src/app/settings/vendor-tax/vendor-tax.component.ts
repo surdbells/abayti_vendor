@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -8,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-tax',
   standalone: true,
-  imports: [SideComponent, TopComponent, FormsModule, CommonModule],
+  imports: [VendorShellComponent, FormsModule, CommonModule],
   templateUrl: './vendor-tax.component.html',
   styleUrl: './vendor-tax.component.css',
 })

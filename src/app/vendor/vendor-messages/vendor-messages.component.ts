@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-messages',
-  imports: [TopComponent, SideComponent],
+  imports: [VendorShellComponent],
   standalone: true,
   templateUrl: './vendor-messages.component.html',
   styleUrl: './vendor-messages.component.css',

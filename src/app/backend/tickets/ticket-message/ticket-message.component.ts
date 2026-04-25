@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
-import { AsideComponent } from '../../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +6,7 @@ import { CrudService } from '../../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../../global-component';
 
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 export interface Message {
   id: number;
   ticket: number;
@@ -19,7 +18,7 @@ export interface Message {
 @Component({
   selector: 'app-ticket-message',
   standalone: true,
-  imports: [AdminTopComponent, AsideComponent, CommonModule, FormsModule],
+  imports: [AdminShellComponent, CommonModule, FormsModule],
   templateUrl: './ticket-message.component.html',
   styleUrl: './ticket-message.component.css',
 })

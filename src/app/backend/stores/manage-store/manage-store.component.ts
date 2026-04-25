@@ -7,22 +7,20 @@ import { GlobalComponent } from '../../../global-component';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../translate.pipe';
 
-import { AsideComponent } from '../../../partials/aside/aside.component';
-import { AdminTopComponent } from '../../../partials/admin-top/admin-top.component';
 import { AccountSetupComponent } from '../account-setup/account-setup.component';
 
 // Ax design system
 import { AxRichEditorComponent } from '../../../shared/rich/ax-rich-editor.component';
 import { AxTabsComponent, AxTabComponent } from '../../../shared/overlays';
 
+import { AdminShellComponent } from '../../../partials/admin-shell/admin-shell.component';
 @Component({
   selector: 'app-manage-store',
   standalone: true,
   imports: [
+    AdminShellComponent,
     CommonModule,
     FormsModule,
-    AsideComponent,
-    AdminTopComponent,
     AccountSetupComponent,
     TranslatePipe,
     AxRichEditorComponent,

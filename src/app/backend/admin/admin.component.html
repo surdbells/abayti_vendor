@@ -1,9 +1,4 @@
-<app-aside [(isOpen)]="ui_controls.nav_open"></app-aside>
-
-<div class="ax-app-shell">
-  <app-admin-top (menuToggle)="ui_controls.nav_open = !ui_controls.nav_open"></app-admin-top>
-
-  <main class="ax-main">
+<app-admin-shell>
     <!-- Page header -->
     <header class="ax-page-header">
       <div class="ax-page-header-content">
@@ -298,6 +293,4 @@
           </div>
         </div>
       </section>
-    </ng-container>
-  </main>
-</div>
+    </ng-container></app-admin-shell>

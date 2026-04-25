@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TopComponent } from '../../partials/top/top.component';
-import { SideComponent } from '../../partials/side/side.component';
 import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -9,9 +7,10 @@ import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { TranslatePipe } from '../../translate.pipe';
 
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-vendor-notifications',
-  imports: [TopComponent, SideComponent, FormsModule, CommonModule, TranslatePipe],
+  imports: [VendorShellComponent, FormsModule, CommonModule, TranslatePipe],
   standalone: true,
   templateUrl: './vendor-notifications.component.html',
   styleUrl: './vendor-notifications.component.css',

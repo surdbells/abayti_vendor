@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { FormsModule } from '@angular/forms';
 
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 export interface Transactions {
   id: number;
   order_id: string;
@@ -24,7 +23,7 @@ export interface Transactions {
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [AsideComponent, CommonModule, AdminTopComponent, FormsModule],
+  imports: [AdminShellComponent, CommonModule, FormsModule],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css',
 })

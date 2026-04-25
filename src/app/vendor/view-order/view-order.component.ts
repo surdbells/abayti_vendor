@@ -1,8 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { SideComponent } from '../../partials/side/side.component';
-import { TopComponent } from '../../partials/top/top.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -16,14 +14,14 @@ import {
 import { AxCopyToClipboardDirective } from '../../shared/rich/ax-copy-to-clipboard.directive';
 
 import { AxConfirmService } from '../../shared/overlays';
+import { VendorShellComponent } from '../../partials/vendor-shell/vendor-shell.component';
 @Component({
   selector: 'app-view-order',
   standalone: true,
   imports: [
+    VendorShellComponent,
     FormsModule,
     CommonModule,
-    SideComponent,
-    TopComponent,
     AxActivityFeedComponent,
     AxCopyToClipboardDirective,
   ],

@@ -22,10 +22,9 @@ import { GlobalComponent } from '../../global-component';
 import { Products } from '../../class/products';
 import { ROrders } from '../../class/recent';
 import { TranslatePipe } from '../../translate.pipe';
-import { AsideComponent } from '../../partials/aside/aside.component';
-import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { AxPaginationComponent } from '../../shared/data';
 
+import { AdminShellComponent } from '../../partials/admin-shell/admin-shell.component';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -65,7 +64,7 @@ const ICON_MAP: Record<string, string> = {
 @Component({
   selector: 'app-admin',
   imports: [
-    AsideComponent,
+    AdminShellComponent,
     CommonModule,
     TopComponent,
     NgApexchartsModule,
@@ -73,8 +72,7 @@ const ICON_MAP: Record<string, string> = {
     AxPaginationComponent,
     RouterLink,
     TranslatePipe,
-    RouterLinkActive,
-    AdminTopComponent
+    RouterLinkActive
   ],
   standalone: true,
   templateUrl: './admin.component.html',
