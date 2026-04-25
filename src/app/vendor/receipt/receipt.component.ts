@@ -1,15 +1,13 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {SideComponent} from "../../partials/side/side.component";
-import {TuiResponsiveDialogService} from '@taiga-ui/addon-mobile';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CrudService} from '../../services/crud.service';
 import {HotToastService} from '@ngneat/hot-toast';
 import {GlobalComponent} from '../../global-component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import {TUI_CONFIRM} from '@taiga-ui/kit';
-
+import { AxConfirmService } from '../../shared/overlays';
 @Component({
   selector: 'app-receipt',
   standalone: true,
@@ -21,7 +19,7 @@ import {TUI_CONFIRM} from '@taiga-ui/kit';
   styleUrl: './receipt.component.css'
 })
 export class ReceiptComponent   implements OnInit{
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -175,18 +173,16 @@ export class ReceiptComponent   implements OnInit{
     }
   }
   startStatusChange(order: number, status: string, email: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm status',
-        data: {
-          content: 'Your order will be sent to delivery partner for pickup and delivery and customer will be notified',
-          yes: 'Proceed',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm status',
+        message: 'Your order will be sent to delivery partner for pickup and delivery and customer will be notified',
+        confirmLabel: 'Proceed',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response){
-          this.updateOrderStatus(order, status, email);
+        this.updateOrderStatus(order, status, email);
         }
       });
   }

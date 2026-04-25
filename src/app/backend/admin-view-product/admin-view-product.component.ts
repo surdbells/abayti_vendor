@@ -1,11 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { CommonModule, Location } from '@angular/common';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { FormsModule } from '@angular/forms';
 
 import { AsideComponent } from '../../partials/aside/aside.component';
@@ -15,6 +13,7 @@ import { Labels } from '../../class/labels';
 
 // Ax design-system components
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
+import { AxConfirmService } from '../../shared/overlays';
 import {
   AxMultiselectComponent,
   AxMultiselectOption,
@@ -64,7 +63,7 @@ export class AdminViewProductComponent implements OnInit {
     return this.dropdownList.filter(c => ids.has(String(c.id)));
   }
 
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   colorOptions: ColorOption[] = [];
   base64String: any;
 
@@ -364,16 +363,14 @@ export class AdminViewProductComponent implements OnInit {
   }
 
   start_update() {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm update',
-        data: {
-          content: 'Save your changes. Your product update will go live immediately.',
-          yes: 'Save',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm update',
+        message: 'Save your changes. Your product update will go live immediately.',
+        confirmLabel: 'Save',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.updateProduct();
       });
   }

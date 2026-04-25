@@ -5,18 +5,17 @@ import { SideComponent } from '../../partials/side/side.component';
 import { TopComponent } from '../../partials/top/top.component';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
 import {
   AxActivityFeedComponent,
   AxActivityItem,
 } from '../../shared/rich/ax-activity-feed.component';
 import { AxCopyToClipboardDirective } from '../../shared/rich/ax-copy-to-clipboard.directive';
 
+import { AxConfirmService } from '../../shared/overlays';
 @Component({
   selector: 'app-view-order',
   standalone: true,
@@ -32,7 +31,7 @@ import { AxCopyToClipboardDirective } from '../../shared/rich/ax-copy-to-clipboa
   styleUrl: './view-order.component.css',
 })
 export class ViewOrderComponent implements OnInit {
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   constructor(
     private router: Router,
@@ -192,18 +191,16 @@ export class ViewOrderComponent implements OnInit {
   }
 
   startStatusChange(order: number, status: string, email: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm status',
-        data: {
-          content: 'Your order will be sent to delivery partner for pickup and delivery and customer will be notified',
-          yes: 'Proceed',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm status',
+        message: 'Your order will be sent to delivery partner for pickup and delivery and customer will be notified',
+        confirmLabel: 'Proceed',
+        cancelLabel: 'Cancel'
       })
-      .subscribe(response => {
+      .then((response) => {
         if (response) {
-          this.updateOrderStatus(order, status, email);
+        this.updateOrderStatus(order, status, email);
         }
       });
   }

@@ -8,9 +8,7 @@ import { SideComponent } from '../../partials/side/side.component';
 import { TopComponent } from '../../partials/top/top.component';
 import { Labels } from '../../class/labels';
 import { FormsModule } from '@angular/forms';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
-
+import { AxConfirmService } from '../../shared/overlays';
 @Component({
   selector: 'app-labels',
   standalone: true,
@@ -20,7 +18,7 @@ import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 })
 export class LabelComponent implements OnInit {
   labels?: Labels[];
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   ui_controls = {
     is_loading: false,
@@ -144,16 +142,15 @@ export class LabelComponent implements OnInit {
   }
 
   start_delete_label(id: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm delete',
-        data: {
-          content: `Your label "${name}" will be deleted permanently.`,
-          yes: 'Delete',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm delete',
+        message: `Your label "${name}" will be deleted permanently.`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.deleteLabel(id);
       });
   }

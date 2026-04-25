@@ -28,8 +28,6 @@
             ],
             "styles": [
               "node_modules/@ngneat/hot-toast/src/styles/styles.css",
-              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
-              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
               "public/assets/css/libs.bundle.css",
               "public/assets/css/theme.bundle.css",
               "src/styles.css"

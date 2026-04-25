@@ -10,12 +10,11 @@ import { Category } from '../../class/category';
 import { Labels } from '../../class/labels';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import imageCompression from 'browser-image-compression';
 
 // Ax design-system components (Phase 2, 3, 5)
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
+import { AxConfirmService } from '../../shared/overlays';
 import {
   AxFileUploadComponent,
   AxUploadFile,
@@ -146,7 +145,7 @@ export class CreateProductComponent implements OnInit {
   selected = new Set<string>();
 
   // ── Session ────────────────────────────────────────────────────
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   session_data: any = '';
   user_session = {
     id: 0, token: '', first_name: '', last_name: '',
@@ -439,28 +438,30 @@ export class CreateProductComponent implements OnInit {
 
   startPublish(): void {
     if (!this.validate()) return;
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm publish',
-        data: {
-          content: 'Make this product live now. It will be visible to customers immediately. Please review price, stock, and images before publishing.',
-          yes: 'Publish', no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm publish',
+        message: 'Make this product live now. It will be visible to customers immediately. Please review price, stock, and images before publishing.',
+        confirmLabel: 'Publish',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((ok) => { if (ok) this.submitProduct('published'); });
+      .then((ok) => {
+        if (ok) this.submitProduct('published');
+      });
   }
 
   startSave(): void {
     if (!this.validate()) return;
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm save',
-        data: {
-          content: "Save your changes as a draft. They won't be visible to customers until you publish.",
-          yes: 'Save', no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm save',
+        message: "Save your changes as a draft. They won't be visible to customers until you publish.",
+        confirmLabel: 'Save',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((ok) => { if (ok) this.submitProduct('draft'); });
+      .then((ok) => {
+        if (ok) this.submitProduct('draft');
+      });
   }
 
   private submitProduct(status: string): void {

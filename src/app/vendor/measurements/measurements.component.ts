@@ -7,10 +7,9 @@ import { Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { TranslatePipe } from '../../translate.pipe';
 
+import { AxConfirmService } from '../../shared/overlays';
 export interface Measurements {
   id: number;
   token: number;
@@ -35,7 +34,7 @@ export interface Measurements {
 })
 export class MeasurementsComponent implements OnInit {
   measurements?: Measurements[];
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   constructor(
     private router: Router,
@@ -172,16 +171,15 @@ export class MeasurementsComponent implements OnInit {
   }
 
   start_delete_measurement(measurement: number) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm delete',
-        data: {
-          content: 'Your measurement will be deleted permanently',
-          yes: 'Delete',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm delete',
+        message: 'Your measurement will be deleted permanently',
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.delete_measurement(measurement);
       });
   }

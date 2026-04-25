@@ -5,12 +5,11 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../translate.pipe';
 
+import { AxConfirmService } from '../../shared/overlays';
 export interface User {
   id: number;
   token: string;
@@ -39,7 +38,7 @@ export interface User {
 })
 export class UsersComponent implements OnInit {
   customers?: User[];
-  protected readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   protected readonly open = signal(false);
 
   ui_controls = {
@@ -130,16 +129,14 @@ export class UsersComponent implements OnInit {
   }
 
   start_activate(customer: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `${name} account will be activated?`,
-          yes: 'Activate',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `${name} account will be activated?`,
+        confirmLabel: 'Activate',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.activate_customer(customer, name);
       });
   }
@@ -159,16 +156,15 @@ export class UsersComponent implements OnInit {
   }
 
   start_deactivate(customer: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `${name} will be deactivated?`,
-          yes: 'Deactivate',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `${name} will be deactivated?`,
+        confirmLabel: 'Deactivate',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.deactivate_customer(customer, name);
       });
   }

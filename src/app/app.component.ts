@@ -1,11 +1,10 @@
-import { TuiRoot } from "@taiga-ui/core";
 import { Component } from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
 declare let gtag: Function;
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, TuiRoot],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   standalone: true,
   styleUrl: './app.component.css'

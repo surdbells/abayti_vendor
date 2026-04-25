@@ -8,10 +8,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { AxMultiselectComponent, AxMultiselectOption } from '../../shared/forms';
 
+import { AxConfirmService } from '../../shared/overlays';
 interface StoreOption {
   id: number;
   store_name: string;
@@ -34,7 +33,7 @@ interface NamedOption {
   styleUrl: './create-coupon.component.css',
 })
 export class CreateCouponComponent implements OnInit {
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   session_data: any = '';
   user_session = {
@@ -169,16 +168,14 @@ export class CreateCouponComponent implements OnInit {
       return;
     }
 
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Create coupon',
-        data: {
-          content: `Create coupon "${this.form.code || '(auto-generated)'}" and make it active immediately?`,
-          yes: 'Create',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Create coupon',
+        message: `Create coupon "${this.form.code || '(auto-generated)'}" and make it active immediately?`,
+        confirmLabel: 'Create',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((ok) => {
+      .then((ok) => {
         if (ok) this.submitCoupon();
       });
   }

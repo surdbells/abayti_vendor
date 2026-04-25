@@ -5,6 +5,9 @@ export type { AxModalConfig, AxModalSize } from './ax-modal.service';
 export { AxDrawerService, AxDrawerRef, AX_DRAWER_DATA } from './ax-drawer.service';
 export type { AxDrawerConfig, AxDrawerSize, AxDrawerPosition } from './ax-drawer.service';
 
+export { AxConfirmService } from './ax-confirm.service';
+export type { AxConfirmOptions, AxConfirmVariant } from './ax-confirm.service';
+
 // Container components (chrome for service-opened content)
 export { AxModalContainerComponent } from './ax-modal-container.component';
 export { AxDrawerContainerComponent } from './ax-drawer-container.component';

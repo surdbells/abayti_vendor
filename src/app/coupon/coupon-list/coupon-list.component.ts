@@ -8,8 +8,6 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
@@ -19,6 +17,7 @@ import {
 } from '../../shared/overlays';
 import { AxPaginationComponent } from '../../shared/data';
 
+import { AxConfirmService } from '../../shared/overlays';
 interface CouponListItem {
   coupon_id: number;
   code: string;
@@ -64,7 +63,7 @@ export class CouponListComponent implements OnInit, OnDestroy {
   coupons: CouponListItem[] = [];
   pagination: Pagination = { page: 1, per_page: 10, total: 0, total_pages: 0 };
 
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   ui = {
     loading: false,
@@ -211,16 +210,15 @@ export class CouponListComponent implements OnInit, OnDestroy {
     const newStatus = coupon.status === 'active' ? 'inactive' : 'active';
     const label = newStatus === 'active' ? 'activate' : 'deactivate';
 
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: `Confirm ${label}`,
-        data: {
-          content: `Are you sure you want to ${label} coupon "${coupon.code}"?`,
-          yes: label.charAt(0).toUpperCase() + label.slice(1),
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: `Confirm ${label}`,
+        message: `Are you sure you want to ${label} coupon "${coupon.code}"?`,
+        confirmLabel: label.charAt(0).toUpperCase() + label.slice(1),
+        cancelLabel: 'Cancel',
+        variant: newStatus === 'inactive' ? 'danger' : 'default'
       })
-      .subscribe((ok) => {
+      .then((ok) => {
         if (ok) this.executeToggle(coupon.coupon_id, newStatus);
       });
   }
@@ -252,16 +250,15 @@ export class CouponListComponent implements OnInit, OnDestroy {
   }
 
   startDelete(coupon: CouponListItem): void {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm delete',
-        data: {
-          content: `Coupon "${coupon.code}" will be deleted permanently. Usage history will be preserved.`,
-          yes: 'Delete',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm delete',
+        message: `Coupon "${coupon.code}" will be deleted permanently. Usage history will be preserved.`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((ok) => {
+      .then((ok) => {
         if (ok) this.executeDelete(coupon.coupon_id);
       });
   }

@@ -7,10 +7,9 @@ import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 import { FormsModule } from '@angular/forms';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { AxDropdownDirective, AxDropdownItemDirective } from '../../shared/overlays';
 
+import { AxConfirmService } from '../../shared/overlays';
 export interface Tickets {
   ticket_id: number;
   ticket_ref: string;
@@ -42,7 +41,7 @@ export interface Tickets {
 })
 export class TicketsComponent implements OnInit {
   tickets?: Tickets[];
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   ui_controls = {
     is_loading: false,
@@ -161,16 +160,14 @@ export class TicketsComponent implements OnInit {
   }
 
   start_changeStatus(ticket: number, subject: string, status: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `Ticket [ ${subject} ] status will be changed to ${status}`,
-          yes: 'Continue',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `Ticket [ ${subject} ] status will be changed to ${status}`,
+        confirmLabel: 'Continue',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.change_status(ticket, subject, status);
       });
   }
@@ -191,16 +188,14 @@ export class TicketsComponent implements OnInit {
   }
 
   start_changePriority(ticket: number, subject: string, priority: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `Ticket [ ${subject} ] priority will be changed to ${priority}`,
-          yes: 'Continue',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `Ticket [ ${subject} ] priority will be changed to ${priority}`,
+        confirmLabel: 'Continue',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.change_priority(ticket, subject, priority);
       });
   }

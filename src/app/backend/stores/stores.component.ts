@@ -5,11 +5,10 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { CommonModule } from '@angular/common';
 import { Stores } from '../../class/stores';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
 import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 
+import { AxConfirmService } from '../../shared/overlays';
 import {
   AxDropdownDirective,
   AxDropdownItemDirective,
@@ -30,7 +29,7 @@ import {
 })
 export class StoresComponent implements OnInit {
   stores?: Stores[];
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   ui_controls = {
     is_loading: false,
@@ -109,16 +108,14 @@ export class StoresComponent implements OnInit {
   }
 
   start_activate(store: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `${name} account will be activated?`,
-          yes: 'Activate',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `${name} account will be activated?`,
+        confirmLabel: 'Activate',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.activate_store(store, name);
       });
   }
@@ -138,16 +135,15 @@ export class StoresComponent implements OnInit {
   }
 
   start_deactivate(store: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `${name} will be deactivated?`,
-          yes: 'Deactivate',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `${name} will be deactivated?`,
+        confirmLabel: 'Deactivate',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.deactivate_store(store, name);
       });
   }
@@ -167,16 +163,15 @@ export class StoresComponent implements OnInit {
   }
 
   start_delete(store: number, name: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm',
-        data: {
-          content: `${name} will be deleted?`,
-          yes: 'Delete',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm',
+        message: `${name} will be deleted?`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.delete_store(store, name);
       });
   }

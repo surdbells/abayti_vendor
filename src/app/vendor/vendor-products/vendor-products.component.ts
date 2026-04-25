@@ -9,8 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule, formatCurrency } from '@angular/common';
 import { GlobalComponent } from '../../global-component';
 import { Products } from '../../class/products';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import {
@@ -19,6 +17,7 @@ import {
 } from '../../shared/overlays';
 import { AxPaginationComponent } from '../../shared/data';
 
+import { AxConfirmService } from '../../shared/overlays';
 // ── Color map for preview drawer ─────────────────────────────────
 const COLOR_HEX_MAP: Record<string, string> = {
   'black': '#000000', 'white': '#FFFFFF', 'off-white': '#FAF9F6',
@@ -86,7 +85,7 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
 
   // ── Preview drawer ─────────────────────────────────────────────
   protected readonly open = signal(false);
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   image_url = 'https://api.3bayti.ae/vendors/products/';
   single_product: any = {
     id: 0, token: '', product: 0, store: 0, category: 0, category_name: '',
@@ -394,16 +393,15 @@ export class VendorProductsComponent implements OnInit, OnDestroy {
   }
 
   startDelete(id: number, name: string): void {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm delete',
-        data: {
-          content: `Your product "${name}" will be deleted permanently.`,
-          yes: 'Delete',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm delete',
+        message: `Your product "${name}" will be deleted permanently.`,
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        variant: 'danger'
       })
-      .subscribe((confirmed) => {
+      .then((confirmed) => {
         if (confirmed) this.deleteProduct(id, name);
       });
   }

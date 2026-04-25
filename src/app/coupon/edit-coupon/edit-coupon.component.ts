@@ -8,10 +8,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { AxMultiselectComponent, AxMultiselectOption } from '../../shared/forms';
 
+import { AxConfirmService } from '../../shared/overlays';
 interface StoreOption { id: number; store_name: string; }
 interface NamedOption { id: number; name: string; }
 
@@ -27,7 +26,7 @@ interface NamedOption { id: number; name: string; }
   styleUrl: './edit-coupon.component.css',
 })
 export class EditCouponComponent implements OnInit {
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   session_data: any = '';
   user_session = {
@@ -207,16 +206,14 @@ export class EditCouponComponent implements OnInit {
       return;
     }
 
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Save changes',
-        data: {
-          content: 'Update this coupon? Changes take effect immediately.',
-          yes: 'Save',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Save changes',
+        message: 'Update this coupon? Changes take effect immediately.',
+        confirmLabel: 'Save',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((ok) => {
+      .then((ok) => {
         if (ok) this.submitUpdate();
       });
   }

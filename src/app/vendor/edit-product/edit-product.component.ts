@@ -6,16 +6,15 @@ import { AsideComponent } from '../../partials/aside/aside.component';
 import { TopComponent } from '../../partials/top/top.component';
 import { Category } from '../../class/category';
 import { Labels } from '../../class/labels';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
 import imageCompression from 'browser-image-compression';
 
 // Ax design-system components (Phase 2, 3, 5)
 import { AxRichEditorComponent } from '../../shared/rich/ax-rich-editor.component';
+import { AxConfirmService } from '../../shared/overlays';
 import {
   AxFileUploadComponent,
   AxUploadFile,
@@ -154,7 +153,7 @@ export class EditProductComponent implements OnInit {
   selected = new Set<string>();
 
   // ── Session ────────────────────────────────────────────────────
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
   session_data: any = '';
   user_session = {
     id: 0, token: '', first_name: '', last_name: '',
@@ -465,15 +464,16 @@ export class EditProductComponent implements OnInit {
   //  UPDATE FLOW
   // ═══════════════════════════════════════════════════════════════
   startUpdate(): void {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm update',
-        data: {
-          content: 'Save your changes. Your product update will go live immediately.',
-          yes: 'Save', no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm update',
+        message: 'Save your changes. Your product update will go live immediately.',
+        confirmLabel: 'Save',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((ok) => { if (ok) this.submitUpdate(); });
+      .then((ok) => {
+        if (ok) this.submitUpdate();
+      });
   }
 
   private submitUpdate(): void {

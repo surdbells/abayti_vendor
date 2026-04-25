@@ -1,17 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
-import { TuiResponsiveDialogService } from '@taiga-ui/addon-mobile';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { GlobalComponent } from '../../global-component';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { TUI_CONFIRM } from '@taiga-ui/kit';
-
 import { AsideComponent } from '../../partials/aside/aside.component';
 import { AdminTopComponent } from '../../partials/admin-top/admin-top.component';
 
+import { AxConfirmService } from '../../shared/overlays';
 @Component({
   selector: 'app-admin-view-order',
   standalone: true,
@@ -20,7 +18,7 @@ import { AdminTopComponent } from '../../partials/admin-top/admin-top.component'
   styleUrl: './admin-view-order.component.css',
 })
 export class AdminViewOrderComponent implements OnInit {
-  private readonly dialogs = inject(TuiResponsiveDialogService);
+  private readonly confirm = inject(AxConfirmService);
 
   ui_controls = {
     is_loading: false,
@@ -163,16 +161,14 @@ export class AdminViewOrderComponent implements OnInit {
   }
 
   startStatusChange(order: number, status: string, email: string) {
-    this.dialogs
-      .open<boolean>(TUI_CONFIRM, {
-        label: 'Confirm status',
-        data: {
-          content: 'Your order will be sent to delivery partner for pickup and delivery, and customer will be notified.',
-          yes: 'Proceed',
-          no: 'Cancel',
-        },
+    this.confirm
+      .confirm({
+        title: 'Confirm status',
+        message: 'Your order will be sent to delivery partner for pickup and delivery, and customer will be notified.',
+        confirmLabel: 'Proceed',
+        cancelLabel: 'Cancel'
       })
-      .subscribe((response) => {
+      .then((response) => {
         if (response) this.updateOrderStatus(order, status, email);
       });
   }
